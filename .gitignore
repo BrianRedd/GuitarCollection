@@ -1,0 +1,8 @@
+*.code-workspace
+
+api/node_modules
+api/.env
+api/package-lock.json
+
+ui/node_modules
+ui/package-lock.json
