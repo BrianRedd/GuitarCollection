@@ -38,13 +38,9 @@ li {
   margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .icon_holder {
   display: flex;
-  gap: 10px;
-}
-
-.icon {
-  cursor: pointer
 }

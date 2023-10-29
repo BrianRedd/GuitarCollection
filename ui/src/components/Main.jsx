@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import { Button } from "@material-ui/core";
 import axios from "axios";
 import { Formik } from "formik";
 
@@ -64,7 +65,9 @@ const Main = () => {
                 value={values.name}
               />
 
-              <button type="submit">Add Guitar</button>
+              <Button variant="contained" type="submit">
+                Add Guitar
+              </Button>
             </form>
           )}
         </Formik>

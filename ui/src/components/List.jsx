@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { baseURL } from "../utils/constants";
@@ -22,12 +22,12 @@ const List = props => {
     <li>
       {guitar.name}
       <div className="icon_holder">
-        <Button onClick={() => updateMode(id, guitar.name)}>
-          <i className="fa-solid fa-pen-to-square" />
-        </Button>
-        <Button onClick={removeGuitar}>
-          <i className="fa-solid fa-trash" />
-        </Button>
+        <IconButton onClick={() => updateMode(id, guitar.name)}>
+          <span className="fas fa-edit" />
+        </IconButton>
+        <IconButton onClick={removeGuitar}>
+          <span className="fas fa-trash" />
+        </IconButton>
       </div>
     </li>
   );

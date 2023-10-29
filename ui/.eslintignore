@@ -1,7 +1,0 @@
-src/registerServiceWorker.js
-src/serviceWorker.js
-src/reportWebVitals.js
-node_modules/*
-public/*
-build/*
-config/*
