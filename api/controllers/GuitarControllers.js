@@ -1,14 +1,16 @@
-const TaskModel = require("../models/TaskModel");
+const GuitarModel = require("../models/GuitarModel");
 
-module.exports.getTasks = async (request, response) => {
-  const tasks = await TaskModel.find();
-  response.send(tasks);
+module.exports.getGuitars = async (request, response) => {
+  const guitars = await GuitarModel.find();
+  console.log("guitars", guitars);
+  response.send(guitars);
 };
 
-module.exports.saveTask = (request, response) => {
-  const { task } = request.body;
+module.exports.saveGuitar = (request, response) => {
+  const { name } = request.body;
+  console.log("name", name);
 
-  TaskModel.create({ task })
+  GuitarModel.create({ name })
     .then(data => {
       console.log("Saved Successfully...");
       response.status(201).send(data);
@@ -19,11 +21,11 @@ module.exports.saveTask = (request, response) => {
     });
 };
 
-module.exports.updateTask = (request, response) => {
+module.exports.updateGuitar = (request, response) => {
   const { id } = request.params;
-  const { task } = request.body;
+  const { name } = request.body;
 
-  TaskModel.findByIdAndUpdate(id, { task })
+  GuitarModel.findByIdAndUpdate(id, { name })
     .then(() => {
       response.send("Updated successfully");
     })
@@ -33,10 +35,10 @@ module.exports.updateTask = (request, response) => {
     });
 };
 
-module.exports.deleteTask = (request, response) => {
+module.exports.deleteGuitar = (request, response) => {
   const { id } = request.params;
 
-  TaskModel.findByIdAndDelete(id)
+  GuitarModel.findByIdAndDelete(id)
     .then(() => {
       response.send("Deleted successfully");
     })
