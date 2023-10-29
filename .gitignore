@@ -1,9 +1,11 @@
 *.code-workspace
-*.gitignore
+.gitignore
 
-api/node_modules
 api/.env
+api/.gitignore
+api/node_modules
 api/package-lock.json
 
+ui/.gitignore
 ui/node_modules
 ui/package-lock.json
