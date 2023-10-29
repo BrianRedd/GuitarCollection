@@ -1,0 +1,36 @@
+{
+  "extends": [
+    "react-app",
+    "airbnb",
+    "plugin:jsx-a11y/recommended",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true // instead this
+    }
+  },
+  "plugins": [
+    "jsx-a11y",
+    "prettier"
+  ],
+  "rules": {
+    "semi": 1,
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-props-no-spreading": [0, {
+      "html": "ignore",
+      "custom": "ignore",
+      "explicitSpread": "ignore"
+    }],
+    "react/function-component-definition": [0],
+    "comma-dangle": ["error", "never"],
+    "prettier/prettier": [
+      "error", {
+        "endOfLine": "auto",
+        "semi": true
+      }
+    ]
+  }
+}

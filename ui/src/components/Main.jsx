@@ -3,10 +3,15 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Formik } from "formik";
 
-import List from "./List";
 import { getGuitars } from "../utils/apiFunctions";
 import { baseURL } from "../utils/constants";
 
+import List from "./List";
+
+/**
+ * @function Main
+ * @returns {React.Component}
+ */
 const Main = () => {
   const [input, setInput] = useState("");
   const [guitars, setGuitars] = useState([]);
@@ -18,20 +23,18 @@ const Main = () => {
   }, [udpateUI]);
 
   const addGuitar = inputObject => {
-    axios.post(`${baseURL}/save`, inputObject).then(response => {
+    axios.post(`${baseURL}/save`, inputObject).then(() => {
       setInput("");
       setUpdateUI(previousState => !previousState);
     });
   };
 
-  const updateGuitar = inputObject => {
-    axios
-      .put(`${baseURL}/update/${updateId}`, { name: input })
-      .then(response => {
-        setInput("");
-        setUpdateId(null);
-        setUpdateUI(previousState => !previousState);
-      });
+  const updateGuitar = () => {
+    axios.put(`${baseURL}/update/${updateId}`, { name: input }).then(() => {
+      setInput("");
+      setUpdateId(null);
+      setUpdateUI(previousState => !previousState);
+    });
   };
 
   const updateMode = (id, text) => {
@@ -41,7 +44,7 @@ const Main = () => {
 
   return (
     <main>
-      <h1 className="title">Brian's Guitar Collection</h1>
+      <h1 className="title">Brian&apos;s Guitar Collection</h1>
       <div className="input_holder">
         <Formik
           initialValues={{
@@ -52,26 +55,26 @@ const Main = () => {
             apiFunction(values);
           }}
         >
-          {({ values, handleChange, handleSubmit }) => {
-            return (
-              <form onSubmit={handleSubmit}>
-                <input
-                  name="name"
-                  type="text"
-                  onChange={handleChange}
-                  value={values.name}
-                />
+          {({ values, handleChange, handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <input
+                name="name"
+                type="text"
+                onChange={handleChange}
+                value={values.name}
+              />
 
-                <button type="submit">Add Guitar</button>
-              </form>
-            );
-          }}
+              <button type="submit">Add Guitar</button>
+            </form>
+          )}
         </Formik>
       </div>
       <ul>
         {guitars.map(guitar => (
           <List
+            // eslint-disable-next-line no-underscore-dangle
             key={guitar._id}
+            // eslint-disable-next-line no-underscore-dangle
             id={guitar._id}
             guitar={guitar}
             setUpdateUI={setUpdateUI}

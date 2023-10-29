@@ -1,16 +1,19 @@
 import React from "react";
 
+import { Button } from "@material-ui/core";
 import axios from "axios";
 import PropTypes from "prop-types";
-import { BiEditAlt } from "react-icons/bi";
-import { BsTrash } from "react-icons/bs";
 import { baseURL } from "../utils/constants";
 
+/**
+ * @function List
+ * @returns {React.Component}
+ */
 const List = props => {
   const { id, setUpdateUI, guitar, updateMode } = props;
 
   const removeGuitar = () => {
-    axios.delete(`${baseURL}/delete/${id}`).then(response => {
+    axios.delete(`${baseURL}/delete/${id}`).then(() => {
       setUpdateUI(previousState => !previousState);
     });
   };
@@ -19,8 +22,12 @@ const List = props => {
     <li>
       {guitar.name}
       <div className="icon_holder">
-        <BiEditAlt className="icon" onClick={() => updateMode(id, guitar.name)} />
-        <BsTrash className="icon" onClick={removeGuitar} />
+        <Button onClick={() => updateMode(id, guitar.name)}>
+          <i className="fa-solid fa-pen-to-square" />
+        </Button>
+        <Button onClick={removeGuitar}>
+          <i className="fa-solid fa-trash" />
+        </Button>
       </div>
     </li>
   );
