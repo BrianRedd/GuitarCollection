@@ -7,28 +7,28 @@ import { baseURL } from "./utils/constants";
 
 const App = () => {
   const [input, setInput] = useState("");
-  const [tasks, setTasks] = useState([]);
+  const [guitars, setGuitars] = useState([]);
   const [udpateUI, setUpdateUI] = useState(false);
   const [updateId, setUpdateId] = useState(null);
 
   useEffect(() => {
     axios.get(`${baseURL}/get`).then(response => {
       console.log(response.data);
-      setTasks(response.data);
+      setGuitars(response.data);
     });
   }, [udpateUI]);
 
-  const addTask = () => {
-    axios.post(`${baseURL}/save`, { task: input }).then(response => {
+  const addGuitar = () => {
+    axios.post(`${baseURL}/save`, { name: input }).then(response => {
       console.log(response.data);
       setInput("");
       setUpdateUI(previousState => !previousState);
     });
   };
 
-  const updateTask = () => {
+  const updateGuitar = () => {
     axios
-      .put(`${baseURL}/update/${updateId}`, { task: input })
+      .put(`${baseURL}/update/${updateId}`, { name: input })
       .then(response => {
         console.log(response.data);
         setInput("");
@@ -45,23 +45,27 @@ const App = () => {
 
   return (
     <main>
-      <h1 className="title">CRUD Operations</h1>
+      <h1 className="title">Brian's Guitar Collection</h1>
       <div className="input_holder">
         <input
           type="text"
           value={input}
-          onChange={evt => setInput(evt.target.value)}
+          onChange={evt => {
+            const value = evt.target.value;
+            console.log("value", value);
+            setInput(value);
+          }}
         />
-        <button type="submit" onClick={updateId ? updateTask : addTask}>
-          {updateId ? "Update Task" : "Add Task"}
+        <button type="submit" onClick={updateId ? updateGuitar : addGuitar}>
+          {updateId ? "Update Guitar" : "Add Guitar"}
         </button>
       </div>
       <ul>
-        {tasks.map(task => (
+        {guitars.map(guitar => (
           <List
-            key={task._id}
-            id={task._id}
-            task={task.task}
+            key={guitar._id}
+            id={guitar._id}
+            guitar={guitar}
             setUpdateUI={setUpdateUI}
             updateMode={updateMode}
           />

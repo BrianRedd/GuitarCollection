@@ -7,9 +7,9 @@ import { BsTrash } from "react-icons/bs";
 import { baseURL } from "../utils/constants";
 
 const List = props => {
-  const { id, setUpdateUI, task, updateMode } = props;
+  const { id, setUpdateUI, guitar, updateMode } = props;
 
-  const removeTask = () => {
+  const removeGuitar = () => {
     axios.delete(`${baseURL}/delete/${id}`).then(response => {
       console.log(response);
       setUpdateUI(previousState => !previousState);
@@ -18,10 +18,10 @@ const List = props => {
 
   return (
     <li>
-      {task}
+      {guitar.name}
       <div className="icon_holder">
-        <BiEditAlt className="icon" onClick={() => updateMode(id, task)} />
-        <BsTrash className="icon" onClick={removeTask} />
+        <BiEditAlt className="icon" onClick={() => updateMode(id, guitar.name)} />
+        <BsTrash className="icon" onClick={removeGuitar} />
       </div>
     </li>
   );
@@ -30,14 +30,14 @@ const List = props => {
 List.propTypes = {
   id: PropTypes.string,
   setUpdateUI: PropTypes.func,
-  task: PropTypes.string,
+  guitar: PropTypes.objectOf(PropTypes.any),
   updateMode: PropTypes.func
 };
 
 List.defaultProps = {
   id: "",
   setUpdateUI: () => {},
-  task: "",
+  guitar: {},
   updateMode: () => {}
 };
 
