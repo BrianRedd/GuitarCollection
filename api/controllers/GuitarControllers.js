@@ -2,17 +2,15 @@ const GuitarModel = require("../models/GuitarModel");
 
 module.exports.getGuitars = async (request, response) => {
   const guitars = await GuitarModel.find();
-  console.log("guitars", guitars);
   response.send(guitars);
 };
 
 module.exports.saveGuitar = (request, response) => {
   const { name } = request.body;
-  console.log("name", name);
 
   GuitarModel.create({ name })
     .then(data => {
-      console.log("Saved Successfully...");
+      console.log("Saved Successfully");
       response.status(201).send(data);
     })
     .catch(error => {
@@ -27,7 +25,7 @@ module.exports.updateGuitar = (request, response) => {
 
   GuitarModel.findByIdAndUpdate(id, { name })
     .then(() => {
-      response.send("Updated successfully");
+      response.send("Updated Successfully");
     })
     .catch(error => {
       console.error(error);
@@ -40,7 +38,7 @@ module.exports.deleteGuitar = (request, response) => {
 
   GuitarModel.findByIdAndDelete(id)
     .then(() => {
-      response.send("Deleted successfully");
+      response.send("Deleted Successfully");
     })
     .catch(error => {
       console.error(error);

@@ -11,7 +11,6 @@ const List = props => {
 
   const removeGuitar = () => {
     axios.delete(`${baseURL}/delete/${id}`).then(response => {
-      console.log(response);
       setUpdateUI(previousState => !previousState);
     });
   };
