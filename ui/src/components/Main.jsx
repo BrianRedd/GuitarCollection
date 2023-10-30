@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import { Button } from "@material-ui/core";
-import axios from "axios";
 import { Formik } from "formik";
+import { useDispatch, useSelector } from "react-redux";
 
-import { getGuitars } from "../utils/apiFunctions";
-import { baseURL } from "../utils/constants";
+import { addGuitar, getGuitars } from "../utils/apiFunctions";
 
 import List from "./List";
 
@@ -14,34 +13,12 @@ import List from "./List";
  * @returns {React.Component}
  */
 const Main = () => {
-  const [input, setInput] = useState("");
-  const [guitars, setGuitars] = useState([]);
-  const [udpateUI, setUpdateUI] = useState(false);
-  const [updateId, setUpdateId] = useState(null);
+  const dispatch = useDispatch();
+  const guitars = useSelector(state => state.guitarsState?.list) ?? [];
 
   useEffect(() => {
-    getGuitars().then(response => setGuitars(response));
-  }, [udpateUI]);
-
-  const addGuitar = inputObject => {
-    axios.post(`${baseURL}/save`, inputObject).then(() => {
-      setInput("");
-      setUpdateUI(previousState => !previousState);
-    });
-  };
-
-  const updateGuitar = () => {
-    axios.put(`${baseURL}/update/${updateId}`, { name: input }).then(() => {
-      setInput("");
-      setUpdateId(null);
-      setUpdateUI(previousState => !previousState);
-    });
-  };
-
-  const updateMode = (id, text) => {
-    setInput(text);
-    setUpdateId(id);
-  };
+    dispatch(getGuitars());
+  });
 
   return (
     <main>
@@ -52,8 +29,7 @@ const Main = () => {
             name: ""
           }}
           onSubmit={values => {
-            const apiFunction = updateId ? updateGuitar : addGuitar;
-            apiFunction(values);
+            dispatch(addGuitar(values));
           }}
         >
           {({ values, handleChange, handleSubmit }) => (
@@ -80,8 +56,6 @@ const Main = () => {
             // eslint-disable-next-line no-underscore-dangle
             id={guitar._id}
             guitar={guitar}
-            setUpdateUI={setUpdateUI}
-            updateMode={updateMode}
           />
         ))}
       </ul>

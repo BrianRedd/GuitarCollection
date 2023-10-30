@@ -1,31 +1,31 @@
 import React from "react";
 
 import { IconButton } from "@material-ui/core";
-import axios from "axios";
 import PropTypes from "prop-types";
-import { baseURL } from "../utils/constants";
+import { useDispatch } from "react-redux";
+
+import { removeGuitar } from "../utils/apiFunctions";
 
 /**
  * @function List
  * @returns {React.Component}
  */
 const List = props => {
-  const { id, setUpdateUI, guitar, updateMode } = props;
-
-  const removeGuitar = () => {
-    axios.delete(`${baseURL}/delete/${id}`).then(() => {
-      setUpdateUI(previousState => !previousState);
-    });
-  };
+  const { id, guitar } = props;
+  const dispatch = useDispatch();
 
   return (
     <li>
       {guitar.name}
       <div className="icon_holder">
-        <IconButton onClick={() => updateMode(id, guitar.name)}>
+        <IconButton
+          onClick={() => {
+            console.log("Edit guitar");
+          }}
+        >
           <span className="fas fa-edit" />
         </IconButton>
-        <IconButton onClick={removeGuitar}>
+        <IconButton onClick={() => dispatch(removeGuitar(id))}>
           <span className="fas fa-trash" />
         </IconButton>
       </div>
