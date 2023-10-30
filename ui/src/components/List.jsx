@@ -1,50 +1,78 @@
-import React from "react";
+import React, { useState } from "react";
 
+import {
+  faClose,
+  faEdit,
+  faSave,
+  faTrash
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "@material-ui/core";
+import { Field, Form, Formik } from "formik";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 
-import { removeGuitar } from "../utils/apiFunctions";
+import { removeGuitar, updateGuitar } from "../redux/Actions/GuitarActions";
 
 /**
  * @function List
  * @returns {React.Component}
  */
 const List = props => {
-  const { id, guitar } = props;
+  const { guitar } = props;
+
+  const [isEditing, setIsEditing] = useState(false);
+
   const dispatch = useDispatch();
 
   return (
     <li>
-      {guitar.name}
-      <div className="icon_holder">
-        <IconButton
-          onClick={() => {
-            console.log("Edit guitar");
+      {isEditing ? (
+        <Formik
+          initialValues={guitar}
+          onSubmit={values => {
+            return dispatch(updateGuitar(values)).then(() => {
+              setIsEditing(false);
+            });
           }}
         >
-          <span className="fas fa-edit" />
-        </IconButton>
-        <IconButton onClick={() => dispatch(removeGuitar(id))}>
-          <span className="fas fa-trash" />
-        </IconButton>
-      </div>
+          <Form>
+            <Field name="name" type="text" />
+            <IconButton type="submit">
+              <FontAwesomeIcon icon={faSave} />
+            </IconButton>
+            <IconButton onClick={() => setIsEditing(false)}>
+              <FontAwesomeIcon icon={faClose} />
+            </IconButton>
+          </Form>
+        </Formik>
+      ) : (
+        <React.Fragment>
+          <span>{guitar.name}</span>
+          <div className="icon_holder">
+            <IconButton
+              onClick={() => {
+                setIsEditing(true);
+              }}
+            >
+              <FontAwesomeIcon icon={faEdit} />
+            </IconButton>
+            <IconButton onClick={() => dispatch(removeGuitar(guitar._id))}>
+              <FontAwesomeIcon icon={faTrash} />
+            </IconButton>
+          </div>
+        </React.Fragment>
+      )}
     </li>
   );
 };
 
 List.propTypes = {
-  id: PropTypes.string,
-  setUpdateUI: PropTypes.func,
-  guitar: PropTypes.objectOf(PropTypes.any),
-  updateMode: PropTypes.func
+  guitar: PropTypes.objectOf(PropTypes.any)
 };
 
 List.defaultProps = {
-  id: "",
-  setUpdateUI: () => {},
-  guitar: {},
-  updateMode: () => {}
+  guitar: {}
 };
 
 export default List;

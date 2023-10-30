@@ -62,8 +62,9 @@ export const addGuitar = guitarObject => dispatch => {
  * @param {Object} guitarObject
  */
 export const updateGuitar = guitarObject => dispatch => {
+  console.log("guitarObject", guitarObject);
   return axios
-    .put(`${baseURL}/save/${guitarObject._id}`, guitarObject)
+    .put(`${baseURL}/update/${guitarObject._id}`, guitarObject)
     .then(response => response.data)
     .then(() => {
       dispatch(getGuitars());
@@ -80,7 +81,7 @@ export const updateGuitar = guitarObject => dispatch => {
  */
 export const removeGuitar = id => dispatch => {
   return axios
-    .delete(`${baseURL}/save/${id}`)
+    .delete(`${baseURL}/delete/${id}`)
     .then(response => response.data)
     .then(() => {
       dispatch(getGuitars());
