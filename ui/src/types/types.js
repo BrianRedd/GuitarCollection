@@ -10,10 +10,12 @@ import { shape, string } from "prop-types";
  */
 export const guitar = {
   types: shape({
-    _id: string
+    name: string,
+    make: string
   }),
   defaults: {
-    _id: ""
+    name: "",
+    make: ""
   }
 };
 

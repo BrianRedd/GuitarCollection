@@ -2,20 +2,23 @@
 /** @module App */
 
 import React from "react";
+
 import { Provider } from "react-redux";
-
-import "./styles/App.scss";
-
-import Main from "./components/Main";
 
 import store from "./redux/configureStore";
 
+import Main from "./components/Main";
+
+import "./styles/App.scss";
+
+/**
+ * @function App
+ * @returns {React.ReactNode}
+ */
 function App() {
   return (
     <Provider store={store}>
-      <div className="App" data-test="component-app">
-        <Main />
-      </div>
+      <Main />
     </Provider>
   );
 }

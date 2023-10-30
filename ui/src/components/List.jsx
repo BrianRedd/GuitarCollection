@@ -1,68 +1,37 @@
-import React, { useState } from "react";
+import React from "react";
 
-import {
-  faClose,
-  faEdit,
-  faSave,
-  faTrash
-} from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "@material-ui/core";
-import { Field, Form, Formik } from "formik";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
-import { removeGuitar, updateGuitar } from "../redux/Actions/GuitarActions";
+import { removeGuitar } from "../redux/Actions/GuitarActions";
 
 /**
  * @function List
- * @returns {React.Component}
+ * @returns {React.ReactNode}
  */
 const List = props => {
   const { guitar } = props;
-
-  const [isEditing, setIsEditing] = useState(false);
 
   const dispatch = useDispatch();
 
   return (
     <li>
-      {isEditing ? (
-        <Formik
-          initialValues={guitar}
-          onSubmit={values => {
-            return dispatch(updateGuitar(values)).then(() => {
-              setIsEditing(false);
-            });
-          }}
-        >
-          <Form>
-            <Field name="name" type="text" />
-            <IconButton type="submit">
-              <FontAwesomeIcon icon={faSave} />
-            </IconButton>
-            <IconButton onClick={() => setIsEditing(false)}>
-              <FontAwesomeIcon icon={faClose} />
-            </IconButton>
-          </Form>
-        </Formik>
-      ) : (
-        <React.Fragment>
-          <span>{guitar.name}</span>
-          <div className="icon_holder">
-            <IconButton
-              onClick={() => {
-                setIsEditing(true);
-              }}
-            >
-              <FontAwesomeIcon icon={faEdit} />
-            </IconButton>
-            <IconButton onClick={() => dispatch(removeGuitar(guitar._id))}>
-              <FontAwesomeIcon icon={faTrash} />
-            </IconButton>
-          </div>
-        </React.Fragment>
-      )}
+      <span className="cell-width">{guitar.name}</span>
+      <span className="cell-width">{guitar.make}</span>
+      <div className="icon_holder">
+        <IconButton>
+          <Link to={`/editguitar/${guitar._id}`}>
+            <FontAwesomeIcon icon={faEdit} />
+          </Link>
+        </IconButton>
+        <IconButton onClick={() => dispatch(removeGuitar(guitar._id))}>
+          <FontAwesomeIcon icon={faTrash} />
+        </IconButton>
+      </div>
     </li>
   );
 };

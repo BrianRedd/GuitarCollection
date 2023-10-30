@@ -6,9 +6,7 @@ module.exports.getGuitars = async (request, response) => {
 };
 
 module.exports.saveGuitar = (request, response) => {
-  const { name } = request.body;
-
-  GuitarModel.create({ name })
+  GuitarModel.create(request.body)
     .then(data => {
       console.log("Saved Successfully");
       response.status(201).send(data);
@@ -21,9 +19,8 @@ module.exports.saveGuitar = (request, response) => {
 
 module.exports.updateGuitar = (request, response) => {
   const { id } = request.params;
-  const { name } = request.body;
 
-  GuitarModel.findByIdAndUpdate(id, { name })
+  GuitarModel.findByIdAndUpdate(id, request.body)
     .then(() => {
       response.send("Updated Successfully");
     })

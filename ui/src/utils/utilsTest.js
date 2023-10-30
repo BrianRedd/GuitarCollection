@@ -57,7 +57,7 @@ export const localStorageMock = (() => {
 /**
  * @function commonSetup
  * @description wraps component in Enzyme mounted wrapper
- * @param {React.Component} Component - component being wrapped
+ * @param {React.ReactNode} Component - component being wrapped
  * @param {Object} props - component props
  * @param {Boolean} useMount - flag to determine if wrapper is mounted (true) or shallow (false)
  * @param {Object} store - mock store
