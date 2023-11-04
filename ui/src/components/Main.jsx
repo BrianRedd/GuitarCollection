@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 
+import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { useDispatch } from "react-redux";
-import { getGuitars } from "../redux/Actions/GuitarActions";
+import { getGuitars } from "../store/slices/guitarsSlice";
 
 import AddGuitar from "./AddGuitar";
 import EditGuitar from "./EditGuitar";

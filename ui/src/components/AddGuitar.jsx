@@ -1,8 +1,9 @@
 import React from "react";
 
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import { addGuitar } from "../redux/Actions/GuitarActions";
+import { addGuitar } from "../store/slices/guitarsSlice";
 import * as types from "../types/types";
 
 import GuitarForm from "./GuitarForm";
@@ -13,6 +14,8 @@ import GuitarForm from "./GuitarForm";
  */
 const AddGuitar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const initialValues = types.guitar.defaults;
 
   return (
@@ -21,6 +24,7 @@ const AddGuitar = () => {
       handleSubmit={(values, actions) => {
         dispatch(addGuitar(values)).then(() => {
           actions.resetForm(initialValues);
+          navigate("/");
         });
       }}
       buttonText="Add Guitar"

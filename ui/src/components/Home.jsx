@@ -11,9 +11,11 @@ import List from "./List";
 const Home = () => {
   const guitars = useSelector(state => state.guitarsState?.list) ?? [];
 
+  console.log("guitars", guitars);
+
   return (
     <ul>
-      {guitars.map(guitar => (
+      {(guitars ?? []).map(guitar => (
         <List
           // eslint-disable-next-line no-underscore-dangle
           key={guitar._id}

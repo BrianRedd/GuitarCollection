@@ -21,8 +21,9 @@ module.exports.updateGuitar = (request, response) => {
   const { id } = request.params;
 
   GuitarModel.findByIdAndUpdate(id, request.body)
-    .then(() => {
-      response.send("Updated Successfully");
+    .then(data => {
+      console.log("Updated Successfully");
+      response.status(201).send(data);
     })
     .catch(error => {
       console.error(error);
@@ -34,8 +35,9 @@ module.exports.deleteGuitar = (request, response) => {
   const { id } = request.params;
 
   GuitarModel.findByIdAndDelete(id)
-    .then(() => {
-      response.send("Deleted Successfully");
+    .then(data => {
+      console.log("Deleted Successfully");
+      response.status(201).send(data);
     })
     .catch(error => {
       console.error(error);

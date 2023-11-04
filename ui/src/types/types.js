@@ -1,6 +1,6 @@
 /** @module types */
 
-import { shape, string } from "prop-types";
+import { arrayOf, shape, string } from "prop-types";
 
 /*
  GUITARS TYPES
@@ -25,7 +25,7 @@ export const guitar = {
  */
 export const guitarsState = {
   types: shape({
-    list: guitar.types
+    list: arrayOf(guitar.types)
   }),
   defaults: {
     list: []

@@ -1,13 +1,17 @@
 import React from "react";
 
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faTrash,
+  faWandSparkles
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "@material-ui/core";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { removeGuitar } from "../redux/Actions/GuitarActions";
+import { removeGuitar } from "../store/slices/guitarsSlice";
 
 /**
  * @function List
@@ -20,7 +24,14 @@ const List = props => {
 
   return (
     <li>
-      <span className="cell-width">{guitar.name}</span>
+      <span className="cell-width">
+        {guitar.name}
+        {guitar.isNew ? (
+          <FontAwesomeIcon icon={faWandSparkles} className="ms-2" />
+        ) : (
+          ""
+        )}
+      </span>
       <span className="cell-width">{guitar.make}</span>
       <div className="icon_holder">
         <IconButton>

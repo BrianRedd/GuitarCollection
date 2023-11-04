@@ -1,11 +1,10 @@
 import React from "react";
 
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
-import { updateGuitar } from "../redux/Actions/GuitarActions";
+import { updateGuitar } from "../store/slices/guitarsSlice";
 
-import { useSelector } from "react-redux";
 import GuitarForm from "./GuitarForm";
 
 /**
@@ -14,6 +13,7 @@ import GuitarForm from "./GuitarForm";
  */
 const EditGuitar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id: matchId } = useParams();
 
   const guitars = useSelector(state => state.guitarsState?.list) ?? [];
@@ -30,6 +30,7 @@ const EditGuitar = () => {
           handleSubmit={(values, actions) => {
             dispatch(updateGuitar(values)).then(() => {
               actions.resetForm(initialValues);
+              navigate("/");
             });
           }}
           buttonText="Update Guitar"
