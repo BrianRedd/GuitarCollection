@@ -16,7 +16,6 @@ const initialState = {
  */
 export const getGuitars = createAsyncThunk("guitars/getGuitars", () => {
   return axios.get(`${baseURL}/get`).then(response => {
-    console.log("response", response);
     return response.data;
   });
 });
@@ -28,7 +27,6 @@ export const getGuitars = createAsyncThunk("guitars/getGuitars", () => {
  */
 export const addGuitar = createAsyncThunk("guitars/addGuitar", guitarObject => {
   return axios.post(`${baseURL}/save`, guitarObject).then(response => {
-    console.log("response", response);
     return response.data;
   });
 });
@@ -41,11 +39,11 @@ export const addGuitar = createAsyncThunk("guitars/addGuitar", guitarObject => {
 export const updateGuitar = createAsyncThunk(
   "guitars/updateGuitar",
   guitarObject => {
+    console.log("guitarObject", guitarObject);
     return axios
       .put(`${baseURL}/update/${guitarObject._id}`, guitarObject)
       .then(response => {
-        console.log("response", response);
-        return response.data;
+        return { ...response.data, ...guitarObject };
       });
   }
 );
@@ -55,17 +53,11 @@ export const updateGuitar = createAsyncThunk(
  * @description Makes API call remove existing guitar from DB
  * @param {string} id
  */
-export const removeGuitar = createAsyncThunk(
-  "guitars/removeGuitar",
-  id => {
-    return axios
-      .delete(`${baseURL}/delete/${id}`)
-      .then(response => {
-        console.log("response", response);
-        return response.data;
-      });
-  }
-);
+export const removeGuitar = createAsyncThunk("guitars/removeGuitar", id => {
+  return axios.delete(`${baseURL}/delete/${id}`).then(response => {
+    return response.data;
+  });
+});
 
 const guitarsSlice = createSlice({
   name: "guitarsState",
@@ -101,7 +93,6 @@ const guitarsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(addGuitar.fulfilled, (state, action) => {
-      console.log("action.payload", action.payload);
       state.loading = false;
       state.list = [{ ...action.payload, isNew: true }, ...state.list];
       state.message = {
@@ -121,7 +112,6 @@ const guitarsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateGuitar.fulfilled, (state, action) => {
-      console.log("action.payload", action.payload);
       const list = state.list;
       const idx = list.map(item => item._id).indexOf(action.payload._id);
       list[idx] = action.payload;
@@ -144,7 +134,6 @@ const guitarsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(removeGuitar.fulfilled, (state, action) => {
-      console.log("action.payload", action.payload);
       const list = state.list;
       const idx = list.map(item => item._id).indexOf(action.payload._id);
       list.splice(idx, 1);
@@ -164,8 +153,6 @@ const guitarsSlice = createSlice({
     });
   }
 });
-
-console.log(guitarsSlice);
 
 export const { clearMessage } = guitarsSlice.actions;
 

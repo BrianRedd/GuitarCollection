@@ -9,7 +9,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Box,
   IconButton,
-  Paper,
   Table,
   TableBody,
   TableCell,
@@ -78,91 +77,89 @@ const Home = () => {
   const emptyRows =
     page > 0 ? Math.max(0, (page + 1) * rowsPerPage) - guitars.length : 0;
 
-  console.log("page", page);
-  console.log("rowsPerPage", rowsPerPage);
-  console.log("emptyRows", emptyRows);
-
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        <TableContainer>
-          <Table aria-labelledby="tableTitle" size="small">
-            <TableHead>
-              <TableRow>
-                {headCells.map(headCell => (
-                  <TableCell
-                    className={
-                      headCell.id === "iconHolder" ? "icon_holder" : ""
-                    }
-                    key={headCell.id}
-                    sortDirection={orderBy === headCell.id ? order : false}
-                  >
-                    {headCell.id === "iconHolder" ? (
-                      <span>{headCell.label}</span>
-                    ) : (
-                      <TableSortLabel
-                        active={orderBy === headCell.id}
-                        direction={orderBy === headCell.id ? order : "asc"}
-                        onClick={() => {
-                          setOrderBy(headCell.id);
-                          setOrder(order === "asc" ? "desc" : "asc");
-                        }}
-                      >
-                        {headCell.label}
-                      </TableSortLabel>
-                    )}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {gridData.map(row => (
-                <TableRow key={row._id}>
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                    {row.isNew ? (
-                      <FontAwesomeIcon icon={faWandSparkles} className="ms-2" />
-                    ) : (
-                      ""
-                    )}
-                  </TableCell>
-                  <TableCell>{row.make}</TableCell>
-                  <TableCell>{row.model}</TableCell>
-                  <TableCell>{row.year}</TableCell>
-                  <TableCell className="icon_holder">
-                    <IconButton>
-                      <Link to={`/editguitar/${row._id}`}>
-                        <FontAwesomeIcon icon={faEdit} className="text-success small"/>
-                      </Link>
-                    </IconButton>
-                    <IconButton onClick={() => dispatch(removeGuitar(row._id))}>
-                      <FontAwesomeIcon icon={faTrash} className="text-danger small" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 71 * emptyRows
-                  }}
+      <TableContainer>
+        <Table aria-labelledby="tableTitle" size="small">
+          <TableHead>
+            <TableRow>
+              {headCells.map(headCell => (
+                <TableCell
+                  className={headCell.id === "iconHolder" ? "icon_holder" : ""}
+                  key={headCell.id}
+                  sortDirection={orderBy === headCell.id ? order : false}
                 >
-                  <TableCell colSpan={headCells.length} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={guitars.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
+                  {headCell.id === "iconHolder" ? (
+                    <span>{headCell.label}</span>
+                  ) : (
+                    <TableSortLabel
+                      active={orderBy === headCell.id}
+                      direction={orderBy === headCell.id ? order : "asc"}
+                      onClick={() => {
+                        setOrderBy(headCell.id);
+                        setOrder(order === "asc" ? "desc" : "asc");
+                      }}
+                    >
+                      {headCell.label}
+                    </TableSortLabel>
+                  )}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {gridData.map(row => (
+              <TableRow key={row._id}>
+                <TableCell component="th" scope="row">
+                  {row.name}
+                  {row.isNew ? (
+                    <FontAwesomeIcon icon={faWandSparkles} className="ms-2" />
+                  ) : (
+                    ""
+                  )}
+                </TableCell>
+                <TableCell>{row.make}</TableCell>
+                <TableCell>{row.model}</TableCell>
+                <TableCell>{row.year}</TableCell>
+                <TableCell className="icon_holder">
+                  <IconButton>
+                    <Link to={`/editguitar/${row._id}`}>
+                      <FontAwesomeIcon
+                        icon={faEdit}
+                        className="text-success small"
+                      />
+                    </Link>
+                  </IconButton>
+                  <IconButton onClick={() => dispatch(removeGuitar(row._id))}>
+                    <FontAwesomeIcon
+                      icon={faTrash}
+                      className="text-danger small"
+                    />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+            {emptyRows > 0 && (
+              <TableRow
+                style={{
+                  height: 71 * emptyRows
+                }}
+              >
+                <TableCell colSpan={headCells.length} />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={guitars.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </Box>
   );
 };

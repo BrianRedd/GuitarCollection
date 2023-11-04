@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { updateGuitar } from "../../store/slices/guitarsSlice";
+import * as types from "../../types/types";
 
 import GuitarForm from "./GuitarForm";
 
@@ -18,9 +19,10 @@ const EditGuitar = () => {
 
   const guitars = useSelector(state => state.guitarsState?.list) ?? [];
 
-  const initialValues = guitars.find(
-    guitar => guitar._id === matchId || guitar.name === matchId
-  );
+  const initialValues = {
+    ...types.guitar.defaults,
+    ...guitars.find(guitar => guitar._id === matchId || guitar.name === matchId)
+  };
 
   return (
     <React.Fragment>
@@ -28,6 +30,7 @@ const EditGuitar = () => {
         <GuitarForm
           initialValues={initialValues}
           handleSubmit={(values, actions) => {
+            console.log("values", values);
             dispatch(updateGuitar(values)).then(() => {
               actions.resetForm(initialValues);
               navigate("/");

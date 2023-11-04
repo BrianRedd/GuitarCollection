@@ -11,11 +11,17 @@ import { arrayOf, shape, string } from "prop-types";
 export const guitar = {
   types: shape({
     name: string,
-    make: string
+    make: string,
+    model: string,
+    year: string,
+    serialNo: string
   }),
   defaults: {
     name: "",
-    make: ""
+    make: "",
+    model: "",
+    year: "",
+    serialNo: ""
   }
 };
 
