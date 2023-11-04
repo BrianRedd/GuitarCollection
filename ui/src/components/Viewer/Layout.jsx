@@ -25,20 +25,21 @@ const Layout = () => {
   return (
     <React.Fragment>
       <NavBar />
-      {loading && (
-        <div className="d-flex w-100 justify-content-center">
-          <Spinner
-            color="success"
-            style={{
-              height: "3rem",
-              width: "3rem"
-            }}
-          >
-            Loading...
-          </Spinner>
-        </div>
-      )}
       <div className="app-body">
+        {loading && (
+          <div className="d-flex w-100 justify-content-center">
+            <Spinner
+              color="success"
+              style={{
+                marginTop: "100px",
+                height: "5rem",
+                width: "5rem"
+              }}
+            >
+              Loading...
+            </Spinner>
+          </div>
+        )}
         <Alert
           color={message?.type}
           isOpen={!_.isEmpty(message)}

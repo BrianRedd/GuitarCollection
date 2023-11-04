@@ -1,6 +1,6 @@
 /** @module types */
 
-import { arrayOf, shape, string } from "prop-types";
+import { arrayOf, bool, number, shape, string } from "prop-types";
 
 /*
  GUITARS TYPES
@@ -31,9 +31,28 @@ export const guitar = {
  */
 export const guitarsState = {
   types: shape({
-    list: arrayOf(guitar.types)
+    list: arrayOf(guitar.types),
+    loading: bool,
+    message: shape({
+      type: string,
+      text: string
+    }),
+    pagination: shape({
+      order: string,
+      orderBy: string,
+      page: number,
+      pageSize: number
+    })
   }),
   defaults: {
-    list: []
+    list: [],
+    loading: false,
+    message: {},
+    pagination: {
+      order: "asc",
+      orderBy: "name",
+      page: 0,
+      pageSize: 5
+    }
   }
 };

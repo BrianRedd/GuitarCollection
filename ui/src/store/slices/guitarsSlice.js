@@ -1,14 +1,12 @@
+/** @module guitarsSlice */
+
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+
+import * as types from "../../types/types";
 import { baseURL } from "../../utils/constants";
 
-const initialState = {
-  guitarsState: {
-    loading: false,
-    list: [],
-    message: {}
-  }
-};
+const initialState = types.guitarsState.defaults;
 
 /**
  * @function getGuitars
@@ -65,6 +63,12 @@ const guitarsSlice = createSlice({
   reducers: {
     clearMessage(state, action) {
       state.message = {};
+    },
+    updatePagination(state, action) {
+      state.pagination = {
+        ...state.pagination,
+        ...action.payload
+      };
     }
   },
   extraReducers: builder => {
@@ -154,6 +158,6 @@ const guitarsSlice = createSlice({
   }
 });
 
-export const { clearMessage } = guitarsSlice.actions;
+export const { clearMessage, updatePagination } = guitarsSlice.actions;
 
 export default guitarsSlice.reducer;

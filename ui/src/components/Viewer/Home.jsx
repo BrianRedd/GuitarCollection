@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import {
   faEdit,
@@ -22,7 +22,11 @@ import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { removeGuitar } from "../../store/slices/guitarsSlice";
+import {
+  removeGuitar,
+  updatePagination
+} from "../../store/slices/guitarsSlice";
+import * as types from "../../types/types";
 
 /**
  * @function Home
@@ -30,12 +34,10 @@ import { removeGuitar } from "../../store/slices/guitarsSlice";
  */
 const Home = () => {
   const dispatch = useDispatch();
-  const guitars = useSelector(state => state.guitarsState?.list) ?? [];
+  const { list: guitars = [], pagination = types.guitarsState.defaults } =
+    useSelector(state => state.guitarsState) ?? {};
 
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("name");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const { orderBy, order, page = 0, pageSize = 5 } = pagination;
 
   const headCells = [
     {
@@ -61,21 +63,29 @@ const Home = () => {
   ];
 
   const gridData = _.orderBy(guitars ?? [], orderBy, order).slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    page * pageSize,
+    page * pageSize + pageSize
   );
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+    dispatch(
+      updatePagination({
+        page: newPage
+      })
+    );
   };
 
   const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    dispatch(
+      updatePagination({
+        pageSize: parseInt(event.target.value, 10),
+        page: 0
+      })
+    );
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (page + 1) * rowsPerPage) - guitars.length : 0;
+    page > 0 ? Math.max(0, (page + 1) * pageSize) - guitars.length : 0;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -96,8 +106,12 @@ const Home = () => {
                       active={orderBy === headCell.id}
                       direction={orderBy === headCell.id ? order : "asc"}
                       onClick={() => {
-                        setOrderBy(headCell.id);
-                        setOrder(order === "asc" ? "desc" : "asc");
+                        dispatch(
+                          updatePagination({
+                            orderBy: headCell.id,
+                            order: order === "asc" ? "desc" : "asc"
+                          })
+                        );
                       }}
                     >
                       {headCell.label}
@@ -155,7 +169,7 @@ const Home = () => {
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={guitars.length}
-        rowsPerPage={rowsPerPage}
+        rowsPerPage={pageSize}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
