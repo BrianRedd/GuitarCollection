@@ -1,29 +1,40 @@
 .App {
-  padding: 0 20px 20px 20px;
+  .app-body {
+    margin-top: 66px;
+  }
 
-  .navbar {
-    padding-top: 0px;
+  a {
+    text-decoration: none;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .nav-item {
+    padding: 0 10px 0 10px;
+    a {
+      color: white;
+    }
   }
 
   ul {
     list-style: none;
-    padding-left: 0px;
   }
 
   li {
-    background-color: rgb(216, 216, 216);
-    padding: 15px;
-    margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
-  .icon_holder {
-    display: flex;
+  thead {
+    background-color: cadetblue;
+    * {
+      font-weight: bold;
+    }
   }
 
-  .cell-width {
-    width: 200px;
+  .icon_holder {
+    width: 125px;
   }
 }

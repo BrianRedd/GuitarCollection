@@ -5,10 +5,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { getGuitars } from "../store/slices/guitarsSlice";
 
-import AddGuitar from "./AddGuitar";
-import EditGuitar from "./EditGuitar";
-import Home from "./Home";
-import Layout from "./Layout";
+import AddGuitar from "./Editors/AddGuitar";
+import EditGuitar from "./Editors/EditGuitar";
+import Home from "./Viewer/Home";
+import Layout from "./Viewer/Layout";
 
 /**
  * @function Main
