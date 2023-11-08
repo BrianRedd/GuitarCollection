@@ -27,6 +27,7 @@ import {
   updatePagination
 } from "../../store/slices/guitarsSlice";
 import * as types from "../../types/types";
+import { DEFAULT_PAGE_SIZE } from "../data/constants";
 
 /**
  * @function Home
@@ -37,7 +38,7 @@ const Home = () => {
   const { list: guitars = [], pagination = types.guitarsState.defaults } =
     useSelector(state => state.guitarsState) ?? {};
 
-  const { orderBy, order, page = 0, pageSize = 5 } = pagination;
+  const { orderBy, order, page = 0, pageSize = DEFAULT_PAGE_SIZE } = pagination;
 
   const headCells = [
     {

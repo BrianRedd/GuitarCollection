@@ -31,7 +31,14 @@ const EditGuitar = () => {
           initialValues={initialValues}
           handleSubmit={(values, actions) => {
             console.log("values", values);
-            dispatch(updateGuitar(values)).then(() => {
+            const submissionValues = {
+              ...values,
+              make: values.make !== "Other" ? values.make : values.makeOther,
+              makeOther: null,
+              countyOfOrigin: values.countyOfOrigin !== "Other" ? values.countyOfOrigin : values.countyOfOriginOther,
+              countyOfOriginOther: null
+            };
+            dispatch(updateGuitar(submissionValues)).then(() => {
               actions.resetForm(initialValues);
               navigate("/");
             });

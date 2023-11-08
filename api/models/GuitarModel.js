@@ -9,6 +9,12 @@ const guitarSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  makeParent: {
+    type: String
+  },
+  makerLogo: {
+    type: String
+  },
   model: {
     type: String,
     required: true
@@ -20,6 +26,36 @@ const guitarSchema = new mongoose.Schema({
   serialNo: {
     type: String,
     required: true
+  },
+  countyOfOrigin: {
+    type: String,
+    required: true
+  },
+  purchaseData: {
+    type: Object
+  },
+  story: {
+    type: String,
+    required: true
+  },
+  specs: {
+    type: Object
+  },
+  tuning: {
+    type: String
+  },
+  status: {
+    type: String,
+    required: true
+  },
+  lastPlayed: {
+    type: String
+  },
+  pictures: {
+    type: Array
+  },
+  maintenance: {
+    type: Array
   }
 });
 

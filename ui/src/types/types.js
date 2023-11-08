@@ -1,6 +1,11 @@
 /** @module types */
 
 import { arrayOf, bool, number, shape, string } from "prop-types";
+import {
+  DEFAULT_ORDER_BY,
+  DEFAULT_PAGE_SIZE,
+  OWNERSHIP_STATUS_OPTIONS
+} from "../components/data/constants";
 
 /*
  GUITARS TYPES
@@ -12,16 +17,80 @@ export const guitar = {
   types: shape({
     name: string,
     make: string,
+    makeOther: string,
+    makeParent: string,
+    makerLogo: string,
     model: string,
     year: string,
-    serialNo: string
+    serialNo: string,
+    countyOfOrigin: string,
+    purchaseData: shape({
+      ownershipStatus: string,
+      where: string,
+      when: string,
+      who: string,
+      amount: string,
+      case: string
+    }),
+    story: string,
+    specs: shape({
+      instrumentType: string,
+      noOfStrings: number,
+      soundScape: string,
+      color: string,
+      material: shape({
+        body: string,
+        neck: string
+      }),
+      holeConfiguration: string,
+      otherDetails: shape({
+        detail: string
+      })
+    }),
+    tuning: string,
+    status: string,
+    lastPlayed: string,
+    pictures: arrayOf(
+      shape({
+        title: string,
+        fileName: string
+      })
+    ),
+    maintenance: arrayOf(
+      shape({
+        type: string,
+        date: string,
+        whoBy: string,
+        cost: string,
+        notes: string
+      })
+    )
   }),
   defaults: {
     name: "",
     make: "",
+    makeOther: "",
+    makeParent: "",
+    makerLogo: "",
     model: "",
     year: "",
-    serialNo: ""
+    serialNo: "",
+    countyOfOrigin: "",
+    purchaseData: {
+      ownershipStatus: OWNERSHIP_STATUS_OPTIONS[0],
+      where: "",
+      when: "",
+      who: "",
+      amount: "",
+      case: ""
+    },
+    story: "",
+    specs: {},
+    tuning: "",
+    status: "",
+    lastPlayed: "",
+    pictures: [],
+    maintenance: []
   }
 };
 
@@ -50,9 +119,9 @@ export const guitarsState = {
     message: {},
     pagination: {
       order: "asc",
-      orderBy: "name",
+      orderBy: DEFAULT_ORDER_BY,
       page: 0,
-      pageSize: 5
+      pageSize: DEFAULT_PAGE_SIZE
     }
   }
 };
