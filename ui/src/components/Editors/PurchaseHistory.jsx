@@ -34,7 +34,7 @@ function EditToolbar(props) {
         where: "",
         when: "",
         who: "",
-        amount: 0,
+        amount: null,
         notes: "",
         isNew: true
       }
@@ -134,7 +134,7 @@ const PurchaseHistory = props => {
     },
     {
       field: "who",
-      headerName: "Party",
+      headerName: "Store / Party",
       flex: 1,
       editable: true
     },
@@ -210,7 +210,7 @@ const PurchaseHistory = props => {
   return (
     <Box
       sx={{
-        height: 268,
+        height: 214,
         width: "100%",
         "& .actions": {
           color: "text.secondary"

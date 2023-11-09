@@ -24,46 +24,115 @@ const purchaseHistorySchema = new mongoose.Schema({
   }
 });
 
+const specificationSchema = new mongoose.Schema({
+  id: {
+    type: String
+  },
+  specType: {
+    type: String
+  },
+  specification: {
+    type: String
+  },
+  notes: {
+    type: String
+  }
+});
+
+const maintenanceSchema = new mongoose.Schema({
+  id: {
+    type: String
+  },
+  type: {
+    type: String
+  },
+  date: {
+    type: String
+  },
+  whoBy: {
+    type: String
+  },
+  cost: {
+    type: Number
+  },
+  notes: {
+    type: String
+  }
+});
+
+const picturesSchema = new mongoose.Schema({
+  id: {
+    type: String
+  },
+  title: {
+    type: String
+  },
+  fileName: {
+    type: String
+  }
+});
+
+const todoListSchema = new mongoose.Schema({
+  id: {
+    type: String
+  },
+  todoItem: {
+    type: String
+  }
+});
+
 const guitarSchema = new mongoose.Schema({
   name: {
-    type: String,
+    type: String
     // required: true
   },
   make: {
-    type: String,
+    type: String
     // required: true
   },
   makeParent: {
     type: String
   },
-  makerLogo: {
+  makeLogo: {
     type: String
   },
   model: {
-    type: String,
+    type: String
     // required: true
   },
   year: {
-    type: String,
+    type: String
     // required: true
   },
   serialNo: {
-    type: String,
+    type: String
     // required: true
   },
   countyOfOrigin: {
-    type: String,
+    type: String
     // required: true
   },
   purchaseHistory: [purchaseHistorySchema],
   case: {
     type: String
   },
+  instrumentType: {
+    type: String
+  },
+  noOfStrings: {
+    type: String
+  },
+  soundScape: {
+    type: String
+  },
+  color: {
+    type: String
+  },
   story: {
     type: String
     // required: true
   },
-  specs: {},
+  specs: [specificationSchema],
   tuning: {
     type: String
   },
@@ -74,35 +143,14 @@ const guitarSchema = new mongoose.Schema({
   lastPlayed: {
     type: String
   },
-  pictures: [
-    {
-      title: {
-        type: String
-      },
-      fileName: {
-        type: String
-      }
-    }
-  ],
-  maintenance: [
-    {
-      type: {
-        type: String
-      },
-      date: {
-        type: String
-      },
-      whoBy: {
-        type: String
-      },
-      cost: {
-        type: String
-      },
-      notes: {
-        type: String
-      }
-    }
-  ]
+  pictures: [picturesSchema],
+  maintenance: [maintenanceSchema],
+  todoList: [todoListSchema],
+  lastUpdated: {
+    type: Date,
+    required: true,
+    default: Date.now
+  }
 });
 
 module.exports = mongoose.model("Guitar", guitarSchema);
