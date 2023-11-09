@@ -37,4 +37,13 @@
   .icon_holder {
     width: 125px;
   }
+
+  .custom-pagination {
+    display: flex;
+    justify-content: end;
+    .MuiTablePagination-toolbar {
+      display: flex;
+      align-items: baseline;
+    }
+  }
 }

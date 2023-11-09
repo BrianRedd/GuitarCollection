@@ -2,14 +2,21 @@
 
 import React from "react";
 
-import { InputAdornment, MenuItem, TextField } from "@material-ui/core";
+import { InputAdornment, MenuItem, TextField } from "@mui/material";
 import { useFormikContext } from "formik";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { Col } from "reactstrap";
 
 export const InputTextField = props => {
-  const { label: labelFromProps, hidden, name, onChange, prefix, width } = props;
+  const {
+    label: labelFromProps,
+    hidden,
+    name,
+    onChange,
+    prefix,
+    width
+  } = props;
 
   const formProps = useFormikContext();
 
@@ -24,11 +31,11 @@ export const InputTextField = props => {
       <TextField
         {...props}
         error={
-          Boolean(formProps?.touched?.[name]) &&
-          Boolean(formProps?.errors?.[name])
+          Boolean(_.get(formProps.touched, name)) &&
+          Boolean(_.get(formProps.errors, name))
         }
         fullWidth
-        helperText={formProps?.errors?.[name]}
+        helperText={_.get(formProps.errors, name)}
         label={label}
         name={name}
         onBlur={formProps.handleBlur}
@@ -46,7 +53,7 @@ export const InputTextField = props => {
               }
             : undefined
         }
-        value={formProps?.values?.[name]}
+        value={_.get(formProps.values, name)}
       />
     </Col>
   );
@@ -93,11 +100,11 @@ export const InputSelectField = props => {
       <TextField
         {...props}
         error={
-          Boolean(formProps?.touched?.[name]) &&
-          Boolean(formProps?.errors?.[name])
+          Boolean(_.get(formProps.touched, name)) &&
+          Boolean(_.get(formProps.errors, name))
         }
         fullWidth
-        helperText={formProps?.errors?.[name]}
+        helperText={_.get(formProps.errors, name)}
         label={label}
         name={name}
         onBlur={formProps.handleBlur}
@@ -107,7 +114,7 @@ export const InputSelectField = props => {
         }}
         select
         size="small"
-        value={formProps?.values?.[name]}
+        value={_.get(formProps.values, name)}
       >
         {options.map(option => (
           <MenuItem key={option} value={option}>

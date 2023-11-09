@@ -1,16 +1,19 @@
 import React from "react";
 
-import { faCircleXmark, faGuitar } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleXmark,
+  faGuitar
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import { Formik } from "formik";
 import _ from "lodash";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Col, Form, FormGroup, Row } from "reactstrap";
 
-import { useSelector } from "react-redux";
-import { OWNERSHIP_STATUS_OPTIONS } from "../data/constants";
 import { InputSelectField, InputTextField } from "./InputFields";
+import PurchaseHistory from "./PurchaseHistory";
 import { guitarsValidationSchema } from "./data/validationSchemas";
 
 /**
@@ -31,8 +34,6 @@ const GuitarForm = props => {
     _.compact(guitars.map(guitar => guitar.countyOfOrigin))
   ).sort();
 
-  console.log("makeOptions", makeOptions, "countryOptions", countryOptions);
-
   return (
     <Formik
       initialValues={initialValues}
@@ -40,23 +41,10 @@ const GuitarForm = props => {
       validationSchema={guitarsValidationSchema}
     >
       {formProps => {
-        const getAcquisitionLabel = () => {
-          switch (formProps?.values?.purchaseData?.ownershipStatus) {
-            case "Sold":
-            case "Gifted":
-              return `${formProps?.values?.purchaseData?.ownershipStatus} To`;
-            default:
-              return "Acquired";
-          }
-        };
-        const getAmountLabel = () => {
-          switch (formProps?.values?.purchaseData?.ownershipStatus) {
-            case "Sold":
-              return "Sold For";
-            default:
-              return "Amount Paid";
-          }
-        };
+        const writePurchaseHistory = rows => {
+          console.log("rows", rows);
+          formProps.setFieldValue("purchaseHistory", rows);
+        }
         return (
           <Form className="p-5">
             <FormGroup>
@@ -69,7 +57,7 @@ const GuitarForm = props => {
                     formProps.setFieldValue("makeParent", evt?.target?.value);
                   }}
                   options={[...makeOptions, "Other"]}
-                  wide={formProps?.values?.make !== "Other" ? "wide" : ""}
+                  width={formProps?.values?.make !== "Other" ? "wide" : ""}
                 />
                 <InputTextField
                   label="Other Make"
@@ -80,11 +68,7 @@ const GuitarForm = props => {
                   }}
                   required={formProps?.values?.make === "Other"}
                 />
-                <InputTextField
-                  name="makeParent"
-                  label="Maker Parent"
-                  hidden={!formProps?.values?.make}
-                />
+                <InputTextField name="makeParent" label="Maker Parent" />
                 <InputTextField name="model" required />
                 <InputTextField name="year" required />
                 <InputTextField name="serialNo" label="S/N" required />
@@ -104,37 +88,7 @@ const GuitarForm = props => {
                   required={formProps?.values?.countyOfOrigin === "Other"}
                 />
               </Row>
-              <Row>
-                <InputSelectField
-                  name="purchaseData.ownershipStatus"
-                  label="Ownership Status"
-                  required
-                  options={OWNERSHIP_STATUS_OPTIONS}
-                  defaultValue={OWNERSHIP_STATUS_OPTIONS[0]}
-                />
-                <InputTextField
-                  name="purchaseData.where"
-                  label={`Where ${getAcquisitionLabel()}`}
-                  width="wide"
-                />
-                <InputTextField
-                  name="purchaseData.when"
-                  label={`When ${getAcquisitionLabel()}`}
-                />
-                <InputTextField
-                  name="purchaseData.who"
-                  label={`Who ${getAcquisitionLabel()}`}
-                />
-                <InputTextField
-                  name="purchaseData.amount"
-                  label={getAmountLabel()}
-                  type="number"
-                  prefix="$"
-                  hidden={
-                    formProps?.values?.purchaseData.ownershipStatus === "Gifted"
-                  }
-                />
-              </Row>
+              <PurchaseHistory writePurchaseHistory={writePurchaseHistory}/>
             </FormGroup>
             <Row className="pt-5">
               <Col xs={0} md={6} />
@@ -163,6 +117,7 @@ const GuitarForm = props => {
                 </Button>
               </Col>
             </Row>
+            {JSON.stringify(formProps?.values, null, 2)}
           </Form>
         );
       }}

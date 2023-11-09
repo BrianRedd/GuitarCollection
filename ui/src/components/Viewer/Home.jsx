@@ -17,7 +17,7 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel
-} from "@material-ui/core";
+} from "@mui/material";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -167,6 +167,7 @@ const Home = () => {
         </Table>
       </TableContainer>
       <TablePagination
+      className="custom-pagination"
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={guitars.length}

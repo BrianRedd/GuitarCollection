@@ -3,8 +3,7 @@
 import { arrayOf, bool, number, shape, string } from "prop-types";
 import {
   DEFAULT_ORDER_BY,
-  DEFAULT_PAGE_SIZE,
-  OWNERSHIP_STATUS_OPTIONS
+  DEFAULT_PAGE_SIZE
 } from "../components/data/constants";
 
 /*
@@ -24,14 +23,18 @@ export const guitar = {
     year: string,
     serialNo: string,
     countyOfOrigin: string,
-    purchaseData: shape({
-      ownershipStatus: string,
-      where: string,
-      when: string,
-      who: string,
-      amount: string,
-      case: string
-    }),
+    purchaseHistory: arrayOf(
+      shape({
+        id: string,
+        ownershipStatus: string,
+        where: string,
+        when: string,
+        who: string,
+        amount: string,
+        notes: string
+      })
+    ),
+    case: string,
     story: string,
     specs: shape({
       instrumentType: string,
@@ -76,15 +79,9 @@ export const guitar = {
     year: "",
     serialNo: "",
     countyOfOrigin: "",
-    purchaseData: {
-      ownershipStatus: OWNERSHIP_STATUS_OPTIONS[0],
-      where: "",
-      when: "",
-      who: "",
-      amount: "",
-      case: ""
-    },
+    purchaseHistory: [],
     story: "",
+    case: "",
     specs: {},
     tuning: "",
     status: "",

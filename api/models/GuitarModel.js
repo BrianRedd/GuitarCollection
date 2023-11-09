@@ -1,13 +1,37 @@
 const mongoose = require("mongoose");
 
+const purchaseHistorySchema = new mongoose.Schema({
+  id: {
+    type: String
+  },
+  ownershipStatus: {
+    type: String
+  },
+  where: {
+    type: String
+  },
+  when: {
+    type: String
+  },
+  who: {
+    type: String
+  },
+  amount: {
+    type: Number
+  },
+  notes: {
+    type: String
+  }
+});
+
 const guitarSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    // required: true
   },
   make: {
     type: String,
-    required: true
+    // required: true
   },
   makeParent: {
     type: String
@@ -17,46 +41,68 @@ const guitarSchema = new mongoose.Schema({
   },
   model: {
     type: String,
-    required: true
+    // required: true
   },
   year: {
     type: String,
-    required: true
+    // required: true
   },
   serialNo: {
     type: String,
-    required: true
+    // required: true
   },
   countyOfOrigin: {
     type: String,
-    required: true
+    // required: true
   },
-  purchaseData: {
-    type: Object
+  purchaseHistory: [purchaseHistorySchema],
+  case: {
+    type: String
   },
   story: {
-    type: String,
-    required: true
+    type: String
+    // required: true
   },
-  specs: {
-    type: Object
-  },
+  specs: {},
   tuning: {
     type: String
   },
   status: {
-    type: String,
-    required: true
+    type: String
+    // required: true
   },
   lastPlayed: {
     type: String
   },
-  pictures: {
-    type: Array
-  },
-  maintenance: {
-    type: Array
-  }
+  pictures: [
+    {
+      title: {
+        type: String
+      },
+      fileName: {
+        type: String
+      }
+    }
+  ],
+  maintenance: [
+    {
+      type: {
+        type: String
+      },
+      date: {
+        type: String
+      },
+      whoBy: {
+        type: String
+      },
+      cost: {
+        type: String
+      },
+      notes: {
+        type: String
+      }
+    }
+  ]
 });
 
 module.exports = mongoose.model("Guitar", guitarSchema);

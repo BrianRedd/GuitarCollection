@@ -22,6 +22,7 @@ const AddGuitar = () => {
     <GuitarForm
       initialValues={initialValues}
       handleSubmit={(values, actions) => {
+        console.log("values", values)
         const submissionValues = {
           ...values,
           make: values.make !== "Other" ? values.make : values.makeOther,
