@@ -60,7 +60,7 @@ const maintenanceSchema = new mongoose.Schema({
   }
 });
 
-const picturesSchema = new mongoose.Schema({
+const imageSchema = new mongoose.Schema({
   id: {
     type: String
   },
@@ -143,7 +143,7 @@ const guitarSchema = new mongoose.Schema({
   lastPlayed: {
     type: String
   },
-  pictures: [picturesSchema],
+  pictures: [imageSchema],
   maintenance: [maintenanceSchema],
   todoList: [todoListSchema],
   lastUpdated: {
