@@ -133,7 +133,17 @@ const Home = () => {
                     ""
                   )}
                 </TableCell>
-                <TableCell>{row.make}</TableCell>
+                <TableCell>
+                  {row.makeLogo ? (
+                    <img
+                      src={`http://localhost:5000/${row.makeLogo}`}
+                      height="45"
+                      alt={row.make}
+                    ></img>
+                  ) : (
+                    row.make
+                  )}
+                </TableCell>
                 <TableCell>{row.model}</TableCell>
                 <TableCell>{row.year}</TableCell>
                 <TableCell className="icon_holder">
@@ -167,7 +177,7 @@ const Home = () => {
         </Table>
       </TableContainer>
       <TablePagination
-      className="custom-pagination"
+        className="custom-pagination"
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={guitars.length}

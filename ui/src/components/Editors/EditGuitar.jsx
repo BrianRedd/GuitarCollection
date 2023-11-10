@@ -32,7 +32,8 @@ const EditGuitar = () => {
           handleSubmit={(values, actions) => {
             console.log("values", values);
             const submissionValues = {
-              ...values
+              ...values,
+              old_makeLogo: initialValues.makeLogo ?? undefined
             };
             dispatch(updateGuitar(submissionValues)).then(() => {
               actions.resetForm(initialValues);

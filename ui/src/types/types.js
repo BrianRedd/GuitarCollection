@@ -1,14 +1,6 @@
 /** @module types */
 
-import {
-  any,
-  arrayOf,
-  bool,
-  number,
-  objectOf,
-  shape,
-  string
-} from "prop-types";
+import { arrayOf, bool, number, shape, string } from "prop-types";
 import {
   DEFAULT_ORDER_BY,
   DEFAULT_PAGE_SIZE
@@ -26,7 +18,7 @@ export const guitar = {
     make: string,
     makeOther: string,
     makeParent: string,
-    makeLogo: objectOf(any),
+    makeLogo: string,
     model: string,
     year: string,
     serialNo: string,
@@ -81,7 +73,7 @@ export const guitar = {
     make: "",
     makeOther: "",
     makeParent: "",
-    makeLogo: {},
+    makeLogo: "",
     model: "",
     year: "",
     serialNo: "",

@@ -24,9 +24,15 @@ export const getGuitars = createAsyncThunk("guitars/getGuitars", () => {
  * @param {Object} guitarObject
  */
 export const addGuitar = createAsyncThunk("guitars/addGuitar", guitarObject => {
-  return axios.post(`${baseURL}/save`, guitarObject).then(response => {
-    return response.data;
-  });
+  return axios
+    .post(`${baseURL}/save`, guitarObject, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    })
+    .then(response => {
+      return response.data;
+    });
 });
 
 /**
@@ -39,9 +45,18 @@ export const updateGuitar = createAsyncThunk(
   guitarObject => {
     console.log("guitarObject", guitarObject);
     return axios
-      .put(`${baseURL}/update/${guitarObject._id}`, guitarObject)
+      .put(`${baseURL}/update/${guitarObject._id}`, guitarObject, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
       .then(response => {
-        return { ...response.data, ...guitarObject };
+        console.log("response", response);
+        return {
+          ...response.data,
+          ...guitarObject,
+          makeLogo: response?.data?.makeLogo
+        };
       });
   }
 );
