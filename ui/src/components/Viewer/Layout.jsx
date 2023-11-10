@@ -1,26 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-import _ from "lodash";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
-import { Alert, Spinner } from "reactstrap";
-
-import { clearMessage } from "../../store/slices/guitarsSlice";
+import { Spinner } from "reactstrap";
 
 import NavBar from "./NavBar";
 
 const Layout = () => {
-  const dispatch = useDispatch();
-
-  const { loading, message } = useSelector(state => state.guitarsState) ?? {};
-
-  useEffect(() => {
-    if (!_.isEmpty(message)) {
-      setTimeout(() => {
-        dispatch(clearMessage());
-      }, 3000);
-    }
-  }, [dispatch, message]);
+  const { loading } = useSelector(state => state.guitarsState) ?? {};
 
   return (
     <React.Fragment>
@@ -40,13 +27,6 @@ const Layout = () => {
             </Spinner>
           </div>
         )}
-        <Alert
-          color={message?.type}
-          isOpen={!_.isEmpty(message)}
-          toggle={() => dispatch(clearMessage())}
-        >
-          {message?.text}
-        </Alert>
         <Outlet />
       </div>
     </React.Fragment>

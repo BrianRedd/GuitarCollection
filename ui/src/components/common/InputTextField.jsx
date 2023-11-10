@@ -1,14 +1,14 @@
-/** @module InputFields */
+/** @module InputTextField */
 
 import React from "react";
 
-import { InputAdornment, MenuItem, TextField } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 import { useFormikContext } from "formik";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { Col } from "reactstrap";
 
-export const InputTextField = props => {
+const InputTextField = props => {
   const {
     label: labelFromProps,
     hidden,
@@ -77,71 +77,4 @@ InputTextField.defaultProps = {
   width: ""
 };
 
-export const InputSelectField = props => {
-  const {
-    label: labelFromProps,
-    hidden,
-    name,
-    onChange,
-    options,
-    width
-  } = props;
-
-  const formProps = useFormikContext();
-
-  const label = labelFromProps || _.capitalize(name);
-
-  const xs = 12;
-  const md = width === "wide" ? 6 : 3;
-  const lg = width === "wide" ? 4 : 2;
-
-  return (
-    <Col xs={xs} md={md} lg={lg} className={`mb-3 ${hidden ? "d-none" : ""}`}>
-      <TextField
-        {...props}
-        error={
-          Boolean(_.get(formProps.touched, name)) &&
-          Boolean(_.get(formProps.errors, name))
-        }
-        fullWidth
-        helperText={_.get(formProps.errors, name)}
-        label={label}
-        name={name}
-        onBlur={formProps.handleBlur}
-        onChange={value => {
-          formProps.handleChange(value);
-          onChange(value);
-        }}
-        select
-        size="small"
-        value={_.get(formProps.values, name)}
-      >
-        {options.map(option => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
-      </TextField>
-    </Col>
-  );
-};
-
-InputSelectField.propTypes = {
-  hidden: PropTypes.bool,
-  label: PropTypes.string,
-  name: PropTypes.string,
-  onChange: PropTypes.func,
-  options: PropTypes.array,
-  width: PropTypes.string
-};
-
-InputSelectField.defaultProps = {
-  hidden: false,
-  label: undefined,
-  lg: 2,
-  md: 4,
-  name: "",
-  onChange: () => {},
-  options: [],
-  width: ""
-};
+export default InputTextField;

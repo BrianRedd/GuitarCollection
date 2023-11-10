@@ -18,7 +18,7 @@ export const guitar = {
     make: string,
     makeOther: string,
     makeParent: string,
-    makerLogo: string,
+    makeLogo: string,
     model: string,
     year: string,
     serialNo: string,
@@ -35,21 +35,19 @@ export const guitar = {
       })
     ),
     case: string,
-    story: string,
-    specs: shape({
-      instrumentType: string,
-      noOfStrings: number,
-      soundScape: string,
-      color: string,
-      material: shape({
-        body: string,
-        neck: string
-      }),
-      holeConfiguration: string,
-      otherDetails: shape({
-        detail: string
+    instrumentType: string,
+    noOfStrings: number,
+    soundScape: string,
+    color: string,
+    specs: arrayOf(
+      shape({
+        id: string,
+        specType: string,
+        specification: string,
+        notes: string
       })
-    }),
+    ),
+    story: string,
     tuning: string,
     status: string,
     lastPlayed: string,
@@ -61,6 +59,7 @@ export const guitar = {
     ),
     maintenance: arrayOf(
       shape({
+        id: string,
         type: string,
         date: string,
         whoBy: string,
@@ -74,15 +73,19 @@ export const guitar = {
     make: "",
     makeOther: "",
     makeParent: "",
-    makerLogo: "",
+    makeLogo: "",
     model: "",
     year: "",
     serialNo: "",
     countyOfOrigin: "",
     purchaseHistory: [],
-    story: "",
     case: "",
-    specs: {},
+    instrumentType: string,
+    noOfStrings: number,
+    soundScape: string,
+    color: string,
+    story: "",
+    specs: [],
     tuning: "",
     status: "",
     lastPlayed: "",

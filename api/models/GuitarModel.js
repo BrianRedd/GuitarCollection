@@ -83,12 +83,12 @@ const todoListSchema = new mongoose.Schema({
 
 const guitarSchema = new mongoose.Schema({
   name: {
-    type: String
-    // required: true
+    type: String,
+    required: true
   },
   make: {
     type: String
-    // required: true
+    // ,required: true
   },
   makeParent: {
     type: String
@@ -98,19 +98,19 @@ const guitarSchema = new mongoose.Schema({
   },
   model: {
     type: String
-    // required: true
+    // ,required: true
   },
   year: {
     type: String
-    // required: true
+    // ,required: true
   },
   serialNo: {
     type: String
-    // required: true
+    // ,required: true
   },
   countyOfOrigin: {
     type: String
-    // required: true
+    // ,required: true
   },
   purchaseHistory: [purchaseHistorySchema],
   case: {
@@ -130,7 +130,7 @@ const guitarSchema = new mongoose.Schema({
   },
   story: {
     type: String
-    // required: true
+    // ,required: true
   },
   specs: [specificationSchema],
   tuning: {
@@ -138,7 +138,7 @@ const guitarSchema = new mongoose.Schema({
   },
   status: {
     type: String
-    // required: true
+    // ,required: true
   },
   lastPlayed: {
     type: String

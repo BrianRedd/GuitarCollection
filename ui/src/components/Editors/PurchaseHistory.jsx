@@ -219,6 +219,7 @@ const PurchaseHistory = props => {
           color: "text.primary"
         }
       }}
+      className="mb-3"
     >
       <DataGrid
         rows={rows}

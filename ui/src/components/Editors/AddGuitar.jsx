@@ -22,13 +22,9 @@ const AddGuitar = () => {
     <GuitarForm
       initialValues={initialValues}
       handleSubmit={(values, actions) => {
-        console.log("values", values)
+        console.log("values", values);
         const submissionValues = {
-          ...values,
-          make: values.make !== "Other" ? values.make : values.makeOther,
-          makeOther: null,
-          countyOfOrigin: values.countyOfOrigin !== "Other" ? values.countyOfOrigin : values.countyOfOriginOther,
-          countyOfOriginOther: null
+          ...values
         };
         dispatch(addGuitar(submissionValues)).then(() => {
           actions.resetForm(initialValues);
