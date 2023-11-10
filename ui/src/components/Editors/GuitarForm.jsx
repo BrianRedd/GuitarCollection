@@ -58,6 +58,24 @@ const GuitarForm = props => {
                   options={makeOptions}
                 />
                 <InputTextField name="makeParent" label="Maker Parent" />
+                <div className="mb-3">
+                  <label htmlFor="makeLogo" className="form-label">
+                    Select Image
+                  </label>
+                  <input
+                    type="file"
+                    name="makeLogo"
+                    className="form-control form-control-lg"
+                    onChange={event => {
+                      console.log("currentTarget", event.currentTarget.files);
+                      formProps.setFieldValue(
+                        "makeLogo",
+                        event.currentTarget.files[0]
+                      );
+                    }}
+                    required
+                  />
+                </div>
                 <InputTextField name="model" required />
                 <InputTextField name="year" required />
                 <InputTextField name="serialNo" label="S/N" required />
@@ -67,7 +85,7 @@ const GuitarForm = props => {
                   required
                   options={countryOptions}
                 />
-                <InputTextField label="Case" name="case" width="wide" />
+                <InputTextField name="case" width="wide" />
               </Row>
               <PurchaseHistory writePurchaseHistory={writePurchaseHistory} />
             </FormGroup>
