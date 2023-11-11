@@ -2,20 +2,22 @@
 
 import React, { useState } from "react";
 
+import { faCircleXmark, faIndustry } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Button } from "@mui/material";
 import { Formik } from "formik";
+import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert, Col, Form, FormGroup, Row } from "reactstrap";
 import { getBrandsValidationSchema } from "./data/validationSchemas";
 
-import { faCircleXmark, faIndustry } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   addBrand,
   getBrands,
   updateBrand
 } from "../../store/slices/brandsSlice";
 import * as types from "../../types/types";
+
 import InputTextField from "../common/InputTextField";
 import BrandBlock from "./BrandBlock";
 
@@ -68,9 +70,9 @@ const Brands = () => {
           return (
             <React.Fragment>
               <h3>Brands</h3>
-              {brands.length ? (
+              {brands?.length ? (
                 <Row>
-                  {brands.map(brand => (
+                  {brands?.map(brand => (
                     <BrandBlock
                       key={brand.id}
                       brand={brand}

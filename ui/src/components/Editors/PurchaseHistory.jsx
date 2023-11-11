@@ -118,7 +118,9 @@ const PurchaseHistory = props => {
       flex: 1,
       editable: true,
       type: "singleSelect",
-      valueOptions: OWNERSHIP_STATUS_OPTIONS
+      valueOptions: OWNERSHIP_STATUS_OPTIONS,
+      getOptionValue: value => value.value,
+      getOptionLabel: value => value.label
     },
     {
       field: "where",

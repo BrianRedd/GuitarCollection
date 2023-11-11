@@ -1,14 +1,72 @@
 /** @module constants */
 
+import {
+  faFileContract,
+  faGift,
+  faHandHoldingDollar,
+  faTag
+} from "@fortawesome/free-solid-svg-icons";
+
 export const DEFAULT_PAGE_SIZE = 10;
-export const DEFAULT_ORDER_BY = "name"
+export const DEFAULT_ORDER_BY = "name";
 
 export const TEXT_REQUIRED = "Required";
 
 export const OWNERSHIP_STATUS_OPTIONS = [
-    "Purchased",
-    "Under Contract",
-    "For Sale",
-    "Sold",
-    "Gifted"
-]
+  {
+    value: "PUR",
+    label: "Purchased"
+  },
+  {
+    value: "UCT",
+    label: "Under Contract",
+    icon: faFileContract
+  },
+  {
+    value: "FSA",
+    label: "For Sale",
+    icon: faTag
+  },
+  {
+    value: "SLD",
+    label: "Sold",
+    icon: faHandHoldingDollar
+  },
+  {
+    value: "GFT",
+    label: "Gifted",
+    icon: faGift
+  }
+];
+
+export const COUNTRY_OPTION_DEFAULTS = ["United States"];
+
+export const INSTRUMENT_OPTION_DEFAULTS = ["Guitar"];
+
+export const SOUNDSCAPE_OPTION_DEFAULTS = [
+  "Acoustic",
+  "Acoustic/Electric",
+  "Classical/Nylon",
+  "Electric",
+  "Electric Stereo"
+];
+
+export const COLOR_OPTION_DEFAULTS = [
+  "Black",
+  "Natural",
+  "Red",
+  "Tobacco Sunburst"
+];
+
+export const TUNING_OPTION_DEFAULTS = [
+  "Standard/EADGBE",
+  "Drop-D/DADGBE",
+  "D-Scale/DGCFAD"
+];
+
+export const STATUS_OPTION_DEFAULTS = [
+  "Playable",
+  "De-tuned",
+  "Offsite Repairs",
+  "Onsite Repairs"
+];

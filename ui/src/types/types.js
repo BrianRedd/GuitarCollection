@@ -1,6 +1,15 @@
 /** @module types */
 
-import { arrayOf, bool, number, shape, string } from "prop-types";
+import {
+  any,
+  arrayOf,
+  bool,
+  number,
+  objectOf,
+  oneOfType,
+  shape,
+  string
+} from "prop-types";
 import {
   DEFAULT_ORDER_BY,
   DEFAULT_PAGE_SIZE
@@ -47,7 +56,7 @@ export const guitar = {
     story: string,
     tuning: string,
     status: string,
-    lastPlayed: string,
+    lastPlayed: oneOfType([string, objectOf(any)]),
     pictures: arrayOf(
       shape({
         title: string,
@@ -74,15 +83,15 @@ export const guitar = {
     countyOfOrigin: "",
     purchaseHistory: [],
     case: "",
-    instrumentType: string,
-    noOfStrings: number,
-    soundScape: string,
-    color: string,
+    instrumentType: "",
+    noOfStrings: null,
+    soundScape: "",
+    color: "",
     story: "",
     specs: [],
     tuning: "",
     status: "",
-    lastPlayed: "",
+    lastPlayed: {},
     pictures: [],
     maintenance: []
   }
@@ -139,7 +148,7 @@ export const brand = {
     logo: "",
     parent: ""
   }
-}
+};
 
 /**
  * @const brandsState

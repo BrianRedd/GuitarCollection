@@ -10,6 +10,13 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Col, Form, FormGroup, Row } from "reactstrap";
 
+import {
+  COLOR_OPTION_DEFAULTS,
+  COUNTRY_OPTION_DEFAULTS,
+  INSTRUMENT_OPTION_DEFAULTS,
+  SOUNDSCAPE_OPTION_DEFAULTS,
+  TUNING_OPTION_DEFAULTS
+} from "../data/constants";
 import { guitarsValidationSchema } from "./data/validationSchemas";
 
 import InputFreeFormField from "../common/InputFreeFormField";
@@ -29,8 +36,35 @@ const GuitarForm = props => {
   const brands = useSelector(state => state.brandsState.list) ?? [];
 
   const countryOptions = _.uniq(
-    _.compact(guitars.map(guitar => guitar.countyOfOrigin))
+    _.compact([
+      ...COUNTRY_OPTION_DEFAULTS,
+      ...guitars.map(guitar => guitar.countyOfOrigin).sort()
+    ])
+  );
+  const instrumentOptions = _.uniq(
+    _.compact([
+      ...INSTRUMENT_OPTION_DEFAULTS,
+      ...guitars.map(guitar => guitar.instrumentType).sort()
+    ])
+  );
+  const soundScapeOptions = _.uniq(
+    _.compact([
+      ...SOUNDSCAPE_OPTION_DEFAULTS,
+      ...guitars.map(guitar => guitar.soundScape)
+    ])
   ).sort();
+  const colorOptions = _.uniq(
+    _.compact([
+      ...COLOR_OPTION_DEFAULTS,
+      ...guitars.map(guitar => guitar.color)
+    ])
+  ).sort();
+  const tuningOptions = _.uniq(
+    _.compact([
+      ...TUNING_OPTION_DEFAULTS,
+      ...guitars.map(guitar => guitar.tuning).sort()
+    ])
+  );
 
   return (
     <Formik
@@ -67,12 +101,64 @@ const GuitarForm = props => {
                   options={countryOptions}
                 />
                 <InputTextField name="case" width="wide" />
+                <InputFreeFormField
+                  name="instrumentType"
+                  label="Instrument Type"
+                  required
+                  options={instrumentOptions}
+                />
+                <InputTextField
+                  name="noOfStrings"
+                  label="Number of Strings"
+                  otherProps={{
+                    type: "number"
+                  }}
+                />
+                <InputFreeFormField
+                  name="soundScape"
+                  label="Sound Scape"
+                  required
+                  options={soundScapeOptions}
+                  width="wide"
+                />
+                <InputFreeFormField
+                  name="color"
+                  required
+                  options={colorOptions}
+                  width="wide"
+                />
               </Row>
               <PurchaseHistory writePurchaseHistory={writePurchaseHistory} />
+              <Row>
+                <InputTextField
+                  name="story"
+                  otherProps={{
+                    multiline: true,
+                    rows: 4
+                  }}
+                  width="full"
+                />
+              </Row>
+              <Row>
+                <InputFreeFormField
+                  name="tuning"
+                  required
+                  options={tuningOptions}
+                  width="wide"
+                />
+                <InputTextField
+                  name="lastPlayed"
+                  label="Last Played"
+                  otherProps={{
+                    type: "date",
+                    InputLabelProps: { shrink: true }
+                  }}
+                />
+              </Row>
             </FormGroup>
             <Row className="pt-5">
               <Col xs={0} md={6} />
-              <Col xs={12} md={6} className="d-flex justify-content-start">
+              <Col xs={12} md={6} className="d-flex justify-content-end">
                 <Button
                   onClick={formProps.handleSubmit}
                   variant="contained"
@@ -97,7 +183,6 @@ const GuitarForm = props => {
                 </Button>
               </Col>
             </Row>
-            {JSON.stringify(formProps?.values, null, 2)}
           </Form>
         );
       }}

@@ -15,7 +15,8 @@ const InputTextField = props => {
     name,
     onChange,
     prefix,
-    width
+    width,
+    otherProps = {}
   } = props;
 
   const formProps = useFormikContext();
@@ -23,13 +24,26 @@ const InputTextField = props => {
   const label = labelFromProps || _.capitalize(name);
 
   const xs = 12;
-  const md = width === "wide" ? 6 : 3;
-  const lg = width === "wide" ? 4 : 2;
+  let md = 0;
+  let lg = 0;
+  switch (width) {
+    case "wide":
+      md = 6;
+      lg = 4;
+      break;
+    case "full":
+      md = 12;
+      lg = 12;
+      break;
+    default:
+      md = 3;
+      lg = 2;
+  }
 
   return (
     <Col xs={xs} md={md} lg={lg} className={`mb-3 ${hidden ? "d-none" : ""}`}>
       <TextField
-        {...props}
+        {...otherProps}
         error={
           Boolean(_.get(formProps.touched, name)) &&
           Boolean(_.get(formProps.errors, name))
@@ -67,7 +81,8 @@ InputTextField.propTypes = {
   name: PropTypes.string,
   onChange: PropTypes.func,
   prefix: PropTypes.string,
-  width: PropTypes.string
+  width: PropTypes.string,
+  otherProps: PropTypes.objectOf(PropTypes.any)
 };
 
 InputTextField.defaultProps = {
@@ -76,7 +91,8 @@ InputTextField.defaultProps = {
   name: "",
   onChange: undefined,
   prefix: undefined,
-  width: ""
+  width: "",
+  otherProps: {}
 };
 
 export default InputTextField;

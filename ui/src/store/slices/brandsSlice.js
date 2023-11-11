@@ -2,6 +2,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import _ from "lodash";
 
 import * as types from "../../types/types";
 import { baseURL } from "../../utils/constants";
@@ -91,7 +92,7 @@ const brandsSlice = createSlice({
     });
     builder.addCase(getBrands.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload;
+      state.list = _.orderBy(action.payload, "id");
       state.message = {
         type: "info",
         text: `${action.payload?.length} Brand${

@@ -2,11 +2,7 @@
 
 import React from "react";
 
-import {
-  faEdit,
-  faTrash,
-  faWandSparkles
-} from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Box,
@@ -23,6 +19,7 @@ import {
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import confirm from "reactstrap-confirm";
 
 import { Alert } from "reactstrap";
 import {
@@ -30,7 +27,7 @@ import {
   updatePagination
 } from "../../store/slices/guitarsSlice";
 import * as types from "../../types/types";
-import { DEFAULT_PAGE_SIZE } from "../data/constants";
+import { DEFAULT_PAGE_SIZE, OWNERSHIP_STATUS_OPTIONS } from "../data/constants";
 
 /**
  * @function Home
@@ -92,6 +89,15 @@ const Home = () => {
   const emptyRows =
     page > 0 ? Math.max(0, (page + 1) * pageSize) - guitars.length : 0;
 
+  const getNameAdornment = row => {
+    const lastPurchaseHistory = row?.purchaseHistory?.slice(-1) ?? {};
+    const lastOwnershipStatus = lastPurchaseHistory[0]?.ownershipStatus;
+    const icon = OWNERSHIP_STATUS_OPTIONS.find(
+      option => option.value === lastOwnershipStatus
+    )?.icon;
+    return icon ? <FontAwesomeIcon icon={icon} className="ms-2" /> : "";
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       {guitars.length ? (
@@ -139,14 +145,7 @@ const Home = () => {
                     <TableRow key={row._id}>
                       <TableCell component="th" scope="row">
                         {row.name}
-                        {row.isNew ? (
-                          <FontAwesomeIcon
-                            icon={faWandSparkles}
-                            className="ms-2"
-                          />
-                        ) : (
-                          ""
-                        )}
+                        {getNameAdornment(row)}
                       </TableCell>
                       <TableCell>
                         {brand.logo ? (
@@ -171,7 +170,17 @@ const Home = () => {
                           </Link>
                         </IconButton>
                         <IconButton
-                          onClick={() => dispatch(removeGuitar(row._id))}
+                          onClick={async () => {
+                            const result = await confirm({
+                              title: `Delete ${row.name}?`,
+                              message: `Are you sure you want to permanently delete ${row.name}?`,
+                              confirmColor: "danger",
+                              cancelColor: "link text-primary"
+                            });
+                            if (result) {
+                              dispatch(removeGuitar(row._id));
+                            }
+                          }}
                         >
                           <FontAwesomeIcon
                             icon={faTrash}

@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "@mui/material";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
+import confirm from "reactstrap-confirm";
+
 import { deleteBrand, getBrands } from "../../store/slices/brandsSlice";
 
 /**
@@ -33,9 +35,17 @@ const BrandBlock = props => {
         <FontAwesomeIcon icon={faEdit} className="text-success small" />
       </IconButton>
       <IconButton
-        onClick={() =>
-          dispatch(deleteBrand(brand._id)).then(() => dispatch(getBrands()))
-        }
+        onClick={async () => {
+          const result = await confirm({
+            title: `Delete Brand ${brand.name}?`,
+            message: `Are you sure you want to permanently delete brand ${brand.name}?`,
+            confirmColor: "danger",
+            cancelColor: "link text-primary"
+          });
+          if (result) {
+            dispatch(deleteBrand(brand._id)).then(() => dispatch(getBrands()));
+          }
+        }}
       >
         <FontAwesomeIcon icon={faTrash} className="text-danger small" />
       </IconButton>
