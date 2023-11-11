@@ -41,7 +41,9 @@ const InputTextField = props => {
         onBlur={formProps.handleBlur}
         onChange={value => {
           formProps.handleChange(value);
-          onChange(value);
+          if (onChange) {
+            onChange(value);
+          }
         }}
         size="small"
         InputProps={
@@ -72,7 +74,7 @@ InputTextField.defaultProps = {
   hidden: false,
   label: undefined,
   name: "",
-  onChange: () => {},
+  onChange: undefined,
   prefix: undefined,
   width: ""
 };

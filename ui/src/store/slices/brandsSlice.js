@@ -1,4 +1,4 @@
-/** @module guitarsSlice */
+/** @module brandsSlice */
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
@@ -6,63 +6,72 @@ import axios from "axios";
 import * as types from "../../types/types";
 import { baseURL } from "../../utils/constants";
 
-const initialState = types.guitarsState.defaults;
+const initialState = types.brandsState.defaults;
 
 /**
- * @function getGuitars
- * @description Makes API call to retrieve guitars from DB
+ * @function getBrands
+ * @description Makes API call to retrieve brands from DB
  */
-export const getGuitars = createAsyncThunk("guitars/getGuitars", () => {
-  return axios.get(`${baseURL}/get`).then(response => {
+export const getBrands = createAsyncThunk("brands/getBrands", () => {
+  return axios.get(`${baseURL}/getbrands`).then(response => {
     return response.data;
   });
 });
 
 /**
- * @function addGuitar
- * @description Makes API call add new guitar to DB
- * @param {Object} guitarObject
+ * @function addBrand
+ * @description Makes API call add new brand to DB
+ * @param {Object} brandObject
  */
-export const addGuitar = createAsyncThunk("guitars/addGuitar", guitarObject => {
-  return axios.post(`${baseURL}/save`, guitarObject).then(response => {
-    return response.data;
-  });
+export const addBrand = createAsyncThunk("brands/saveBrand", brandObject => {
+  return axios
+    .post(`${baseURL}/savebrand`, brandObject, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    })
+    .then(response => {
+      console.log("addBrand", response);
+      return response.data;
+    });
 });
 
 /**
- * @function updateGuitar
+ * @function updateBrand
  * @description Makes API call update existing guitar in DB
- * @param {Object} guitarObject
+ * @param {Object} brandObject
  */
-export const updateGuitar = createAsyncThunk(
-  "guitars/updateGuitar",
-  guitarObject => {
-    console.log("guitarObject", guitarObject);
+export const updateBrand = createAsyncThunk(
+  "brands/updatebrand",
+  brandObject => {
+    console.log("brandObject", brandObject);
     return axios
-      .put(`${baseURL}/update/${guitarObject._id}`, guitarObject)
+      .put(`${baseURL}/updatebrand/${brandObject._id}`, brandObject, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
       .then(response => {
-        console.log("response", response);
-        return {
-          ...response.data,
-          ...guitarObject
-        };
+        console.log("updateBrand", response);
+        return response;
       });
   }
 );
 
 /**
- * @function removeGuitar
+ * @function deleteBrand
  * @description Makes API call remove existing guitar from DB
  * @param {string} id
  */
-export const removeGuitar = createAsyncThunk("guitars/removeGuitar", id => {
-  return axios.delete(`${baseURL}/delete/${id}`).then(response => {
+export const deleteBrand = createAsyncThunk("brands/deleteBrand", id => {
+  return axios.delete(`${baseURL}/deletebrand/${id}`).then(response => {
+    console.log("deleteBrand", response);
     return response.data;
   });
 });
 
-const guitarsSlice = createSlice({
-  name: "guitarsState",
+const brandsSlice = createSlice({
+  name: "brandsState",
   initialState,
   reducers: {
     clearMessage(state, action) {
@@ -77,20 +86,20 @@ const guitarsSlice = createSlice({
   },
   extraReducers: builder => {
     // GET
-    builder.addCase(getGuitars.pending, state => {
+    builder.addCase(getBrands.pending, state => {
       state.loading = true;
     });
-    builder.addCase(getGuitars.fulfilled, (state, action) => {
+    builder.addCase(getBrands.fulfilled, (state, action) => {
       state.loading = false;
       state.list = action.payload;
       state.message = {
         type: "info",
-        text: `${action.payload?.length} Guitar${
+        text: `${action.payload?.length} Brand${
           action.payload?.length !== 1 ? "s" : ""
         } Loaded`
       };
     });
-    builder.addCase(getGuitars.rejected, (state, action) => {
+    builder.addCase(getBrands.rejected, (state, action) => {
       state.loading = false;
       state.list = [];
       state.message = {
@@ -99,10 +108,10 @@ const guitarsSlice = createSlice({
       };
     });
     // POST
-    builder.addCase(addGuitar.pending, state => {
+    builder.addCase(addBrand.pending, state => {
       state.loading = true;
     });
-    builder.addCase(addGuitar.fulfilled, (state, action) => {
+    builder.addCase(addBrand.fulfilled, (state, action) => {
       state.loading = false;
       state.list = [{ ...action.payload, isNew: true }, ...state.list];
       state.message = {
@@ -110,7 +119,7 @@ const guitarsSlice = createSlice({
         text: `${action.payload.name} Successfully Added`
       };
     });
-    builder.addCase(addGuitar.rejected, (state, action) => {
+    builder.addCase(addBrand.rejected, (state, action) => {
       state.loading = false;
       state.message = {
         type: "danger",
@@ -118,10 +127,10 @@ const guitarsSlice = createSlice({
       };
     });
     // PUT
-    builder.addCase(updateGuitar.pending, state => {
+    builder.addCase(updateBrand.pending, state => {
       state.loading = true;
     });
-    builder.addCase(updateGuitar.fulfilled, (state, action) => {
+    builder.addCase(updateBrand.fulfilled, (state, action) => {
       const list = state.list;
       const idx = list.map(item => item._id).indexOf(action.payload._id);
       list[idx] = action.payload;
@@ -132,7 +141,7 @@ const guitarsSlice = createSlice({
         text: `${action.payload.name} Successfully Updated`
       };
     });
-    builder.addCase(updateGuitar.rejected, (state, action) => {
+    builder.addCase(updateBrand.rejected, (state, action) => {
       state.loading = false;
       state.message = {
         type: "danger",
@@ -140,10 +149,10 @@ const guitarsSlice = createSlice({
       };
     });
     // DELETE
-    builder.addCase(removeGuitar.pending, state => {
+    builder.addCase(deleteBrand.pending, state => {
       state.loading = true;
     });
-    builder.addCase(removeGuitar.fulfilled, (state, action) => {
+    builder.addCase(deleteBrand.fulfilled, (state, action) => {
       const list = state.list;
       const idx = list.map(item => item._id).indexOf(action.payload._id);
       list.splice(idx, 1);
@@ -154,7 +163,7 @@ const guitarsSlice = createSlice({
         text: `${action.payload.name} Successfully Deleted`
       };
     });
-    builder.addCase(removeGuitar.rejected, (state, action) => {
+    builder.addCase(deleteBrand.rejected, (state, action) => {
       state.loading = false;
       state.message = {
         type: "danger",
@@ -164,6 +173,6 @@ const guitarsSlice = createSlice({
   }
 });
 
-export const { clearMessage, updatePagination } = guitarsSlice.actions;
+export const { clearMessage } = brandsSlice.actions;
 
-export default guitarsSlice.reducer;
+export default brandsSlice.reducer;

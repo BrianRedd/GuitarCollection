@@ -6,11 +6,10 @@ import { TEXT_REQUIRED } from "../../data/constants";
 
 export const guitarsValidationSchema = Yup.object().shape({
   name: Yup.string().required(TEXT_REQUIRED),
-  make: Yup.string().nullable(), //.required(TEXT_REQUIRED),
-  makeParent: Yup.string().nullable(),
+  brandId: Yup.string().required(TEXT_REQUIRED),
   model: Yup.string().nullable(), //.required(TEXT_REQUIRED),
-  year: Yup.string().nullable(), //.required(TEXT_REQUIRED),
   serialNo: Yup.string().nullable(), //.required(TEXT_REQUIRED),
+  year: Yup.string().nullable(), //.required(TEXT_REQUIRED),
   countyOfOrigin: Yup.string().nullable(), //.required(TEXT_REQUIRED),
   purchaseHistory: Yup.array().of(
     Yup.object().shape({

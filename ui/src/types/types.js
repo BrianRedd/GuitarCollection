@@ -15,10 +15,7 @@ import {
 export const guitar = {
   types: shape({
     name: string,
-    make: string,
-    makeOther: string,
-    makeParent: string,
-    makeLogo: string,
+    brandId: string,
     model: string,
     year: string,
     serialNo: string,
@@ -70,10 +67,7 @@ export const guitar = {
   }),
   defaults: {
     name: "",
-    make: "",
-    makeOther: "",
-    makeParent: "",
-    makeLogo: "",
+    brandId: "",
     model: "",
     year: "",
     serialNo: "",
@@ -96,7 +90,7 @@ export const guitar = {
 
 /**
  * @const guitarsState
- * @description Types for cardsState Redux store
+ * @description Types for guitarsState Redux store
  */
 export const guitarsState = {
   types: shape({
@@ -123,5 +117,46 @@ export const guitarsState = {
       page: 0,
       pageSize: DEFAULT_PAGE_SIZE
     }
+  }
+};
+
+/*
+ BRANDS TYPES
+ ------------*/
+/**
+ * @const brand
+ */
+export const brand = {
+  types: shape({
+    id: string,
+    name: string,
+    logo: string,
+    parent: string
+  }),
+  defaults: {
+    id: "",
+    name: "",
+    logo: "",
+    parent: ""
+  }
+}
+
+/**
+ * @const brandsState
+ * @description Types for brandsState Redux store
+ */
+export const brandsState = {
+  types: shape({
+    list: arrayOf(brand.types),
+    loading: bool,
+    message: shape({
+      type: string,
+      text: string
+    })
+  }),
+  defaults: {
+    list: [],
+    loading: false,
+    message: {}
   }
 };

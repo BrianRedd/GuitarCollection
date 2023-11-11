@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@mui/material";
 import { Formik } from "formik";
 import _ from "lodash";
+import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Col, Form, FormGroup, Row } from "reactstrap";
@@ -12,6 +13,7 @@ import { Col, Form, FormGroup, Row } from "reactstrap";
 import { guitarsValidationSchema } from "./data/validationSchemas";
 
 import InputFreeFormField from "../common/InputFreeFormField";
+import InputSelectField from "../common/InputSelectField";
 import InputTextField from "../common/InputTextField";
 import PurchaseHistory from "./PurchaseHistory";
 
@@ -21,14 +23,11 @@ import PurchaseHistory from "./PurchaseHistory";
  */
 const GuitarForm = props => {
   const { handleSubmit, initialValues, buttonText } = props;
-
-  const guitars = useSelector(state => state.guitarsState?.list) ?? [];
-
   const navigate = useNavigate();
 
-  const makeOptions = _.uniq(
-    _.compact(guitars.map(guitar => guitar.make))
-  ).sort();
+  const guitars = useSelector(state => state.guitarsState?.list) ?? [];
+  const brands = useSelector(state => state.brandsState.list) ?? [];
+
   const countryOptions = _.uniq(
     _.compact(guitars.map(guitar => guitar.countyOfOrigin))
   ).sort();
@@ -49,36 +48,18 @@ const GuitarForm = props => {
             <FormGroup>
               <Row>
                 <InputTextField name="name" required />
-                <InputFreeFormField
-                  name="make"
+                <InputSelectField
+                  name="brandId"
+                  label="Brand"
                   required
-                  onChange={value => {
-                    formProps.setFieldValue("makeParent", value);
-                  }}
-                  options={makeOptions}
+                  options={brands?.map(brand => ({
+                    value: brand.id,
+                    label: brand.name
+                  }))}
                 />
-                <InputTextField name="makeParent" label="Maker Parent" />
-                <div className="mb-3">
-                  <label htmlFor="makeLogo" className="form-label">
-                    Select Image
-                  </label>
-                  <input
-                    type="file"
-                    name="makeLogo"
-                    className="form-control form-control-lg"
-                    onChange={event => {
-                      console.log("currentTarget", event.currentTarget.files);
-                      formProps.setFieldValue(
-                        "makeLogo",
-                        event.currentTarget.files[0]
-                      );
-                    }}
-                    required
-                  />
-                </div>
                 <InputTextField name="model" required />
-                <InputTextField name="year" required />
                 <InputTextField name="serialNo" label="S/N" required />
+                <InputTextField name="year" required />
                 <InputFreeFormField
                   name="countyOfOrigin"
                   label="Country of Origin"
@@ -122,6 +103,18 @@ const GuitarForm = props => {
       }}
     </Formik>
   );
+};
+
+GuitarForm.propTypes = {
+  handleSubmit: PropTypes.func,
+  initialValues: PropTypes.objectOf(PropTypes.any),
+  buttonText: PropTypes.string
+};
+
+GuitarForm.defaultTypes = {
+  handleSubmit: () => {},
+  initialValues: {},
+  buttonText: ""
 };
 
 export default GuitarForm;

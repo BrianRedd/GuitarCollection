@@ -15,7 +15,10 @@ const InputSelectField = props => {
     name,
     onChange,
     options,
-    width
+    width,
+    valueProp = "value",
+    labelProp = "label",
+    otherProps = {}
   } = props;
 
   const formProps = useFormikContext();
@@ -29,7 +32,7 @@ const InputSelectField = props => {
   return (
     <Col xs={xs} md={md} lg={lg} className={`mb-3 ${hidden ? "d-none" : ""}`}>
       <TextField
-        {...props}
+        {...otherProps}
         error={
           Boolean(_.get(formProps.touched, name)) &&
           Boolean(_.get(formProps.errors, name))
@@ -41,78 +44,31 @@ const InputSelectField = props => {
         onBlur={formProps.handleBlur}
         onChange={value => {
           formProps.handleChange(value);
-          onChange(value);
+          if (onChange) {
+            onChange(value);
+          }
         }}
         select
         size="small"
         value={_.get(formProps.values, name)}
       >
-        {options.map(option => (
-          <MenuItem key={option} value={option}>
-            {option}
-          </MenuItem>
-        ))}
-      </TextField>
-      {/* <Autocomplete
-        value={_.get(formProps.values, name)}
-        onChange={(event, newValue) => {
-          if (typeof newValue === "string") {
-            formProps.handleChange(newValue);
-            onChange(newValue);
-          } else if (newValue && newValue.inputValue) {
-            // Create a new value from the user input
-            formProps.handleChange(newValue.inputValue);
-            onChange(newValue.inputValue);
-          } else {
-            formProps.handleChange(newValue);
-            onChange(newValue);
-          }
-        }}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params);
-
-          const { inputValue } = params;
-          // Suggest the creation of a new value
-          const isExisting = options.some(
-            option => inputValue === option.title
-          );
-          if (inputValue !== "" && !isExisting) {
-            filtered.push({
-              inputValue,
-              title: `Add "${inputValue}"`
-            });
-          }
-
-          return filtered;
-        }}
-        selectOnFocus
-        clearOnBlur
-        handleHomeEndKeys
-        id={name}
-        options={options}
-        getOptionLabel={option => {
-          // Value selected with enter, right from the input
+        {options.map(option => {
+          let value;
+          let label;
           if (typeof option === "string") {
-            return option;
+            value = option;
+            label = option;
+          } else {
+            value = option[valueProp];
+            label = option[labelProp];
           }
-          // Add "xxx" option created dynamically
-          if (option.inputValue) {
-            return option.inputValue;
-          }
-          // Regular option
-          return option.title;
-        }}
-        renderOption={(props, option) => <li {...props}>{option}</li>}
-        fullWidth
-        freeSolo
-        size="small"
-        error={
-          Boolean(_.get(formProps.touched, name)) &&
-          Boolean(_.get(formProps.errors, name))
-        }
-        helperText={_.get(formProps.errors, name)}
-        renderInput={params => <TextField {...params} label={label} />}
-      /> */}
+          return (
+            <MenuItem key={value} value={value}>
+              {label}
+            </MenuItem>
+          );
+        })}
+      </TextField>
     </Col>
   );
 };
@@ -123,18 +79,22 @@ InputSelectField.propTypes = {
   name: PropTypes.string,
   onChange: PropTypes.func,
   options: PropTypes.array,
-  width: PropTypes.string
+  width: PropTypes.string,
+  valueProp: PropTypes.string,
+  labelProp: PropTypes.string,
+  otherProps: PropTypes.objectOf(PropTypes.any)
 };
 
 InputSelectField.defaultProps = {
   hidden: false,
   label: undefined,
-  lg: 2,
-  md: 4,
   name: "",
-  onChange: () => {},
+  onChange: undefined,
   options: [],
-  width: ""
+  width: "",
+  valueProp: "value",
+  labelProp: "label",
+  otherProps: {}
 };
 
 export default InputSelectField;

@@ -1,14 +1,12 @@
 const BrandModel = require("../models/BrandModel");
-const GuitarModel = require("../models/GuitarModel");
 
-module.exports.getGuitars = async (request, response) => {
-  const guitars = await GuitarModel.find();
-  response.send(guitars);
+module.exports.getBrands = async (request, response) => {
+  const brands = await BrandModel.find();
+  response.send(brands);
 };
 
-module.exports.saveGuitar = (request, response) => {
-  console.log("request", request.body)
-  GuitarModel.create(request.body)
+module.exports.saveBrand = (request, response) => {
+  BrandModel.create(request.body)
     .then(data => {
       console.log("Saved Successfully");
       response.status(201).send(data);
@@ -19,10 +17,10 @@ module.exports.saveGuitar = (request, response) => {
     });
 };
 
-module.exports.updateGuitar = (request, response) => {
+module.exports.updateBrand = (request, response) => {
   const { id } = request.params;
 
-  GuitarModel.findByIdAndUpdate(id, request.body)
+  BrandModel.findByIdAndUpdate(id, request.body)
     .then(data => {
       console.log("Updated Successfully");
       response.status(201).send(data);
@@ -33,10 +31,10 @@ module.exports.updateGuitar = (request, response) => {
     });
 };
 
-module.exports.deleteGuitar = (request, response) => {
+module.exports.deleteBrand = (request, response) => {
   const { id } = request.params;
 
-  GuitarModel.findByIdAndDelete(id)
+  BrandModel.findByIdAndDelete(id)
     .then(data => {
       console.log("Deleted Successfully");
       response.status(201).send(data);

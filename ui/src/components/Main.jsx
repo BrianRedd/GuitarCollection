@@ -3,8 +3,10 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import { getBrands } from "../store/slices/brandsSlice";
 import { getGuitars } from "../store/slices/guitarsSlice";
 
+import Brands from "./Brands/Brands";
 import AddGuitar from "./Editors/AddGuitar";
 import EditGuitar from "./Editors/EditGuitar";
 import Home from "./Viewer/Home";
@@ -22,6 +24,11 @@ const Main = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    dispatch(getBrands());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <BrowserRouter>
       <div className="App" data-test="component-app">
@@ -31,6 +38,7 @@ const Main = () => {
             <Route path="addguitar" element={<AddGuitar />} />
             <Route path="editguitar" element={<EditGuitar />} />
             <Route path="editguitar/:id" element={<EditGuitar />} />
+            <Route path="brands" element={<Brands />} />
           </Route>
         </Routes>
       </div>

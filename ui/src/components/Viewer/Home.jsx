@@ -1,3 +1,5 @@
+/** @module Home */
+
 import React from "react";
 
 import {
@@ -22,6 +24,7 @@ import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
+import { Alert } from "reactstrap";
 import {
   removeGuitar,
   updatePagination
@@ -37,6 +40,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const { list: guitars = [], pagination = types.guitarsState.defaults } =
     useSelector(state => state.guitarsState) ?? {};
+  const brands = useSelector(state => state.brandsState?.list) ?? [];
 
   const { orderBy, order, page = 0, pageSize = DEFAULT_PAGE_SIZE } = pagination;
 
@@ -46,7 +50,7 @@ const Home = () => {
       label: "Name"
     },
     {
-      id: "make",
+      id: "brandId",
       label: "Make"
     },
     {
@@ -90,102 +94,122 @@ const Home = () => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <TableContainer>
-        <Table aria-labelledby="tableTitle" size="small">
-          <TableHead>
-            <TableRow>
-              {headCells.map(headCell => (
-                <TableCell
-                  className={headCell.id === "iconHolder" ? "icon_holder" : ""}
-                  key={headCell.id}
-                  sortDirection={orderBy === headCell.id ? order : false}
-                >
-                  {headCell.id === "iconHolder" ? (
-                    <span>{headCell.label}</span>
-                  ) : (
-                    <TableSortLabel
-                      active={orderBy === headCell.id}
-                      direction={orderBy === headCell.id ? order : "asc"}
-                      onClick={() => {
-                        dispatch(
-                          updatePagination({
-                            orderBy: headCell.id,
-                            order: order === "asc" ? "desc" : "asc"
-                          })
-                        );
-                      }}
+      {guitars.length ? (
+        <React.Fragment>
+          <TableContainer>
+            <Table aria-labelledby="tableTitle" size="small">
+              <TableHead>
+                <TableRow>
+                  {headCells.map(headCell => (
+                    <TableCell
+                      className={
+                        headCell.id === "iconHolder" ? "icon_holder" : ""
+                      }
+                      key={headCell.id}
+                      sortDirection={orderBy === headCell.id ? order : false}
                     >
-                      {headCell.label}
-                    </TableSortLabel>
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {gridData.map(row => (
-              <TableRow key={row._id}>
-                <TableCell component="th" scope="row">
-                  {row.name}
-                  {row.isNew ? (
-                    <FontAwesomeIcon icon={faWandSparkles} className="ms-2" />
-                  ) : (
-                    ""
-                  )}
-                </TableCell>
-                <TableCell>
-                  {row.makeLogo ? (
-                    <img
-                      src={`http://localhost:5000/${row.makeLogo}`}
-                      height="45"
-                      alt={row.make}
-                    ></img>
-                  ) : (
-                    row.make
-                  )}
-                </TableCell>
-                <TableCell>{row.model}</TableCell>
-                <TableCell>{row.year}</TableCell>
-                <TableCell className="icon_holder">
-                  <IconButton>
-                    <Link to={`/editguitar/${row._id}`}>
-                      <FontAwesomeIcon
-                        icon={faEdit}
-                        className="text-success small"
-                      />
-                    </Link>
-                  </IconButton>
-                  <IconButton onClick={() => dispatch(removeGuitar(row._id))}>
-                    <FontAwesomeIcon
-                      icon={faTrash}
-                      className="text-danger small"
-                    />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-            {emptyRows > 0 && (
-              <TableRow
-                style={{
-                  height: 71 * emptyRows
-                }}
-              >
-                <TableCell colSpan={headCells.length} />
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        className="custom-pagination"
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={guitars.length}
-        rowsPerPage={pageSize}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+                      {headCell.id === "iconHolder" ? (
+                        <span>{headCell.label}</span>
+                      ) : (
+                        <TableSortLabel
+                          active={orderBy === headCell.id}
+                          direction={orderBy === headCell.id ? order : "asc"}
+                          onClick={() => {
+                            dispatch(
+                              updatePagination({
+                                orderBy: headCell.id,
+                                order: order === "asc" ? "desc" : "asc"
+                              })
+                            );
+                          }}
+                        >
+                          {headCell.label}
+                        </TableSortLabel>
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {gridData.map(row => {
+                  const brand =
+                    (brands ?? []).find(brand => brand.id === row.brandId) ??
+                    {};
+                  return (
+                    <TableRow key={row._id}>
+                      <TableCell component="th" scope="row">
+                        {row.name}
+                        {row.isNew ? (
+                          <FontAwesomeIcon
+                            icon={faWandSparkles}
+                            className="ms-2"
+                          />
+                        ) : (
+                          ""
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {brand.logo ? (
+                          <img
+                            src={`http://localhost:5000/${brand.logo}`}
+                            height="45"
+                            alt={brand.name}
+                          ></img>
+                        ) : (
+                          brand.name ?? row.brandId
+                        )}
+                      </TableCell>
+                      <TableCell>{row.model}</TableCell>
+                      <TableCell>{row.year}</TableCell>
+                      <TableCell className="icon_holder">
+                        <IconButton>
+                          <Link to={`/editguitar/${row._id}`}>
+                            <FontAwesomeIcon
+                              icon={faEdit}
+                              className="text-success small"
+                            />
+                          </Link>
+                        </IconButton>
+                        <IconButton
+                          onClick={() => dispatch(removeGuitar(row._id))}
+                        >
+                          <FontAwesomeIcon
+                            icon={faTrash}
+                            className="text-danger small"
+                          />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: 71 * emptyRows
+                    }}
+                  >
+                    <TableCell colSpan={headCells.length} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            className="custom-pagination"
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={guitars.length}
+            rowsPerPage={pageSize}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </React.Fragment>
+      ) : (
+        <Alert className="m-0" color={"danger"}>
+          No Guitars Found
+        </Alert>
+      )}
     </Box>
   );
 };

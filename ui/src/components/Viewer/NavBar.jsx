@@ -2,7 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 
-import { faGuitar, faHome } from "@fortawesome/free-solid-svg-icons";
+import {
+  faGuitar,
+  faHome,
+  faIndustry
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +21,8 @@ import {
   NavbarToggler
 } from "reactstrap";
 
-import { clearMessage } from "../../store/slices/guitarsSlice";
+import { clearMessage as clearGuitarMessage } from "../../store/slices/guitarsSlice";
+import { clearMessage as clearBrandMessage } from "../../store/slices/brandsSlice";
 
 const NavBar = () => {
   const dispatch = useDispatch();
@@ -25,15 +30,26 @@ const NavBar = () => {
 
   const toggle = () => setIsOpen(!isOpen);
 
-  const { message } = useSelector(state => state.guitarsState) ?? {};
+  const { message: guitarsMessage } =
+    useSelector(state => state.guitarsState) ?? {};
+  const { message: brandsMessage } =
+    useSelector(state => state.brandsState) ?? {};
 
   useEffect(() => {
-    if (!_.isEmpty(message)) {
+    if (!_.isEmpty(guitarsMessage)) {
       setTimeout(() => {
-        dispatch(clearMessage());
+        dispatch(clearGuitarMessage());
       }, 3000);
     }
-  }, [dispatch, message]);
+  }, [dispatch, guitarsMessage]);
+
+  useEffect(() => {
+    if (!_.isEmpty(brandsMessage)) {
+      setTimeout(() => {
+        dispatch(clearBrandMessage());
+      }, 3000);
+    }
+  }, [brandsMessage, dispatch]);
 
   return (
     <Navbar color="dark" dark expand="sm" fixed="top">
@@ -51,15 +67,28 @@ const NavBar = () => {
               <FontAwesomeIcon icon={faGuitar} /> Add Guitar
             </Link>
           </NavItem>
+          <NavItem>
+            <Link to="/brands">
+              <FontAwesomeIcon icon={faIndustry} /> Brands
+            </Link>
+          </NavItem>
         </Nav>
       </Collapse>
       <Alert
-        className="m-0"
-        color={message?.type}
-        isOpen={!_.isEmpty(message)}
-        toggle={() => dispatch(clearMessage())}
+        className="my-0 mx-1"
+        color={guitarsMessage?.type}
+        isOpen={!_.isEmpty(guitarsMessage)}
+        toggle={() => dispatch(clearGuitarMessage())}
       >
-        {message?.text}
+        {guitarsMessage?.text}
+      </Alert>
+      <Alert
+        className="my-0 mx-1"
+        color={brandsMessage?.type}
+        isOpen={!_.isEmpty(brandsMessage)}
+        toggle={() => dispatch(clearBrandMessage())}
+      >
+        {brandsMessage?.text}
       </Alert>
     </Navbar>
   );

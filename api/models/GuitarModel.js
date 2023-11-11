@@ -86,15 +86,9 @@ const guitarSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  make: {
-    type: String
-    // ,required: true
-  },
-  makeParent: {
-    type: String
-  },
-  makeLogo: {
-    type: String
+  brandId: {
+    type: String,
+    required: true
   },
   model: {
     type: String

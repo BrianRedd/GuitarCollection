@@ -7,14 +7,17 @@ import { Spinner } from "reactstrap";
 import NavBar from "./NavBar";
 
 const Layout = () => {
-  const { loading } = useSelector(state => state.guitarsState) ?? {};
+  const { loading: guitarLoading } =
+    useSelector(state => state.guitarsState) ?? {};
+  const { loading: brandsLoading } =
+    useSelector(state => state.brandsState) ?? {};
 
   return (
     <React.Fragment>
       <NavBar />
       <div className="app-body">
-        {loading && (
-          <div className="d-flex w-100 justify-content-center">
+        {(guitarLoading || brandsLoading) && (
+          <div className="position-absolute p-auto d-flex w-100 justify-content-center">
             <Spinner
               color="success"
               style={{
