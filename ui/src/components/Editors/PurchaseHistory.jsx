@@ -232,7 +232,6 @@ const PurchaseHistory = props => {
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={(newRow, oldRow) => {
-          console.log("processRowUpdate > values", newRow);
           return processRowUpdate(newRow, oldRow);
         }}
         slots={{

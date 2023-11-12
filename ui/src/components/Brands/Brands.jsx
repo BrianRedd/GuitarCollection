@@ -6,7 +6,6 @@ import { faCircleXmark, faIndustry } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Button } from "@mui/material";
 import { Formik } from "formik";
-import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert, Col, Form, FormGroup, Row } from "reactstrap";
 import { getBrandsValidationSchema } from "./data/validationSchemas";
@@ -30,16 +29,17 @@ const Brands = () => {
   const [selectedBrand, setSelectedBrand] = useState(types.brand.defaults);
   const brands = useSelector(state => state.brandsState.list);
 
+  const isEdit = Boolean(selectedBrand._id);
+
   return (
-    <Box sx={{ width: "100%" }} className="p-5">
+    <Box sx={{ width: "100%" }} className="p-4">
+      <h1>Brands</h1>
       <Formik
         initialValues={selectedBrand}
         onSubmit={(values, actions) => {
-          const isEdit = Boolean(selectedBrand._id);
           const submissionValues = {
             ...values
           };
-
           isEdit
             ? dispatch(
                 updateBrand({
@@ -69,7 +69,6 @@ const Brands = () => {
           };
           return (
             <React.Fragment>
-              <h3>Brands</h3>
               {brands?.length ? (
                 <Row>
                   {brands?.map(brand => (
@@ -85,7 +84,9 @@ const Brands = () => {
                   No Brands Found
                 </Alert>
               )}
-              <h4 className="mt-3">Add Brand</h4>
+              <h4 className="mt-3">
+                {isEdit ? `Edit Brand ${selectedBrand.name}` : "Add New Brand"}
+              </h4>
               <Form>
                 <FormGroup>
                   <Row>
@@ -94,8 +95,7 @@ const Brands = () => {
                       required
                       onChange={evt => {
                         const value = evt.target.value;
-                        console.log("value", value);
-                        if (value && value.length > 2 && !selectedBrand._id) {
+                        if (value && value.length > 2 && !isEdit) {
                           formProps.setFieldValue(
                             "id",
                             value?.slice(0, 2)?.toUpperCase()
@@ -106,60 +106,76 @@ const Brands = () => {
                     <InputTextField
                       name="id"
                       required
-                      disabled={
-                        !formProps.values?.name || Boolean(selectedBrand._id)
-                      }
+                      otherProps={{
+                        disabled: !formProps.values?.name || isEdit
+                      }}
                     />
+                    <InputTextField name="notes" width="wide" />
                   </Row>
-                  <div className="mb-3">
-                    <label htmlFor="logo" className="form-label">
-                      Select Image
-                    </label>
-                    <input
-                      type="file"
-                      name="logo"
-                      className="form-control form-control-lg"
-                      onChange={event => {
-                        console.log("currentTarget", event.currentTarget.files);
-                        formProps.setFieldValue(
-                          "logo",
-                          event.currentTarget.files[0]
-                        );
-                      }}
-                      required
-                    />
-                  </div>
-                  <InputTextField name="notes" width="wide" />
+                  <label htmlFor="logo" className="form-label">
+                    Select Image
+                  </label>
+                  <Row>
+                    <Col xs={isEdit ? 6 : 12} md={isEdit ? 4 : 6}>
+                      <input
+                        type="file"
+                        name="image"
+                        className="form-control form-control-lg"
+                        onChange={event => {
+                          formProps.setFieldValue(
+                            "logo",
+                            event.currentTarget.files[0]
+                          );
+                        }}
+                        required
+                      />
+                    </Col>
+                    {isEdit && (
+                      <Col xs={6} md={2}>
+                        <img
+                          src={`http://localhost:5000/${selectedBrand.logo}`}
+                          width="100"
+                          className="img-thumbnail mt-1"
+                          alt={selectedBrand.name}
+                        ></img>
+                      </Col>
+                    )}
+                    <Col
+                      xs={12}
+                      md={6}
+                      className="d-flex justify-content-start"
+                      style={{ height: "48px" }}
+                    >
+                      <Button
+                        onClick={formProps.handleSubmit}
+                        variant="contained"
+                        disableElevation
+                        color="primary"
+                        className="font-weight-bold"
+                      >
+                        <FontAwesomeIcon icon={faIndustry} className="me-3" />
+                        {Boolean(selectedBrand._id)
+                          ? `Save ${selectedBrand.name}`
+                          : "Create New Brand"}
+                      </Button>
+                      <Button
+                        className="ms-2"
+                        onClick={() => {
+                          formProps.resetForm(types.brand.defaults);
+                          setSelectedBrand(types.brand.defaults);
+                        }}
+                        variant="outlined"
+                        color="secondary"
+                      >
+                        <FontAwesomeIcon
+                          icon={faCircleXmark}
+                          className="me-3"
+                        />
+                        Cancel
+                      </Button>
+                    </Col>
+                  </Row>
                 </FormGroup>
-                <Row className="pt-5">
-                  <Col xs={0} md={6} />
-                  <Col xs={12} md={6} className="d-flex justify-content-start">
-                    <Button
-                      onClick={formProps.handleSubmit}
-                      variant="contained"
-                      disableElevation
-                      color="primary"
-                      className="font-weight-bold"
-                    >
-                      <FontAwesomeIcon icon={faIndustry} className="me-3" />
-                      {Boolean(selectedBrand._id)
-                        ? `Save ${selectedBrand.name}`
-                        : "Create New Brand"}
-                    </Button>
-                    <Button
-                      className="ms-2"
-                      onClick={() => {
-                        formProps.resetForm(types.brandsState.defaults);
-                        setSelectedBrand(types.brand.defaults);
-                      }}
-                      variant="outlined"
-                      color="secondary"
-                    >
-                      <FontAwesomeIcon icon={faCircleXmark} className="me-3" />
-                      Cancel
-                    </Button>
-                  </Col>
-                </Row>
               </Form>
             </React.Fragment>
           );

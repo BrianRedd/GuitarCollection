@@ -5,12 +5,18 @@ import * as Yup from "yup";
 import { TEXT_REQUIRED } from "../../data/constants";
 
 export const guitarsValidationSchema = Yup.object().shape({
-  name: Yup.string().required(TEXT_REQUIRED),
-  brandId: Yup.string().required(TEXT_REQUIRED),
-  model: Yup.string().nullable(), //.required(TEXT_REQUIRED),
-  serialNo: Yup.string().nullable(), //.required(TEXT_REQUIRED),
-  year: Yup.string().nullable(), //.required(TEXT_REQUIRED),
-  countyOfOrigin: Yup.string().nullable(), //.required(TEXT_REQUIRED),
+  name: Yup.string().ensure().required(TEXT_REQUIRED),
+  brandId: Yup.string().ensure().required(TEXT_REQUIRED),
+  model: Yup.string().ensure().required(TEXT_REQUIRED),
+  serialNo: Yup.string().ensure().required(TEXT_REQUIRED),
+  year: Yup.string().nullable(),
+  countyOfOrigin: Yup.string().nullable(),
+  case: Yup.string().nullable(),
+  instrumentType: Yup.string().ensure().required(TEXT_REQUIRED),
+  noOfStrings: Yup.number().required(TEXT_REQUIRED),
+  soundScape: Yup.string().ensure().required(TEXT_REQUIRED),
+  color: Yup.string().ensure().required(TEXT_REQUIRED),
+  appearanceNotes: Yup.string().nullable(),
   purchaseHistory: Yup.array().of(
     Yup.object().shape({
       ownershipStatus: Yup.string().nullable(),
@@ -20,5 +26,8 @@ export const guitarsValidationSchema = Yup.object().shape({
       amount: Yup.number().nullable()
     })
   ),
-  case: Yup.string().nullable(),
+  story: Yup.string().nullable(),
+  status: Yup.string().ensure().required(TEXT_REQUIRED),
+  tuning: Yup.string().nullable(),
+  lastPlayed: Yup.string().nullable()
 });

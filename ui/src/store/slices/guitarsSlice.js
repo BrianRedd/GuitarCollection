@@ -25,6 +25,7 @@ export const getGuitars = createAsyncThunk("guitars/getGuitars", () => {
  */
 export const addGuitar = createAsyncThunk("guitars/addGuitar", guitarObject => {
   return axios.post(`${baseURL}/save`, guitarObject).then(response => {
+    console.log("addGuitar", response);
     return response.data;
   });
 });
@@ -37,11 +38,10 @@ export const addGuitar = createAsyncThunk("guitars/addGuitar", guitarObject => {
 export const updateGuitar = createAsyncThunk(
   "guitars/updateGuitar",
   guitarObject => {
-    console.log("guitarObject", guitarObject);
     return axios
       .put(`${baseURL}/update/${guitarObject._id}`, guitarObject)
       .then(response => {
-        console.log("response", response);
+        console.log("updateGuitar", response);
         return {
           ...response.data,
           ...guitarObject
@@ -57,6 +57,7 @@ export const updateGuitar = createAsyncThunk(
  */
 export const removeGuitar = createAsyncThunk("guitars/removeGuitar", id => {
   return axios.delete(`${baseURL}/delete/${id}`).then(response => {
+    console.log("removeGuitar", response);
     return response.data;
   });
 });

@@ -9,6 +9,7 @@ import { getGuitars } from "../store/slices/guitarsSlice";
 import Brands from "./Brands/Brands";
 import AddGuitar from "./Editors/AddGuitar";
 import EditGuitar from "./Editors/EditGuitar";
+import GuitarDetail from "./GuitarDetail/GuitarDetail";
 import Home from "./Viewer/Home";
 import Layout from "./Viewer/Layout";
 
@@ -39,6 +40,7 @@ const Main = () => {
             <Route path="editguitar" element={<EditGuitar />} />
             <Route path="editguitar/:id" element={<EditGuitar />} />
             <Route path="brands" element={<Brands />} />
+            <Route path="guitar/:id" element={<GuitarDetail />} />
           </Route>
         </Routes>
       </div>

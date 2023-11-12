@@ -14,11 +14,12 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel
+  TableSortLabel,
+  Tooltip
 } from "@mui/material";
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import confirm from "reactstrap-confirm";
 
 import { Alert } from "reactstrap";
@@ -35,6 +36,7 @@ import { DEFAULT_PAGE_SIZE, OWNERSHIP_STATUS_OPTIONS } from "../data/constants";
  */
 const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { list: guitars = [], pagination = types.guitarsState.defaults } =
     useSelector(state => state.guitarsState) ?? {};
   const brands = useSelector(state => state.brandsState?.list) ?? [];
@@ -95,13 +97,28 @@ const Home = () => {
     const icon = OWNERSHIP_STATUS_OPTIONS.find(
       option => option.value === lastOwnershipStatus
     )?.icon;
-    return icon ? <FontAwesomeIcon icon={icon} className="ms-2" /> : "";
+    return icon ? (
+      <Tooltip
+        arrow
+        placement="right"
+        title={
+          OWNERSHIP_STATUS_OPTIONS.find(
+            option => option.value === lastOwnershipStatus
+          )?.label
+        }
+      >
+        <FontAwesomeIcon icon={icon} className="ms-2" />
+      </Tooltip>
+    ) : (
+      ""
+    );
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%" }} className="p-4">
       {guitars.length ? (
         <React.Fragment>
+          <h1>Guitar List</h1>
           <TableContainer>
             <Table aria-labelledby="tableTitle" size="small">
               <TableHead>
@@ -143,11 +160,21 @@ const Home = () => {
                     {};
                   return (
                     <TableRow key={row._id}>
-                      <TableCell component="th" scope="row">
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        onClick={() => {
+                          navigate(`/guitar/${row._id}`);
+                        }}
+                      >
                         {row.name}
                         {getNameAdornment(row)}
                       </TableCell>
-                      <TableCell>
+                      <TableCell
+                        onClick={() => {
+                          navigate(`/guitar/${row._id}`);
+                        }}
+                      >
                         {brand.logo ? (
                           <img
                             src={`http://localhost:5000/${brand.logo}`}
@@ -158,19 +185,32 @@ const Home = () => {
                           brand.name ?? row.brandId
                         )}
                       </TableCell>
-                      <TableCell>{row.model}</TableCell>
-                      <TableCell>{row.year}</TableCell>
+                      <TableCell
+                        onClick={() => {
+                          navigate(`/guitar/${row._id}`);
+                        }}
+                      >
+                        {row.model}
+                      </TableCell>
+                      <TableCell
+                        onClick={() => {
+                          navigate(`/guitar/${row._id}`);
+                        }}
+                      >
+                        {row.year}
+                      </TableCell>
                       <TableCell className="icon_holder">
-                        <IconButton>
-                          <Link to={`/editguitar/${row._id}`}>
-                            <FontAwesomeIcon
-                              icon={faEdit}
-                              className="text-success small"
-                            />
-                          </Link>
+                        <IconButton
+                          onClick={() => navigate(`/editguitar/${row._id}`)}
+                        >
+                          <FontAwesomeIcon
+                            icon={faEdit}
+                            className="text-success small"
+                          />
                         </IconButton>
                         <IconButton
-                          onClick={async () => {
+                          onClick={async event => {
+                            event.preventDefault();
                             const result = await confirm({
                               title: `Delete ${row.name}?`,
                               message: `Are you sure you want to permanently delete ${row.name}?`,

@@ -13,7 +13,7 @@ const brandSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  parent: {
+  notes: {
     type: String
   }
 });

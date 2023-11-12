@@ -15,6 +15,7 @@ import {
   COUNTRY_OPTION_DEFAULTS,
   INSTRUMENT_OPTION_DEFAULTS,
   SOUNDSCAPE_OPTION_DEFAULTS,
+  STATUS_OPTION_DEFAULTS,
   TUNING_OPTION_DEFAULTS
 } from "../data/constants";
 import { guitarsValidationSchema } from "./data/validationSchemas";
@@ -59,6 +60,12 @@ const GuitarForm = props => {
       ...guitars.map(guitar => guitar.color)
     ])
   ).sort();
+  const statusOptions = _.uniq(
+    _.compact([
+      ...STATUS_OPTION_DEFAULTS,
+      ...guitars.map(guitar => guitar.status)
+    ])
+  ).sort();
   const tuningOptions = _.uniq(
     _.compact([
       ...TUNING_OPTION_DEFAULTS,
@@ -74,11 +81,10 @@ const GuitarForm = props => {
     >
       {formProps => {
         const writePurchaseHistory = rows => {
-          console.log("rows", rows);
           formProps.setFieldValue("purchaseHistory", rows);
         };
         return (
-          <Form className="p-5">
+          <Form>
             <FormGroup>
               <Row>
                 <InputTextField name="name" required />
@@ -97,7 +103,6 @@ const GuitarForm = props => {
                 <InputFreeFormField
                   name="countyOfOrigin"
                   label="Country of Origin"
-                  required
                   options={countryOptions}
                 />
                 <InputTextField name="case" width="wide" />
@@ -110,6 +115,7 @@ const GuitarForm = props => {
                 <InputTextField
                   name="noOfStrings"
                   label="Number of Strings"
+                  required
                   otherProps={{
                     type: "number"
                   }}
@@ -127,6 +133,11 @@ const GuitarForm = props => {
                   options={colorOptions}
                   width="wide"
                 />
+                <InputTextField
+                  name="appearanceNotes"
+                  label="Notes on Appearance"
+                  width="wide"
+                />
               </Row>
               <PurchaseHistory writePurchaseHistory={writePurchaseHistory} />
               <Row>
@@ -141,8 +152,13 @@ const GuitarForm = props => {
               </Row>
               <Row>
                 <InputFreeFormField
-                  name="tuning"
+                  name="status"
                   required
+                  options={statusOptions}
+                  width="wide"
+                />
+                <InputFreeFormField
+                  name="tuning"
                   options={tuningOptions}
                   width="wide"
                 />

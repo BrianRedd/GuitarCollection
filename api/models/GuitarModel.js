@@ -91,52 +91,57 @@ const guitarSchema = new mongoose.Schema({
     required: true
   },
   model: {
-    type: String
-    // ,required: true
-  },
-  year: {
-    type: String
-    // ,required: true
+    type: String,
+    required: true
   },
   serialNo: {
-    type: String
-    // ,required: true
+    type: String,
+    required: true
+  },
+  year: {
+    type: String,
+    required: true
   },
   countyOfOrigin: {
     type: String
-    // ,required: true
   },
-  purchaseHistory: [purchaseHistorySchema],
   case: {
     type: String
   },
   instrumentType: {
-    type: String
+    type: String,
+    required: true
   },
   noOfStrings: {
-    type: String
+    type: String,
+    required: true
   },
   soundScape: {
-    type: String
+    type: String,
+    required: true
   },
   color: {
+    type: String,
+    required: true
+  },
+  appearanceNotes: {
     type: String
   },
+  purchaseHistory: [purchaseHistorySchema],
   story: {
-    type: String
-    // ,required: true
-  },
-  specs: [specificationSchema],
-  tuning: {
     type: String
   },
   status: {
+    type: String,
+    required: true
+  },
+  tuning: {
     type: String
-    // ,required: true
   },
   lastPlayed: {
     type: String
   },
+  specs: [specificationSchema],
   pictures: [imageSchema],
   maintenance: [maintenanceSchema],
   todoList: [todoListSchema],

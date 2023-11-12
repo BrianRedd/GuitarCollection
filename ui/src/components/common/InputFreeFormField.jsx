@@ -41,7 +41,6 @@ const InputFreeFormField = props => {
     <Col xs={xs} md={md} lg={lg} className={`mb-3 ${hidden ? "d-none" : ""}`}>
       <Autocomplete
         onChange={(event, newValue) => {
-          console.log("newValue", newValue);
           if (!newValue) {
             setValue("");
           } else if (typeof newValue === "string") {

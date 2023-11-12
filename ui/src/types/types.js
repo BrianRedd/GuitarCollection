@@ -45,6 +45,11 @@ export const guitar = {
     noOfStrings: number,
     soundScape: string,
     color: string,
+    appearanceNotes: string,
+    story: string,
+    status: string,
+    tuning: string,
+    lastPlayed: oneOfType([string, objectOf(any)]),
     specs: arrayOf(
       shape({
         id: string,
@@ -53,10 +58,6 @@ export const guitar = {
         notes: string
       })
     ),
-    story: string,
-    tuning: string,
-    status: string,
-    lastPlayed: oneOfType([string, objectOf(any)]),
     pictures: arrayOf(
       shape({
         title: string,
@@ -87,11 +88,12 @@ export const guitar = {
     noOfStrings: null,
     soundScape: "",
     color: "",
+    appearanceNotes: "",
     story: "",
-    specs: [],
-    tuning: "",
     status: "",
-    lastPlayed: {},
+    tuning: "",
+    lastPlayed: "",
+    specs: [],
     pictures: [],
     maintenance: []
   }
@@ -140,13 +142,13 @@ export const brand = {
     id: string,
     name: string,
     logo: string,
-    parent: string
+    notes: string
   }),
   defaults: {
     id: "",
     name: "",
     logo: "",
-    parent: ""
+    notes: ""
   }
 };
 

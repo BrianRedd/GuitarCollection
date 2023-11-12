@@ -6,6 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { updateGuitar } from "../../store/slices/guitarsSlice";
 import * as types from "../../types/types";
 
+import { Box } from "@mui/system";
+import { Alert } from "reactstrap";
 import GuitarForm from "./GuitarForm";
 
 /**
@@ -25,26 +27,30 @@ const EditGuitar = () => {
   };
 
   return (
-    <React.Fragment>
+    <Box sx={{ width: "100%" }} className="p-4">
       {initialValues?._id && matchId ? (
-        <GuitarForm
-          initialValues={initialValues}
-          handleSubmit={(values, actions) => {
-            console.log("values", values);
-            const submissionValues = {
-              ...values
-            };
-            dispatch(updateGuitar(submissionValues)).then(() => {
-              actions.resetForm(initialValues);
-              navigate("/");
-            });
-          }}
-          buttonText="Update Guitar"
-        />
+        <React.Fragment>
+          <h1>Edit {initialValues.name ?? "Guitar"}</h1>
+          <GuitarForm
+            initialValues={initialValues}
+            handleSubmit={(values, actions) => {
+              const submissionValues = {
+                ...values
+              };
+              dispatch(updateGuitar(submissionValues)).then(() => {
+                actions.resetForm(initialValues);
+                navigate("/");
+              });
+            }}
+            buttonText="Update Guitar"
+          />
+        </React.Fragment>
       ) : (
-        <div>Entry ID invalid</div>
+        <Alert className="m-0" color={"danger"}>
+          {matchId ?? "Item"} Not Found or Valid
+        </Alert>
       )}
-    </React.Fragment>
+    </Box>
   );
 };
 

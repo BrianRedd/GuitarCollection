@@ -45,7 +45,6 @@ export const addBrand = createAsyncThunk("brands/saveBrand", brandObject => {
 export const updateBrand = createAsyncThunk(
   "brands/updatebrand",
   brandObject => {
-    console.log("brandObject", brandObject);
     return axios
       .put(`${baseURL}/updatebrand/${brandObject._id}`, brandObject, {
         headers: {
