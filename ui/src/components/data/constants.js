@@ -12,6 +12,8 @@ export const DEFAULT_ORDER_BY = "name";
 
 export const TEXT_REQUIRED = "Required";
 
+export const DATE_FORMAT = "YYYY-MM-DD"
+
 export const OWNERSHIP_STATUS_OPTIONS = [
   {
     value: "PUR",

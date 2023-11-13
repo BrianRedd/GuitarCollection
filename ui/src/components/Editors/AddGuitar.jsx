@@ -1,13 +1,15 @@
 import React from "react";
 
+import { Box } from "@mui/system";
+import moment from "moment";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { addGuitar } from "../../store/slices/guitarsSlice";
 import * as types from "../../types/types";
 
-import { Box } from "@mui/system";
+import { DATE_FORMAT } from "../data/constants";
 import GuitarForm from "./GuitarForm";
+import { addGuitar } from "../../store/slices/guitarsSlice";
 
 /**
  * @function AddGuitar
@@ -26,7 +28,10 @@ const AddGuitar = () => {
         initialValues={initialValues}
         handleSubmit={(values, actions) => {
           const submissionValues = {
-            ...values
+            ...values,
+            lastPlayed: values.lastPlayed
+              ? moment(values.lastPlayed).format(DATE_FORMAT)
+              : ""
           };
           dispatch(addGuitar(submissionValues)).then(() => {
             actions.resetForm(initialValues);

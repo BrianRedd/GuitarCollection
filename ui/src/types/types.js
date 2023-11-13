@@ -171,3 +171,40 @@ export const brandsState = {
     message: {}
   }
 };
+
+/*
+ GALLERY TYPES
+ ------------*/
+/**
+ * @const galleryImage
+ */
+export const galleryImage = {
+  types: shape({
+    image: string,
+    capttion: string
+  }),
+  defaults: {
+    image: "",
+    caption: ""
+  }
+};
+
+/**
+ * @const galleryState
+ * @description Types for galleryState Redux store
+ */
+export const galleryState = {
+  types: shape({
+    list: arrayOf(galleryImage.types),
+    loading: bool,
+    message: shape({
+      type: string,
+      text: string
+    })
+  }),
+  defaults: {
+    list: [],
+    loading: false,
+    message: {}
+  }
+};

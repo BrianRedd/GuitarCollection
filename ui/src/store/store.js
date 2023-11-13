@@ -3,10 +3,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import brandsReducer from "./slices/brandsSlice";
+import galleryReducer from "./slices/gallerySlice";
 import guitarsReducer from "./slices/guitarsSlice";
 
 const store = configureStore({
-  reducer: { guitarsState: guitarsReducer, brandsState: brandsReducer }
+  reducer: {
+    brandsState: brandsReducer,
+    galleryState: galleryReducer,
+    guitarsState: guitarsReducer
+  }
 });
 
 export default store;

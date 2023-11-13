@@ -70,7 +70,10 @@ const Brands = () => {
           return (
             <React.Fragment>
               {brands?.length ? (
-                <Row>
+                <Row
+                  style={{ maxHeight: "450px" }}
+                  className="overflow-auto border"
+                >
                   {brands?.map(brand => (
                     <BrandBlock
                       key={brand.id}
@@ -154,7 +157,7 @@ const Brands = () => {
                         className="font-weight-bold"
                       >
                         <FontAwesomeIcon icon={faIndustry} className="me-3" />
-                        {Boolean(selectedBrand._id)
+                        {isEdit
                           ? `Save ${selectedBrand.name}`
                           : "Create New Brand"}
                       </Button>

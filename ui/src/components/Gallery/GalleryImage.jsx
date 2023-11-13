@@ -1,4 +1,4 @@
-/** @module BrandBlock */
+/** @module GalleryImage */
 
 import React from "react";
 
@@ -9,43 +9,47 @@ import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import confirm from "reactstrap-confirm";
 
-import { deleteBrand, getBrands } from "../../store/slices/brandsSlice";
+import {
+  deleteGalleryImage,
+  getGallery
+} from "../../store/slices/gallerySlice";
 
 /**
- * @function BrandBlock
+ * @function GalleryImage
  * @returns {React.ReactNode}
  */
-const BrandBlock = props => {
-  const { brand, selectBrand } = props;
+const GalleryImage = props => {
+  const { image, selectImage } = props;
   const dispatch = useDispatch();
 
   return (
     <div className="border p-2 m-2 text-center" style={{ width: "200px" }}>
-      <Tooltip arrow placement="top" title={brand.notes}>
-        <React.Fragment>
-          <p className="text-nowrap overflow-hidden">{brand.name}</p>
+      <Tooltip arrow placement="top" title={image.notes}>
+        <figure>
           <img
-            src={`http://localhost:5000/brandLogos/${brand.logo}`}
-            height="70"
+            src={`http://localhost:5000/gallery/${image.image}`}
             style={{ maxWidth: "175px" }}
-            alt={brand.name}
+            alt={image._id}
           ></img>
-        </React.Fragment>
+          <figcaption>{image.caption}</figcaption>
+        </figure>
       </Tooltip>
       <div className="mt-3">
-        <IconButton onClick={() => selectBrand(brand)}>
+        <IconButton onClick={() => selectImage(image)}>
           <FontAwesomeIcon icon={faEdit} className="text-success small" />
         </IconButton>
         <IconButton
           onClick={async () => {
             const result = await confirm({
-              title: `Delete Brand ${brand.name}?`,
-              message: `Are you sure you want to permanently delete brand ${brand.name}?`,
+              title: `Delete Image?`,
+              message: `Are you sure you want to permanently delete image?`,
               confirmColor: "danger",
               cancelColor: "link text-primary"
             });
             if (result) {
-              dispatch(deleteBrand(brand)).then(() => dispatch(getBrands()));
+              dispatch(deleteGalleryImage(image)).then(() =>
+                dispatch(getGallery())
+              );
             }
           }}
         >
@@ -56,14 +60,14 @@ const BrandBlock = props => {
   );
 };
 
-BrandBlock.propTypes = {
-  brand: PropTypes.objectOf(PropTypes.any),
-  selectBrand: PropTypes.func
+GalleryImage.propTypes = {
+  image: PropTypes.objectOf(PropTypes.any),
+  selectImage: PropTypes.func
 };
 
-BrandBlock.defaultTypes = {
-  brand: {},
-  selectBrand: () => {}
+GalleryImage.defaultTypes = {
+  image: {},
+  selectImage: () => {}
 };
 
-export default BrandBlock;
+export default GalleryImage;

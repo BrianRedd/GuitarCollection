@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import {
   faGuitar,
   faHome,
+  faImages,
   faIndustry
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,6 +24,7 @@ import {
 
 import { clearMessage as clearGuitarMessage } from "../../store/slices/guitarsSlice";
 import { clearMessage as clearBrandMessage } from "../../store/slices/brandsSlice";
+import { clearMessage as clearGalleryMessage } from "../../store/slices/gallerySlice";
 
 const NavBar = () => {
   const dispatch = useDispatch();
@@ -34,6 +36,8 @@ const NavBar = () => {
     useSelector(state => state.guitarsState) ?? {};
   const { message: brandsMessage } =
     useSelector(state => state.brandsState) ?? {};
+  const { message: galleryMessage } =
+    useSelector(state => state.galleryState) ?? {};
 
   useEffect(() => {
     if (!_.isEmpty(guitarsMessage)) {
@@ -50,6 +54,22 @@ const NavBar = () => {
       }, 3000);
     }
   }, [brandsMessage, dispatch]);
+
+  useEffect(() => {
+    if (!_.isEmpty(brandsMessage)) {
+      setTimeout(() => {
+        dispatch(clearBrandMessage());
+      }, 3000);
+    }
+  }, [brandsMessage, dispatch]);
+
+  useEffect(() => {
+    if (!_.isEmpty(galleryMessage)) {
+      setTimeout(() => {
+        dispatch(clearGalleryMessage());
+      }, 3000);
+    }
+  }, [galleryMessage, dispatch]);
 
   return (
     <Navbar color="dark" dark expand="sm" fixed="top">
@@ -72,12 +92,17 @@ const NavBar = () => {
               <FontAwesomeIcon icon={faIndustry} /> Brands
             </Link>
           </NavItem>
+          <NavItem>
+            <Link to="/gallery">
+              <FontAwesomeIcon icon={faImages} /> Image Gallery
+            </Link>
+          </NavItem>
         </Nav>
       </Collapse>
       <Alert
         className="my-0 mx-1"
         color={guitarsMessage?.type}
-        isOpen={!_.isEmpty(guitarsMessage)}
+        isOpen={!_.isEmpty(guitarsMessage) }
         toggle={() => dispatch(clearGuitarMessage())}
       >
         {guitarsMessage?.text}
@@ -89,6 +114,14 @@ const NavBar = () => {
         toggle={() => dispatch(clearBrandMessage())}
       >
         {brandsMessage?.text}
+      </Alert>
+      <Alert
+        className="my-0 mx-1"
+        color={galleryMessage?.type}
+        isOpen={!_.isEmpty(galleryMessage)}
+        toggle={() => dispatch(clearGalleryMessage())}
+      >
+        {galleryMessage?.text}
       </Alert>
     </Navbar>
   );

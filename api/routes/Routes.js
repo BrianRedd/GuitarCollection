@@ -16,9 +16,15 @@ const {
   deleteBrand,
   updateBrand
 } = require("../controllers/BrandsControllers");
+const {
+  getGallery,
+  saveGalleryImage,
+  updateGalleryImage,
+  deleteGalleryImage
+} = require("../controllers/GalleryControllers");
 
 // image upload
-var storage = multer.diskStorage({
+var brandStorage = multer.diskStorage({
   destination: function (request, file, callback) {
     callback(null, "./images/brandLogos");
   },
@@ -27,9 +33,22 @@ var storage = multer.diskStorage({
   }
 });
 
-var upload = multer({
-  storage: storage
+var galleryStorage = multer.diskStorage({
+  destination: function (request, file, callback) {
+    callback(null, "./images/gallery");
+  },
+  filename: function (request, file, callback) {
+    callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
+  }
+});
+
+var brandUpload = multer({
+  storage: brandStorage
 }).single("logo");
+
+var galleryUpload = multer({
+  storage: galleryStorage
+}).single("image");
 
 // Guitars
 router.get("/get", getGuitars);
@@ -39,8 +58,14 @@ router.delete("/delete/:id", deleteGuitar);
 
 // Brands
 router.get("/getbrands", getBrands);
-router.post("/savebrand", upload, saveBrand);
-router.put("/updatebrand/:id", upload, updateBrand);
+router.post("/savebrand", brandUpload, saveBrand);
+router.put("/updatebrand/:id", brandUpload, updateBrand);
 router.delete("/deletebrand/:id", deleteBrand);
+
+// GalleryImages
+router.get("/getgallery", getGallery);
+router.post("/saveimage", galleryUpload, saveGalleryImage);
+router.put("/updateimage/:id", galleryUpload, updateGalleryImage);
+router.delete("/deleteimage/:id", deleteGalleryImage);
 
 module.exports = router;

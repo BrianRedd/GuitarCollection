@@ -16,6 +16,7 @@ const InputTextField = props => {
     onChange,
     prefix,
     width,
+    height,
     otherProps = {}
   } = props;
 
@@ -59,7 +60,7 @@ const InputTextField = props => {
             onChange(value);
           }
         }}
-        size="small"
+        size={height === "tall" ? "normal" : "small"}
         InputProps={
           prefix
             ? {

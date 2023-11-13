@@ -1,4 +1,4 @@
-/** @module brandsSlice */
+/** @module gallerySlice */
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
@@ -7,78 +7,78 @@ import _ from "lodash";
 import * as types from "../../types/types";
 import { baseURL } from "../../utils/constants";
 
-const initialState = types.brandsState.defaults;
+const initialState = types.galleryState.defaults;
 
 /**
- * @function getBrands
- * @description Makes API call to retrieve brands from DB
+ * @function getGallery
+ * @description Makes API call to retrieve gallery from DB
  */
-export const getBrands = createAsyncThunk("brands/getBrands", () => {
-  return axios.get(`${baseURL}/getbrands`).then(response => {
+export const getGallery = createAsyncThunk("gallery/getGallery", () => {
+  return axios.get(`${baseURL}/getgallery`).then(response => {
     return response.data;
   });
 });
 
 /**
- * @function addBrand
+ * @function addGalleryImage
  * @description Makes API call add new brand to DB
  * @param {Object} brandObject
  */
-export const addBrand = createAsyncThunk("brands/saveBrand", brandObject => {
+export const addGalleryImage = createAsyncThunk("gallery/saveImage", brandObject => {
   return axios
-    .post(`${baseURL}/savebrand`, brandObject, {
+    .post(`${baseURL}/saveimage`, brandObject, {
       headers: {
         "Content-Type": "multipart/form-data"
       }
     })
     .then(response => {
-      console.log("addBrand", response);
+      console.log("addGalleryImage", response);
       return response.data;
     });
 });
 
 /**
- * @function updateBrand
+ * @function updateGalleryImage
  * @description Makes API call update existing brand in DB
  * @param {Object} brandObject
  */
-export const updateBrand = createAsyncThunk(
-  "brands/updatebrand",
+export const updateGalleryImage = createAsyncThunk(
+  "gallery/updateimage",
   brandObject => {
     return axios
-      .put(`${baseURL}/updatebrand/${brandObject._id}`, brandObject, {
+      .put(`${baseURL}/updateimage/${brandObject._id}`, brandObject, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
       })
       .then(response => {
-        console.log("updateBrand", response);
+        console.log("updateGalleryImage", response);
         return response;
       });
   }
 );
 
 /**
- * @function deleteBrand
+ * @function deleteGalleryImage
  * @description Makes API call remove existing brand from DB
  * @param {Object} brandObject
  */
-export const deleteBrand = createAsyncThunk(
-  "brands/deleteBrand",
+export const deleteGalleryImage = createAsyncThunk(
+  "gallery/deleteImage",
   brandObject => {
     return axios
-      .delete(`${baseURL}/deletebrand/${brandObject._id}`, {
+      .delete(`${baseURL}/deleteimage/${brandObject._id}`, {
         data: brandObject
       })
       .then(response => {
-        console.log("deleteBrand", response);
+        console.log("deleteGalleryImage", response);
         return response.data;
       });
   }
 );
 
-const brandsSlice = createSlice({
-  name: "brandsState",
+const gallerySlice = createSlice({
+  name: "galleryState",
   initialState,
   reducers: {
     clearMessage(state, action) {
@@ -93,20 +93,20 @@ const brandsSlice = createSlice({
   },
   extraReducers: builder => {
     // GET
-    builder.addCase(getBrands.pending, state => {
+    builder.addCase(getGallery.pending, state => {
       state.loading = true;
     });
-    builder.addCase(getBrands.fulfilled, (state, action) => {
+    builder.addCase(getGallery.fulfilled, (state, action) => {
       state.loading = false;
       state.list = _.orderBy(action.payload, "name");
       state.message = {
         type: "info",
-        text: `${action.payload?.length} Brand${
+        text: `${action.payload?.length} Gallery Image${
           action.payload?.length !== 1 ? "s" : ""
         } Loaded`
       };
     });
-    builder.addCase(getBrands.rejected, (state, action) => {
+    builder.addCase(getGallery.rejected, (state, action) => {
       state.loading = false;
       state.list = [];
       state.message = {
@@ -115,18 +115,18 @@ const brandsSlice = createSlice({
       };
     });
     // POST
-    builder.addCase(addBrand.pending, state => {
+    builder.addCase(addGalleryImage.pending, state => {
       state.loading = true;
     });
-    builder.addCase(addBrand.fulfilled, (state, action) => {
+    builder.addCase(addGalleryImage.fulfilled, (state, action) => {
       state.loading = false;
       state.list = [{ ...action.payload, isNew: true }, ...state.list];
       state.message = {
         type: "success",
-        text: `Brand ${action.payload.name} Successfully Added`
+        text: `Image Successfully Added`
       };
     });
-    builder.addCase(addBrand.rejected, (state, action) => {
+    builder.addCase(addGalleryImage.rejected, (state, action) => {
       state.loading = false;
       state.message = {
         type: "danger",
@@ -134,10 +134,10 @@ const brandsSlice = createSlice({
       };
     });
     // PUT
-    builder.addCase(updateBrand.pending, state => {
+    builder.addCase(updateGalleryImage.pending, state => {
       state.loading = true;
     });
-    builder.addCase(updateBrand.fulfilled, (state, action) => {
+    builder.addCase(updateGalleryImage.fulfilled, (state, action) => {
       const list = state.list;
       const idx = list.map(item => item._id).indexOf(action.payload._id);
       list[idx] = action.payload;
@@ -145,10 +145,10 @@ const brandsSlice = createSlice({
       state.list = list;
       state.message = {
         type: "success",
-        text: `Brand ${action.payload.name} Successfully Updated`
+        text: `Image Successfully Updated`
       };
     });
-    builder.addCase(updateBrand.rejected, (state, action) => {
+    builder.addCase(updateGalleryImage.rejected, (state, action) => {
       state.loading = false;
       state.message = {
         type: "danger",
@@ -156,10 +156,10 @@ const brandsSlice = createSlice({
       };
     });
     // DELETE
-    builder.addCase(deleteBrand.pending, state => {
+    builder.addCase(deleteGalleryImage.pending, state => {
       state.loading = true;
     });
-    builder.addCase(deleteBrand.fulfilled, (state, action) => {
+    builder.addCase(deleteGalleryImage.fulfilled, (state, action) => {
       const list = state.list;
       const idx = list.map(item => item._id).indexOf(action.payload._id);
       list.splice(idx, 1);
@@ -167,10 +167,10 @@ const brandsSlice = createSlice({
       state.list = list;
       state.message = {
         type: "success",
-        text: `Brand ${action.payload.name} Successfully Deleted`
+        text: `Image Successfully Deleted`
       };
     });
-    builder.addCase(deleteBrand.rejected, (state, action) => {
+    builder.addCase(deleteGalleryImage.rejected, (state, action) => {
       state.loading = false;
       state.message = {
         type: "danger",
@@ -180,6 +180,6 @@ const brandsSlice = createSlice({
   }
 });
 
-export const { clearMessage } = brandsSlice.actions;
+export const { clearMessage } = gallerySlice.actions;
 
-export default brandsSlice.reducer;
+export default gallerySlice.reducer;

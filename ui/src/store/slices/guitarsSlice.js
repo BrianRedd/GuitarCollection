@@ -108,7 +108,7 @@ const guitarsSlice = createSlice({
       state.list = [{ ...action.payload, isNew: true }, ...state.list];
       state.message = {
         type: "success",
-        text: `${action.payload.name} Successfully Added`
+        text: `Guitar ${action.payload.name} Successfully Added`
       };
     });
     builder.addCase(addGuitar.rejected, (state, action) => {
@@ -130,7 +130,7 @@ const guitarsSlice = createSlice({
       state.list = list;
       state.message = {
         type: "success",
-        text: `${action.payload.name} Successfully Updated`
+        text: `Guitar ${action.payload.name} Successfully Updated`
       };
     });
     builder.addCase(updateGuitar.rejected, (state, action) => {
@@ -152,7 +152,7 @@ const guitarsSlice = createSlice({
       state.list = list;
       state.message = {
         type: "success",
-        text: `${action.payload.name} Successfully Deleted`
+        text: `Guitar ${action.payload.name} Successfully Deleted`
       };
     });
     builder.addCase(removeGuitar.rejected, (state, action) => {
