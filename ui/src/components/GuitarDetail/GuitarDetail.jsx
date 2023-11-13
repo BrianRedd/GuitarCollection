@@ -14,7 +14,11 @@ import confirm from "reactstrap-confirm";
 
 import { updateGuitar } from "../../store/slices/guitarsSlice";
 import { DATE_FORMAT } from "../data/constants";
+import MaintenanceTable from "./MaintenanceTable";
+import PictureGallery from "./PictureGallery";
 import PurchaseDetailTable from "./PurchaseDetailTable";
+import SpecificationsTable from "./SpecificationsTable";
+import TodoList from "./TodoList";
 
 /**
  * @function GuitarDetail
@@ -157,13 +161,17 @@ const GuitarDetail = () => {
           </Row>
         </Col>
       </Row>
-      <PurchaseDetailTable guitar={guitar} />
       <Row>
         <Col xs={12} className="mt-3">
           <b>Story: </b>
           <p>{guitar.story}</p>
         </Col>
       </Row>
+      <PurchaseDetailTable guitar={guitar} />
+      <PictureGallery guitar={guitar} />
+      <SpecificationsTable guitar={guitar} />
+      <TodoList guitar={guitar} />
+      <MaintenanceTable guitar={guitar} />
     </Box>
   );
 };
