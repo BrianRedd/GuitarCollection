@@ -91,7 +91,7 @@ const brandsSlice = createSlice({
     });
     builder.addCase(getBrands.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = _.orderBy(action.payload, "id");
+      state.list = _.orderBy(action.payload, "name");
       state.message = {
         type: "info",
         text: `${action.payload?.length} Brand${

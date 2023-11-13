@@ -27,7 +27,7 @@ import BrandBlock from "./BrandBlock";
 const Brands = () => {
   const dispatch = useDispatch();
   const [selectedBrand, setSelectedBrand] = useState(types.brand.defaults);
-  const brands = useSelector(state => state.brandsState.list);
+  const brands = useSelector(state => state.brandsState.list) ?? [];
 
   const isEdit = Boolean(selectedBrand._id);
 

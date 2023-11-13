@@ -22,13 +22,15 @@ const BrandBlock = props => {
   return (
     <div className="border p-2 m-2 text-center" style={{ width: "200px" }}>
       <Tooltip arrow placement="top" title={brand.notes}>
-        <p className="text-nowrap overflow-hidden">{brand.name}</p>
-        <img
-          src={`http://localhost:5000/${brand.logo}`}
-          height="70"
-          style={{ maxWidth: "175px" }}
-          alt={brand.name}
-        ></img>
+        <React.Fragment>
+          <p className="text-nowrap overflow-hidden">{brand.name}</p>
+          <img
+            src={`http://localhost:5000/${brand.logo}`}
+            height="70"
+            style={{ maxWidth: "175px" }}
+            alt={brand.name}
+          ></img>
+        </React.Fragment>
       </Tooltip>
       <div className="mt-3">
         <IconButton onClick={() => selectBrand(brand)}>
