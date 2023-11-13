@@ -39,7 +39,7 @@ export const addBrand = createAsyncThunk("brands/saveBrand", brandObject => {
 
 /**
  * @function updateBrand
- * @description Makes API call update existing guitar in DB
+ * @description Makes API call update existing brand in DB
  * @param {Object} brandObject
  */
 export const updateBrand = createAsyncThunk(
@@ -60,15 +60,22 @@ export const updateBrand = createAsyncThunk(
 
 /**
  * @function deleteBrand
- * @description Makes API call remove existing guitar from DB
- * @param {string} id
+ * @description Makes API call remove existing brand from DB
+ * @param {Object} brandObject
  */
-export const deleteBrand = createAsyncThunk("brands/deleteBrand", id => {
-  return axios.delete(`${baseURL}/deletebrand/${id}`).then(response => {
-    console.log("deleteBrand", response);
-    return response.data;
-  });
-});
+export const deleteBrand = createAsyncThunk(
+  "brands/deleteBrand",
+  brandObject => {
+    return axios
+      .delete(`${baseURL}/deletebrand/${brandObject._id}`, {
+        data: brandObject
+      })
+      .then(response => {
+        console.log("deleteBrand", response);
+        return response.data;
+      });
+  }
+);
 
 const brandsSlice = createSlice({
   name: "brandsState",

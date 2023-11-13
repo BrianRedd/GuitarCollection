@@ -5,7 +5,7 @@ api/.env
 api/.gitignore
 api/node_modules
 api/package-lock.json
-api/uploads
+api/images
 
 ui/.gitignore
 ui/node_modules

@@ -27,7 +27,7 @@ app.use(express.static("public"));
 
 app.use("/api", routes);
 
-var publicDir = require('path').join(__dirname,'/uploads'); 
+var publicDir = require('path').join(__dirname,'/images'); 
 app.use(express.static(publicDir)); 
 
 app.listen(PORT, () => {

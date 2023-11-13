@@ -177,7 +177,7 @@ const Home = () => {
                       >
                         {brand.logo ? (
                           <img
-                            src={`http://localhost:5000/${brand.logo}`}
+                            src={`http://localhost:5000/brandLogos/${brand.logo}`}
                             height="45"
                             alt={brand.name}
                           ></img>

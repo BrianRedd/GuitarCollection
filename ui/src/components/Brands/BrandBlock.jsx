@@ -25,7 +25,7 @@ const BrandBlock = props => {
         <React.Fragment>
           <p className="text-nowrap overflow-hidden">{brand.name}</p>
           <img
-            src={`http://localhost:5000/${brand.logo}`}
+            src={`http://localhost:5000/brandLogos/${brand.logo}`}
             height="70"
             style={{ maxWidth: "175px" }}
             alt={brand.name}
@@ -45,7 +45,7 @@ const BrandBlock = props => {
               cancelColor: "link text-primary"
             });
             if (result) {
-              dispatch(deleteBrand(brand._id)).then(() =>
+              dispatch(deleteBrand(brand)).then(() =>
                 dispatch(getBrands())
               );
             }
