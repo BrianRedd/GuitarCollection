@@ -17,7 +17,8 @@ const InputSelectField = props => {
     options,
     width,
     valueProp = "value",
-    labelProp = "label",
+    labelProp = "label",    
+    required,
     otherProps = {}
   } = props;
 
@@ -61,9 +62,10 @@ const InputSelectField = props => {
             onChange(value);
           }
         }}
+        required={required}
         select
         size="small"
-        value={_.get(formProps.values, name)}
+        value={_.get(formProps.values, name) ?? ""}
       >
         {options.map(option => {
           let value;
@@ -95,6 +97,7 @@ InputSelectField.propTypes = {
   width: PropTypes.string,
   valueProp: PropTypes.string,
   labelProp: PropTypes.string,
+  required: PropTypes.bool,
   otherProps: PropTypes.objectOf(PropTypes.any)
 };
 
@@ -107,6 +110,7 @@ InputSelectField.defaultProps = {
   width: "",
   valueProp: "value",
   labelProp: "label",
+  required: false,
   otherProps: {}
 };
 

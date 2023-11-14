@@ -59,6 +59,10 @@ function EditToolbar(props) {
   );
 }
 
+/**
+ * @function PurchaseHistory
+ * @returns {React.ReactNode}
+ */
 const PurchaseHistory = props => {
   const { writePurchaseHistory } = props;
   const formProps = useFormikContext();
@@ -194,15 +198,14 @@ const PurchaseHistory = props => {
           <GridActionsCellItem
             icon={<FontAwesomeIcon icon={faPenToSquare} />}
             label="Edit"
-            className="textPrimary"
             onClick={handleEditClick(id)}
-            color="inherit"
+            color="success"
           />,
           <GridActionsCellItem
             icon={<FontAwesomeIcon icon={faTrash} />}
             label="Delete"
             onClick={handleDeleteClick(id)}
-            color="inherit"
+            color="warning"
           />
         ];
       }

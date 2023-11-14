@@ -7,10 +7,10 @@ import { Row } from 'reactstrap';
 
 const MaintenanceTable = props => {
   const { guitar } = props;
-  console.log("MaintenanceTable", guitar);
   return (
     <Row>
       <h5 className="mt-2 text-decoration-underline">Maintenance History</h5>
+      {JSON.stringify(guitar.maintenance, null, 2)}
     </Row>
   );
 };

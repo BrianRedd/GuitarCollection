@@ -4,12 +4,14 @@ import React from "react";
 
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconButton, Tooltip } from "@mui/material";
+import { IconButton } from "@mui/material";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import confirm from "reactstrap-confirm";
 
 import { deleteBrand, getBrands } from "../../store/slices/brandsSlice";
+
+import "./styles/brands.scss";
 
 /**
  * @function BrandBlock
@@ -20,19 +22,17 @@ const BrandBlock = props => {
   const dispatch = useDispatch();
 
   return (
-    <div className="border p-2 m-2 text-center" style={{ width: "200px" }}>
-      <Tooltip arrow placement="top" title={brand.notes}>
-        <React.Fragment>
-          <p className="text-nowrap overflow-hidden">{brand.name}</p>
-          <img
-            src={`http://localhost:5000/brandLogos/${brand.logo}`}
-            height="70"
-            style={{ maxWidth: "175px" }}
-            alt={brand.name}
-          ></img>
-        </React.Fragment>
-      </Tooltip>
-      <div className="mt-3">
+    <div className="border brand-block">
+      <p className="brand-name">{brand.name}</p>
+      {brand.logo && (
+        <img
+          className="brand-logo"
+          src={`http://localhost:5000/brandLogos/${brand.logo}`}
+          alt={brand.name}
+        ></img>
+      )}
+      {brand.notes && <p className="brand-notes">{brand.notes}</p>}
+      <div className="brand-buttons-container">
         <IconButton onClick={() => selectBrand(brand)}>
           <FontAwesomeIcon icon={faEdit} className="text-success small" />
         </IconButton>

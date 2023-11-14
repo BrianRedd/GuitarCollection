@@ -2,10 +2,12 @@
 
 import React, { useState } from "react";
 
-import { Box, Button } from "@mui/material";
+import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Box, ButtonBase } from "@mui/material";
 import { Formik } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import { Alert, Col, Form, FormGroup, Row } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import { galleryValidationSchema } from "./data/validationSchemas";
 
 import {
@@ -15,10 +17,11 @@ import {
 } from "../../store/slices/gallerySlice";
 import * as types from "../../types/types";
 
-import { faCircleXmark, faIndustry } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import InputTextField from "../common/InputTextField";
+import ImageUploadModal from "../Modals/ImageUploadModal";
 import GalleryImage from "./GalleryImage";
+
+import _ from "lodash";
+import "./styles/gallery.scss";
 
 /**
  * @function Gallery
@@ -26,12 +29,35 @@ import GalleryImage from "./GalleryImage";
  */
 const Gallery = () => {
   const dispatch = useDispatch();
+
+  const guitars = useSelector(state => state.guitarsState.list) ?? [];
+  const gallery = useSelector(state => state.galleryState.list) ?? [];
+
   const [selectedImage, setSelectedImage] = useState(
     types.galleryImage.defaults
   );
-  const gallery = useSelector(state => state.galleryState.list) ?? [];
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const isEdit = Boolean(selectedImage._id);
+
+  const gridData = () => {
+    const imageGuitarMapping = {};
+    guitars.forEach(guitar => {
+      (guitar.pictures ?? []).forEach(picture => {
+        if (!imageGuitarMapping[picture]) {
+          imageGuitarMapping[picture] = guitar.name;
+        }
+      });
+    });
+    console.log("imageGuitarMapping", imageGuitarMapping);
+    return _.orderBy(
+      (gallery ?? []).map(image => ({
+        ...image,
+        guitar: `${imageGuitarMapping?.[image._id] ?? ""}`
+      })),
+      "guitar"
+    );
+  };
 
   return (
     <Box sx={{ width: "100%" }} className="p-4">
@@ -68,98 +94,42 @@ const Gallery = () => {
           };
           return (
             <React.Fragment>
-              <h4 className="mt-3">
-                {isEdit ? `Edit Image` : "Upload New Image"}
-              </h4>
-              <Form>
-                <FormGroup>
+              <Row>
+                <ButtonBase
+                  className="gallery-image border d-block me-2"
+                  onClick={() => {
+                    selectImage(types.galleryImage.defaults);
+                    setIsModalOpen(true);
+                  }}
+                >
                   <Row>
-                    <Col xs={12} md={isEdit ? 10 : 12}>
-                      <Row>
-                        <Col>
-                          <input
-                            type="file"
-                            name="image"
-                            className="form-control form-control-lg"
-                            style={{ height: "59px" }}
-                            onChange={event => {
-                              formProps.setFieldValue(
-                                "image",
-                                event.currentTarget.files[0]
-                              );
-                            }}
-                            required
-                          />
-                        </Col>
-                        <Col>
-                          <InputTextField
-                            name="caption"
-                            width="full"
-                            height="tall"
-                          />
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col className="d-flex justify-content-end">
-                          <Button
-                            onClick={formProps.handleSubmit}
-                            variant="contained"
-                            disableElevation
-                            color="primary"
-                            className="font-weight-bold"
-                          >
-                            <FontAwesomeIcon
-                              icon={faIndustry}
-                              className="me-3"
-                            />
-                            {isEdit ? `Save Image` : "Upload New Image"}
-                          </Button>
-                          <Button
-                            className="ms-2"
-                            onClick={() => {
-                              formProps.resetForm(types.galleryImage.defaults);
-                              setSelectedImage(types.galleryImage.defaults);
-                            }}
-                            variant="outlined"
-                            color="secondary"
-                          >
-                            <FontAwesomeIcon
-                              icon={faCircleXmark}
-                              className="me-3"
-                            />
-                            Cancel
-                          </Button>
-                        </Col>
-                      </Row>
+                    <Col>
+                      <h6 className="">Upload New Image</h6>
                     </Col>
-                    {isEdit && (
-                      <Col xs={0} md={2}>
-                        <img
-                          src={`http://localhost:5000/gallery/${selectedImage.image}`}
-                          width="100"
-                          className="img-thumbnail mt-1"
-                          alt={selectedImage._id}
-                        ></img>
-                      </Col>
-                    )}
                   </Row>
-                </FormGroup>
-              </Form>
-              {gallery?.length ? (
-                <Row>
-                  {gallery?.map(image => (
-                    <GalleryImage
-                      key={image._id}
-                      image={image}
-                      selectImage={selectImage}
-                    />
-                  ))}
-                </Row>
-              ) : (
-                <Alert className="m-0" color={"danger"}>
-                  No Gallery Images Found
-                </Alert>
-              )}
+                  <Row className="">
+                    <Col>
+                      <FontAwesomeIcon icon={faCloudArrowUp} size="2xl" />
+                    </Col>
+                  </Row>
+                </ButtonBase>
+                {gridData()?.map(image => (
+                  <GalleryImage
+                    key={image._id}
+                    image={image}
+                    selectImage={image => {
+                      selectImage(image);
+                      setIsModalOpen(true);
+                    }}
+                  />
+                ))}
+              </Row>
+              <ImageUploadModal
+                isOpen={isModalOpen}
+                toggle={() => setIsModalOpen(!isModalOpen)}
+                selectedImage={selectedImage}
+                handleSubmit={formProps.handleSubmit}
+              />
             </React.Fragment>
           );
         }}

@@ -20,15 +20,21 @@ import {
 import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "reactstrap";
 import confirm from "reactstrap-confirm";
 
-import { Alert } from "reactstrap";
 import {
   removeGuitar,
   updatePagination
 } from "../../store/slices/guitarsSlice";
 import * as types from "../../types/types";
-import { DEFAULT_PAGE_SIZE, OWNERSHIP_STATUS_OPTIONS } from "../data/constants";
+import {
+  CAPTION_OPTION_DEFAULTS,
+  DEFAULT_PAGE_SIZE,
+  OWNERSHIP_STATUS_OPTIONS
+} from "../data/constants";
+
+import "./styles/viewer.scss";
 
 /**
  * @function Home
@@ -40,10 +46,20 @@ const Home = () => {
   const { list: guitars = [], pagination = types.guitarsState.defaults } =
     useSelector(state => state.guitarsState) ?? {};
   const brands = useSelector(state => state.brandsState?.list) ?? [];
+  const gallery = useSelector(state => state.galleryState?.list) ?? [];
+
+  const frontPictures = gallery.filter(
+    image => image.caption === CAPTION_OPTION_DEFAULTS[0]
+  );
+  console.log("frontPictures", frontPictures);
 
   const { orderBy, order, page = 0, pageSize = DEFAULT_PAGE_SIZE } = pagination;
 
   const headCells = [
+    {
+      id: "thumbnail",
+      label: ""
+    },
     {
       id: "name",
       label: "Name"
@@ -158,6 +174,9 @@ const Home = () => {
                   const brand =
                     (brands ?? []).find(brand => brand.id === row.brandId) ??
                     {};
+                  const frontPicture = frontPictures.find(picture =>
+                    (row.pictures ?? []).includes(picture._id)
+                  );
                   return (
                     <TableRow key={row._id}>
                       <TableCell
@@ -167,7 +186,22 @@ const Home = () => {
                           navigate(`/guitar/${row._id}`);
                         }}
                       >
-                        {row.name}
+                        {!_.isEmpty(frontPicture) && (
+                          <img
+                            src={`http://localhost:5000/gallery/${frontPicture.image}`}
+                            height="60"
+                            alt={row.name}
+                          ></img>
+                        )}
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        onClick={() => {
+                          navigate(`/guitar/${row._id}`);
+                        }}
+                      >
+                        <b>{row.name}</b>
                         {getNameAdornment(row)}
                       </TableCell>
                       <TableCell

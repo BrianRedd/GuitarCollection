@@ -1,10 +1,14 @@
 /** @module GalleryImage */
 
-import React from "react";
+import React, { useState } from "react";
 
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEdit,
+  faSquareMinus,
+  faTrash
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconButton, Tooltip } from "@mui/material";
+import { ButtonBase, IconButton } from "@mui/material";
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import confirm from "reactstrap-confirm";
@@ -14,58 +18,99 @@ import {
   getGallery
 } from "../../store/slices/gallerySlice";
 
+import ImageViewerModal from "../Modals/ImageViewerModal";
+import "./styles/gallery.scss";
+
 /**
  * @function GalleryImage
  * @returns {React.ReactNode}
  */
 const GalleryImage = props => {
-  const { image, selectImage } = props;
+  const { image, selectImage, handleDelete } = props;
   const dispatch = useDispatch();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggle = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const isDisconnect = Boolean(handleDelete);
+
   return (
-    <div className="border p-2 m-2 text-center" style={{ width: "200px" }}>
-      <Tooltip arrow placement="top" title={image.notes}>
-        <figure>
-          <img
-            src={`http://localhost:5000/gallery/${image.image}`}
-            style={{ maxWidth: "175px" }}
-            alt={image._id}
-          ></img>
-          <figcaption>{image.caption}</figcaption>
-        </figure>
-      </Tooltip>
-      <div className="mt-3">
-        <IconButton onClick={() => selectImage(image)}>
-          <FontAwesomeIcon icon={faEdit} className="text-success small" />
-        </IconButton>
-        <IconButton
-          onClick={async () => {
-            const result = await confirm({
-              title: `Delete Image?`,
-              message: `Are you sure you want to permanently delete image?`,
-              confirmColor: "danger",
-              cancelColor: "link text-primary"
-            });
-            if (result) {
-              dispatch(deleteGalleryImage(image)).then(() =>
-                dispatch(getGallery())
-              );
-            }
+    <React.Fragment>
+      <div
+        className="border gallery-image me-2 p-0 mb-2"
+        style={{
+          backgroundImage: `url(http://localhost:5000/gallery/${image.image})`
+        }}
+      >
+        {image.caption && (
+          <div className="gallery-image-caption">
+            {image.guitar ? `${image.guitar} ` : ""}
+            {image.caption}
+          </div>
+        )}
+        <ButtonBase
+          className="click-space"
+          onClick={evt => {
+            evt.preventDefault();
+            toggle();
           }}
-        >
-          <FontAwesomeIcon icon={faTrash} className="text-danger small" />
-        </IconButton>
+        />
+        <div className="gallery-image-buttons px-1">
+          <IconButton
+            onClick={() => {
+              selectImage(image);
+            }}
+          >
+            <FontAwesomeIcon icon={faEdit} className="text-success small" />
+          </IconButton>
+          <IconButton
+            onClick={async () => {
+              const result = await confirm({
+                title: `${isDisconnect ? "Disconnect" : "Delete"} Image?`,
+                message: `Are you sure you want to ${
+                  isDisconnect ? "disconnect" : "permanently delete"
+                } image?`,
+                confirmColor: "danger",
+                cancelColor: "link text-primary"
+              });
+              if (result) {
+                if (handleDelete) {
+                  handleDelete();
+                } else {
+                  dispatch(deleteGalleryImage(image)).then(() => {
+                    dispatch(getGallery());
+                  });
+                }
+              }
+            }}
+          >
+            <FontAwesomeIcon
+              icon={isDisconnect ? faSquareMinus : faTrash}
+              className="text-danger small"
+            />
+          </IconButton>
+        </div>
       </div>
-    </div>
+      <ImageViewerModal
+        isModalOpen={isModalOpen}
+        toggle={toggle}
+        image={image}
+      />
+    </React.Fragment>
   );
 };
 
 GalleryImage.propTypes = {
+  handleDelete: PropTypes.func,
   image: PropTypes.objectOf(PropTypes.any),
   selectImage: PropTypes.func
 };
 
 GalleryImage.defaultTypes = {
+  handleDelete: undefined,
   image: {},
   selectImage: () => {}
 };

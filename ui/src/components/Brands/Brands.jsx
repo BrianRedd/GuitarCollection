@@ -20,6 +20,8 @@ import * as types from "../../types/types";
 import InputTextField from "../common/InputTextField";
 import BrandBlock from "./BrandBlock";
 
+import "./styles/brands.scss";
+
 /**
  * @function Brands
  * @returns {ReactNode}
@@ -70,10 +72,7 @@ const Brands = () => {
           return (
             <React.Fragment>
               {brands?.length ? (
-                <Row
-                  style={{ maxHeight: "450px" }}
-                  className="overflow-auto border"
-                >
+                <Row className="brands-container border">
                   {brands?.map(brand => (
                     <BrandBlock
                       key={brand.id}
@@ -115,9 +114,6 @@ const Brands = () => {
                     />
                     <InputTextField name="notes" width="wide" />
                   </Row>
-                  <label htmlFor="logo" className="form-label">
-                    Select Image
-                  </label>
                   <Row>
                     <Col xs={isEdit ? 6 : 12} md={isEdit ? 4 : 6}>
                       <input
@@ -133,22 +129,17 @@ const Brands = () => {
                         required
                       />
                     </Col>
-                    {isEdit && (
+                    {isEdit && selectedBrand.logo && (
                       <Col xs={6} md={2}>
                         <img
-                          src={`http://localhost:5000/${selectedBrand.logo}`}
+                          src={`http://localhost:5000/brandLogos/${selectedBrand.logo}`}
                           width="100"
                           className="img-thumbnail mt-1"
                           alt={selectedBrand.name}
                         ></img>
                       </Col>
                     )}
-                    <Col
-                      xs={12}
-                      md={6}
-                      className="d-flex justify-content-start"
-                      style={{ height: "48px" }}
-                    >
+                    <Col xs={12} md={6} className="buttons-container">
                       <Button
                         onClick={formProps.handleSubmit}
                         variant="contained"

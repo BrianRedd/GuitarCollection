@@ -22,31 +22,34 @@ export const getGallery = createAsyncThunk("gallery/getGallery", () => {
 /**
  * @function addGalleryImage
  * @description Makes API call add new brand to DB
- * @param {Object} brandObject
+ * @param {Object} imageObject
  */
-export const addGalleryImage = createAsyncThunk("gallery/saveImage", brandObject => {
-  return axios
-    .post(`${baseURL}/saveimage`, brandObject, {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    })
-    .then(response => {
-      console.log("addGalleryImage", response);
-      return response.data;
-    });
-});
+export const addGalleryImage = createAsyncThunk(
+  "gallery/saveImage",
+  imageObject => {
+    return axios
+      .post(`${baseURL}/saveimage`, imageObject, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+      .then(response => {
+        console.log("addGalleryImage", response);
+        return response.data;
+      });
+  }
+);
 
 /**
  * @function updateGalleryImage
  * @description Makes API call update existing brand in DB
- * @param {Object} brandObject
+ * @param {Object} imageObject
  */
 export const updateGalleryImage = createAsyncThunk(
   "gallery/updateimage",
-  brandObject => {
+  imageObject => {
     return axios
-      .put(`${baseURL}/updateimage/${brandObject._id}`, brandObject, {
+      .put(`${baseURL}/updateimage/${imageObject._id}`, imageObject, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -61,14 +64,14 @@ export const updateGalleryImage = createAsyncThunk(
 /**
  * @function deleteGalleryImage
  * @description Makes API call remove existing brand from DB
- * @param {Object} brandObject
+ * @param {Object} imageObject
  */
 export const deleteGalleryImage = createAsyncThunk(
   "gallery/deleteImage",
-  brandObject => {
+  imageObject => {
     return axios
-      .delete(`${baseURL}/deleteimage/${brandObject._id}`, {
-        data: brandObject
+      .delete(`${baseURL}/deleteimage/${imageObject._id}`, {
+        data: imageObject
       })
       .then(response => {
         console.log("deleteGalleryImage", response);

@@ -83,9 +83,34 @@ const GuitarForm = props => {
         const writePurchaseHistory = rows => {
           formProps.setFieldValue("purchaseHistory", rows);
         };
+        const isEdit = Boolean(initialValues._id);
         return (
           <Form>
             <FormGroup>
+              {isEdit ? (
+                <Row className="border my-4 pt-3">
+                  <InputFreeFormField
+                    name="status"
+                    required
+                    options={statusOptions}
+                    width="wide"
+                  />
+                  <InputFreeFormField
+                    name="tuning"
+                    options={tuningOptions}
+                    width="wide"
+                  />
+                  <InputTextField
+                    name="lastPlayed"
+                    label="Last Played"
+                    otherProps={{
+                      type: "date",
+                      InputLabelProps: { shrink: true }
+                    }}
+                    width="wide"
+                  />
+                </Row>
+              ) : null}
               <Row>
                 <InputTextField name="name" required />
                 <InputSelectField
@@ -150,27 +175,30 @@ const GuitarForm = props => {
                   width="full"
                 />
               </Row>
-              <Row>
-                <InputFreeFormField
-                  name="status"
-                  required
-                  options={statusOptions}
-                  width="wide"
-                />
-                <InputFreeFormField
-                  name="tuning"
-                  options={tuningOptions}
-                  width="wide"
-                />
-                <InputTextField
-                  name="lastPlayed"
-                  label="Last Played"
-                  otherProps={{
-                    type: "date",
-                    InputLabelProps: { shrink: true }
-                  }}
-                />
-              </Row>
+
+              {isEdit ? null : (
+                <Row>
+                  <InputFreeFormField
+                    name="status"
+                    required
+                    options={statusOptions}
+                    width="wide"
+                  />
+                  <InputFreeFormField
+                    name="tuning"
+                    options={tuningOptions}
+                    width="wide"
+                  />
+                  <InputTextField
+                    name="lastPlayed"
+                    label="Last Played"
+                    otherProps={{
+                      type: "date",
+                      InputLabelProps: { shrink: true }
+                    }}
+                  />
+                </Row>
+              )}
             </FormGroup>
             <Row className="pt-5">
               <Col xs={0} md={6} />

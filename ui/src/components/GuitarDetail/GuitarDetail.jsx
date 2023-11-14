@@ -9,16 +9,20 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { Alert, Button, Col, Row } from "reactstrap";
+import { Alert, Col, Row } from "reactstrap";
 import confirm from "reactstrap-confirm";
 
 import { updateGuitar } from "../../store/slices/guitarsSlice";
 import { DATE_FORMAT } from "../data/constants";
+
 import MaintenanceTable from "./MaintenanceTable";
-import PictureGallery from "./PictureGallery";
+import GuitarPictures from "./GuitarPictures";
 import PurchaseDetailTable from "./PurchaseDetailTable";
 import SpecificationsTable from "./SpecificationsTable";
 import TodoList from "./TodoList";
+
+import { Button, IconButton } from "@mui/material";
+import "./styles/guitardetail.scss";
 
 /**
  * @function GuitarDetail
@@ -76,14 +80,9 @@ const GuitarDetail = () => {
       {guitar?._id && matchId ? (
         <div className="d-flex w-100 justify-content-between">
           <h1>{guitar.name}</h1>
-          <Button
-            onClick={() => navigate(`/editguitar/${guitar._id}`)}
-            variant="contained"
-            disableElevation
-            color="info"
-          >
-            <FontAwesomeIcon icon={faEdit} /> Edit
-          </Button>
+          <IconButton onClick={() => navigate(`/editguitar/${guitar._id}`)}>
+            <FontAwesomeIcon icon={faEdit} className="text-info" />
+          </IconButton>
         </div>
       ) : (
         <Alert className="m-0" color={"danger"}>
@@ -91,11 +90,13 @@ const GuitarDetail = () => {
         </Alert>
       )}
       <Row>
-        <Col {...colWidth()}>
-          <img
-            src={`http://localhost:5000/brandLogos/${brand.logo}`}
-            alt={brand.name}
-          ></img>
+        <Col {...colWidth()} className="brand-logo">
+          {brand.logo && (
+            <img
+              src={`http://localhost:5000/brandLogos/${brand.logo}`}
+              alt={brand.name}
+            ></img>
+          )}
         </Col>
         <Col>
           <Row>
@@ -168,7 +169,7 @@ const GuitarDetail = () => {
         </Col>
       </Row>
       <PurchaseDetailTable guitar={guitar} />
-      <PictureGallery guitar={guitar} />
+      <GuitarPictures guitar={guitar} />
       <SpecificationsTable guitar={guitar} />
       <TodoList guitar={guitar} />
       <MaintenanceTable guitar={guitar} />

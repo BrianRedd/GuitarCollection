@@ -18,7 +18,7 @@ import { OWNERSHIP_STATUS_OPTIONS } from "../data/constants";
 export const PurchaseDetailTable = props => {
   const { guitar } = props;
   return (
-    <Row>
+    <Row className="mt-3">
       <h5 className="mt-2 text-decoration-underline">Purchase History</h5>
       <Table>
         <TableHead>

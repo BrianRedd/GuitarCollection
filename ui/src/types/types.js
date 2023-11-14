@@ -73,7 +73,8 @@ export const guitar = {
         cost: string,
         notes: string
       })
-    )
+    ),
+    todo: arrayOf(any) // TODO: update
   }),
   defaults: {
     name: "",
@@ -95,7 +96,8 @@ export const guitar = {
     lastPlayed: "",
     specs: [],
     pictures: [],
-    maintenance: []
+    maintenance: [],
+    todo: []
   }
 };
 

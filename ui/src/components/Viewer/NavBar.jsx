@@ -4,9 +4,9 @@ import React, { useEffect, useState } from "react";
 
 import {
   faGuitar,
-  faHome,
   faImages,
-  faIndustry
+  faIndustry,
+  faList
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
@@ -22,9 +22,9 @@ import {
   NavbarToggler
 } from "reactstrap";
 
-import { clearMessage as clearGuitarMessage } from "../../store/slices/guitarsSlice";
 import { clearMessage as clearBrandMessage } from "../../store/slices/brandsSlice";
 import { clearMessage as clearGalleryMessage } from "../../store/slices/gallerySlice";
+import { clearMessage as clearGuitarMessage } from "../../store/slices/guitarsSlice";
 
 const NavBar = () => {
   const dispatch = useDispatch();
@@ -79,7 +79,7 @@ const NavBar = () => {
         <Nav className="me-auto" navbar>
           <NavItem>
             <Link to="/">
-              <FontAwesomeIcon icon={faHome} /> Home
+              <FontAwesomeIcon icon={faList} /> Guitar List
             </Link>
           </NavItem>
           <NavItem>
@@ -102,7 +102,7 @@ const NavBar = () => {
       <Alert
         className="my-0 mx-1"
         color={guitarsMessage?.type}
-        isOpen={!_.isEmpty(guitarsMessage) }
+        isOpen={!_.isEmpty(guitarsMessage)}
         toggle={() => dispatch(clearGuitarMessage())}
       >
         {guitarsMessage?.text}

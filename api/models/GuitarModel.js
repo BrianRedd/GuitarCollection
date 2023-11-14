@@ -60,18 +60,6 @@ const maintenanceSchema = new mongoose.Schema({
   }
 });
 
-const imageSchema = new mongoose.Schema({
-  id: {
-    type: String
-  },
-  title: {
-    type: String
-  },
-  fileName: {
-    type: String
-  }
-});
-
 const todoListSchema = new mongoose.Schema({
   id: {
     type: String
@@ -127,7 +115,6 @@ const guitarSchema = new mongoose.Schema({
   appearanceNotes: {
     type: String
   },
-  purchaseHistory: [purchaseHistorySchema],
   story: {
     type: String
   },
@@ -141,8 +128,11 @@ const guitarSchema = new mongoose.Schema({
   lastPlayed: {
     type: String
   },
+  purchaseHistory: [purchaseHistorySchema],
+  pictures: [{
+    type: String
+  }],
   specs: [specificationSchema],
-  pictures: [imageSchema],
   maintenance: [maintenanceSchema],
   todoList: [todoListSchema],
   lastUpdated: {

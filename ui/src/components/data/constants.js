@@ -70,5 +70,19 @@ export const STATUS_OPTION_DEFAULTS = [
   "Playable",
   "De-tuned",
   "Offsite Repairs",
-  "Onsite Repairs"
+  "In Need of Repairs",
+  "In Transit",
+  "For Sale"
+];
+
+export const CAPTION_OPTION_DEFAULTS = [
+  "Full Front",
+  "Full Side",
+  "Body Front",
+  "Body Back",
+  "Headstock Front",
+  "Headstock Back",
+  "Label",
+  "Serial Number",
+  "Case"
 ];

@@ -17,6 +17,7 @@ const InputTextField = props => {
     prefix,
     width,
     height,
+    required,
     otherProps = {}
   } = props;
 
@@ -51,16 +52,6 @@ const InputTextField = props => {
         }
         fullWidth
         helperText={_.get(formProps.errors, name)}
-        label={label}
-        name={name}
-        onBlur={formProps.handleBlur}
-        onChange={value => {
-          formProps.handleChange(value);
-          if (onChange) {
-            onChange(value);
-          }
-        }}
-        size={height === "tall" ? "normal" : "small"}
         InputProps={
           prefix
             ? {
@@ -70,7 +61,18 @@ const InputTextField = props => {
               }
             : undefined
         }
-        value={_.get(formProps.values, name)}
+        label={label}
+        name={name}
+        onBlur={formProps.handleBlur}
+        onChange={value => {
+          formProps.handleChange(value);
+          if (onChange) {
+            onChange(value);
+          }
+        }}
+        required={required}
+        size={height === "tall" ? "normal" : "small"}
+        value={_.get(formProps.values, name) ?? ""}
       />
     </Col>
   );
@@ -82,6 +84,7 @@ InputTextField.propTypes = {
   name: PropTypes.string,
   onChange: PropTypes.func,
   prefix: PropTypes.string,
+  required: PropTypes.bool,
   width: PropTypes.string,
   otherProps: PropTypes.objectOf(PropTypes.any)
 };
@@ -92,6 +95,7 @@ InputTextField.defaultProps = {
   name: "",
   onChange: undefined,
   prefix: undefined,
+  required: false,
   width: "",
   otherProps: {}
 };
