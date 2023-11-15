@@ -87,3 +87,17 @@ export const CAPTION_OPTION_DEFAULTS = [
   "Serial Number",
   "Case"
 ];
+
+export const SPEC_OPTION_DEFAULTS = [
+  "Body Material",
+  "Body Type",
+  "Bridge",
+  "Decorations",
+  "Neck Material",
+  "Pickups",
+  "Pre-Amp",
+  "Sound Hole",
+  "Tuners",
+  "Reference Link^",
+  "Other"
+];

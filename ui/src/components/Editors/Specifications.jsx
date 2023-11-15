@@ -1,27 +1,27 @@
-/** @module PurchaseHistory */
+/** @module Specifications */
 
 import React, { useState } from "react";
 
 import {
-  faCircleXmark,
-  faFloppyDisk,
-  faPenToSquare,
-  faPlus,
-  faTrash
+    faCircleXmark,
+    faFloppyDisk,
+    faPenToSquare,
+    faPlus,
+    faTrash
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Button } from "@mui/material";
 import {
-  DataGrid,
-  GridActionsCellItem,
-  GridRowEditStopReasons,
-  GridRowModes,
-  GridToolbarContainer
+    DataGrid,
+    GridActionsCellItem,
+    GridRowEditStopReasons,
+    GridRowModes,
+    GridToolbarContainer
 } from "@mui/x-data-grid";
 import { randomId } from "@mui/x-data-grid-generator";
 import { useFormikContext } from "formik";
 import PropTypes from "prop-types";
-import { OWNERSHIP_STATUS_OPTIONS } from "../data/constants";
+import { SPEC_OPTION_DEFAULTS } from "../data/constants";
 
 function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
@@ -32,44 +32,40 @@ function EditToolbar(props) {
       ...oldRows,
       {
         id,
-        ownershipStatus: "",
-        where: "",
-        when: "",
-        who: "",
-        amount: null,
-        notes: "",
+        specType: "",
+        specification: "",
         isNew: true
       }
     ]);
     setRowModesModel(oldModel => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "ownershipStatus" }
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: "specType" }
     }));
   };
 
   return (
     <GridToolbarContainer className="d-flex justify-content-between p-2">
-      <h5>Purchase History</h5>
+      <h5>Specifications</h5>
       <Button
         color="primary"
         startIcon={<FontAwesomeIcon icon={faPlus} />}
         onClick={createNewRow}
       >
-        Add Entry
+        Add Spec
       </Button>
     </GridToolbarContainer>
   );
 }
 
 /**
- * @function PurchaseHistory
+ * @function Specifications
  * @returns {React.ReactNode}
  */
-const PurchaseHistory = props => {
-  const { writePurchaseHistory } = props;
+const Specifications = props => {
+  const { writeSpecifications } = props;
   const formProps = useFormikContext();
 
-  const [rows, setRows] = useState(formProps?.values?.purchaseHistory ?? []);
+  const [rows, setRows] = useState(formProps?.values?.specifications ?? []);
   const [rowModesModel, setRowModesModel] = useState({});
 
   const handleRowEditStop = (params, event) => {
@@ -109,7 +105,7 @@ const PurchaseHistory = props => {
     const updatedRow = { ...newRow, isNew: false };
     const newRows = rows.map(row => (row.id === newRow.id ? updatedRow : row));
     setRows(newRows);
-    writePurchaseHistory(newRows);
+    writeSpecifications(newRows);
     return updatedRow;
   };
 
@@ -119,58 +115,21 @@ const PurchaseHistory = props => {
 
   const columns = [
     {
-      field: "ownershipStatus",
-      headerName: "Ownership Status",
-      flex: 1,
+      field: "specType",
+      headerName: "Type",
+      flex: 0.3,
       editable: true,
       type: "singleSelect",
-      valueOptions: OWNERSHIP_STATUS_OPTIONS,
-      getOptionValue: value => value.value,
-      getOptionLabel: value => value.label,
+      valueOptions: SPEC_OPTION_DEFAULTS,
+      getOptionValue: value => value,
+      getOptionLabel: value => value.replaceAll("^", ""),
       headerClassName: "fst-italic"
     },
     {
-      field: "where",
-      headerName: "Transaction Location",
+      field: "specification",
+      headerName: "Specification",
+      editable: true,
       flex: 1,
-      editable: true,
-      headerClassName: "fst-italic"
-    },
-    {
-      field: "when",
-      headerName: "Date",
-      flex: 1,
-      editable: true,
-      headerClassName: "fst-italic"
-    },
-    {
-      field: "who",
-      headerName: "Store / Party",
-      flex: 1,
-      editable: true,
-      headerClassName: "fst-italic"
-    },
-    {
-      field: "amount",
-      headerName: "Amount",
-      type: "number",
-      flex: 1,
-      align: "right",
-      headerAlign: "right",
-      editable: true,
-      valueFormatter: params => {
-        if (params.value == null) {
-          return "";
-        }
-        return `$ ${params.value.toLocaleString()}`;
-      },
-      headerClassName: "fst-italic"
-    },
-    {
-      field: "notes",
-      headerName: "Notes",
-      flex: 1.5,
-      editable: true,
       headerClassName: "fst-italic"
     },
     {
@@ -256,12 +215,12 @@ const PurchaseHistory = props => {
   );
 };
 
-PurchaseHistory.propTypes = {
-  writePurchaseHistory: PropTypes.func
+Specifications.propTypes = {
+  writeSpecifications: PropTypes.func
 };
 
-PurchaseHistory.defaultProps = {
-  writePurchaseHistory: () => {}
+Specifications.defaultProps = {
+  writeSpecifications: () => {}
 };
 
-export default PurchaseHistory;
+export default Specifications;

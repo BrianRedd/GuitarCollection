@@ -5,3 +5,11 @@
     width: 100%;
   }
 }
+
+.navigation-span {
+  color: blue;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}

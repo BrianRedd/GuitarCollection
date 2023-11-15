@@ -81,7 +81,7 @@ const GuitarPictures = props => {
           setSelectedImage(image);
         };
         return (
-          <Row className="mt-3">
+          <Row>
             <h5 className="mt-2 text-decoration-underline">Picture Gallery</h5>
             <Row>
               {(guitar.pictures ?? [])?.map(imageId => {

@@ -24,6 +24,7 @@ import InputFreeFormField from "../common/InputFreeFormField";
 import InputSelectField from "../common/InputSelectField";
 import InputTextField from "../common/InputTextField";
 import PurchaseHistory from "./PurchaseHistory";
+import Specifications from "./Specifications";
 
 /**
  * @function GuitarForm
@@ -90,8 +91,8 @@ const GuitarForm = props => {
       validationSchema={guitarsValidationSchema}
     >
       {formProps => {
-        const writePurchaseHistory = rows => {
-          formProps.setFieldValue("purchaseHistory", rows);
+        const writeArray = (arrayField, rows) => {
+          formProps.setFieldValue(arrayField, rows);
         };
         const isEdit = Boolean(initialValues._id);
         return (
@@ -171,7 +172,6 @@ const GuitarForm = props => {
                   width="wide"
                 />
               </Row>
-              <PurchaseHistory writePurchaseHistory={writePurchaseHistory} />
               <Row>
                 <InputTextField
                   name="story"
@@ -182,7 +182,6 @@ const GuitarForm = props => {
                   width="full"
                 />
               </Row>
-
               {isEdit ? null : (
                 <Row>
                   <InputFreeFormField
@@ -206,6 +205,14 @@ const GuitarForm = props => {
                   />
                 </Row>
               )}
+              <PurchaseHistory
+                writePurchaseHistory={rows =>
+                  writeArray("purchaseHistory", rows)
+                }
+              />
+              <Specifications
+                writeSpecifications={rows => writeArray("specifications", rows)}
+              />
             </FormGroup>
             <Row className="pt-5">
               <Col xs={0} md={6} />
@@ -225,7 +232,9 @@ const GuitarForm = props => {
                   onClick={() => {
                     formProps.resetForm(initialValues);
                     navigate(
-                      `/${isEdit ? `guitar/${initialValues._id}` : "/guitarlist"}`
+                      `/${
+                        isEdit ? `guitar/${initialValues._id}` : "/guitarlist"
+                      }`
                     );
                   }}
                   variant="outlined"

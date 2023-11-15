@@ -51,12 +51,10 @@ export const guitar = {
     status: string,
     tuning: string,
     lastPlayed: oneOfType([string, objectOf(any)]),
-    specs: arrayOf(
+    specifications: arrayOf(
       shape({
-        id: string,
         specType: string,
-        specification: string,
-        notes: string
+        specification: string
       })
     ),
     pictures: arrayOf(
@@ -75,7 +73,14 @@ export const guitar = {
         notes: string
       })
     ),
-    todo: arrayOf(any) // TODO: update
+    todo: arrayOf(
+      shape({
+        todoItem: string,
+        status: string,
+        completionDate: string,
+        notes: string
+      })
+    )
   }),
   defaults: {
     name: "",
@@ -95,7 +100,7 @@ export const guitar = {
     status: "",
     tuning: "",
     lastPlayed: "",
-    specs: [],
+    specifications: [],
     pictures: [],
     maintenance: [],
     todo: []

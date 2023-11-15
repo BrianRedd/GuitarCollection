@@ -2,15 +2,42 @@
 
 import React from "react";
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow
+} from "@mui/material";
 import PropTypes from "prop-types";
 import { Row } from "reactstrap";
 
-const TodoList = props => {
+export const TodoList = props => {
   const { guitar } = props;
   return (
-    <Row>
-      <h5 className="mt-2 text-decoration-underline">ToDo List</h5>
-      {JSON.stringify(guitar.todo, null, 2)}
+    <Row className="mt-3">
+      <h5 className="mt-2 text-decoration-underline">To Do List</h5>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Item</TableCell>
+            <TableCell width="250">Status</TableCell>
+            <TableCell>Completion Date</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {(guitar.todo ?? []).map(row => (
+            <TableRow key={row.id}>
+              <TableCell component="th" scope="row">
+                {row.todoItem}
+              </TableCell>
+              <TableCell>{row.status}</TableCell>
+              <TableCell>{row.completionDate}</TableCell>
+              <TableCell>{row.notes}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </Row>
   );
 };

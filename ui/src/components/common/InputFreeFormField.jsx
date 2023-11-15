@@ -12,14 +12,18 @@ const filter = createFilterOptions();
 
 const InputFreeFormField = props => {
   const {
-    label: labelFromProps,
+    className,
     hidden,
+    label: labelFromProps,
     name,
     onChange,
     options,
     required,
+    size = "small",
     width
   } = props;
+
+  console.log("props", props);
 
   const formProps = useFormikContext();
 
@@ -51,7 +55,12 @@ const InputFreeFormField = props => {
   }
 
   return (
-    <Col xs={xs} md={md} lg={lg} className={`mb-3 ${hidden ? "d-none" : ""}`}>
+    <Col
+      xs={xs}
+      md={md}
+      lg={lg}
+      className={_.compact(["mb-3", hidden && "d-none", className].join(" "))}
+    >
       <Autocomplete
         onChange={(event, newValue) => {
           if (!newValue) {
@@ -108,7 +117,7 @@ const InputFreeFormField = props => {
         freeSolo
         fullWidth
         name={name}
-        size="small"
+        size={size}
         value={_.get(formProps.values, name) ?? ""}
         renderInput={params => (
           <TextField
@@ -128,16 +137,19 @@ const InputFreeFormField = props => {
 };
 
 InputFreeFormField.propTypes = {
+  className: PropTypes.string,
   hidden: PropTypes.bool,
   label: PropTypes.string,
   name: PropTypes.string,
   onChange: PropTypes.func,
   options: PropTypes.array,
   required: PropTypes.bool,
+  size: PropTypes.string,
   width: PropTypes.string
 };
 
 InputFreeFormField.defaultProps = {
+  className: undefined,
   hidden: false,
   label: undefined,
   lg: 2,
@@ -146,6 +158,7 @@ InputFreeFormField.defaultProps = {
   onChange: () => {},
   options: [],
   required: false,
+  size: "small",
   width: ""
 };
 

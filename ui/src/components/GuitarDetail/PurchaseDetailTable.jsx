@@ -23,7 +23,7 @@ export const PurchaseDetailTable = props => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Ownership Status</TableCell>
+            <TableCell width="250">Ownership Status</TableCell>
             <TableCell>Transaction Location</TableCell>
             <TableCell>Date</TableCell>
             <TableCell>Store / Party</TableCell>

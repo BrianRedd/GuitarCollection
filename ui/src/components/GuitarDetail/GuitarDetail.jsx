@@ -78,11 +78,15 @@ const GuitarDetail = () => {
 
   const LinkParser = paragraph => {
     // links
-    const potentialLinks = paragraph.split("|");
+    const potentialLinks = paragraph.split(/[|^_]+/);
     return potentialLinks.map(snippet => {
       const linkedGuitar = guitars.find(guitar => guitar.name === snippet);
       if (!_.isEmpty(linkedGuitar)) {
-        return <a href={`/guitar/${linkedGuitar._id}`}>{snippet}</a>;
+        return (
+          <span className="navigation-span" onClick={() => navigate(`/guitar/${linkedGuitar._id}`)}>
+            {snippet}
+          </span>
+        );
       }
       return snippet;
     });
@@ -189,8 +193,8 @@ const GuitarDetail = () => {
           ))}
         </Col>
       </Row>
-      <PurchaseDetailTable guitar={guitar} />
       <GuitarPictures guitar={guitar} />
+      <PurchaseDetailTable guitar={guitar} />
       <SpecificationsTable guitar={guitar} />
       <TodoList guitar={guitar} />
       <MaintenanceTable guitar={guitar} />

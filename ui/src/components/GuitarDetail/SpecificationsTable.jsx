@@ -2,15 +2,39 @@
 
 import React from "react";
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow
+} from "@mui/material";
 import PropTypes from "prop-types";
 import { Row } from "reactstrap";
 
-const SpecificationsTable = props => {
+export const SpecificationsTable = props => {
   const { guitar } = props;
   return (
-    <Row>
+    <Row className="mt-3">
       <h5 className="mt-2 text-decoration-underline">Specifications</h5>
-      {JSON.stringify(guitar.specs, null, 2)}
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell width="250">Type</TableCell>
+            <TableCell>Specification</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {(guitar.specifications ?? []).map(row => (
+            <TableRow key={row.id}>
+              <TableCell component="th" scope="row">
+                {row.specType}
+              </TableCell>
+              <TableCell>{row.specification}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </Row>
   );
 };

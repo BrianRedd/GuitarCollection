@@ -1,16 +1,56 @@
 /** @module MaintenanceTable */
 
-import React from 'react';
+import React from "react";
 
-import PropTypes from 'prop-types';
-import { Row } from 'reactstrap';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow
+} from "@mui/material";
+import PropTypes from "prop-types";
+import { NumericFormat } from "react-number-format";
+import { Row } from "reactstrap";
 
-const MaintenanceTable = props => {
+export const MaintenanceTable = props => {
   const { guitar } = props;
   return (
-    <Row>
+    <Row className="mt-3">
       <h5 className="mt-2 text-decoration-underline">Maintenance History</h5>
-      {JSON.stringify(guitar.maintenance, null, 2)}
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell width="250">Maintenance Type</TableCell>
+            <TableCell>Date</TableCell>
+            <TableCell>Who By</TableCell>
+            <TableCell>Cost</TableCell>
+            <TableCell>Notes</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {(guitar.specifications ?? []).map(row => (
+            <TableRow key={row.id}>
+              <TableCell component="th" scope="row">
+                {row.type}
+              </TableCell>
+              <TableCell>{row.date}</TableCell>
+              <TableCell>{row.whoBy}</TableCell>
+              <TableCell>
+                <NumericFormat
+                  value={row.cost}
+                  thousandSeparator
+                  decimalScale={2}
+                  fixedDecimalScale
+                  prefix={"$"}
+                  displayType="text"
+                />
+              </TableCell>
+              <TableCell>{row.notes}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </Row>
   );
 };

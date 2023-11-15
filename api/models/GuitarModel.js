@@ -33,16 +33,10 @@ const specificationSchema = new mongoose.Schema({
   },
   specification: {
     type: String
-  },
-  notes: {
-    type: String
   }
 });
 
 const maintenanceSchema = new mongoose.Schema({
-  id: {
-    type: String
-  },
   type: {
     type: String
   },
@@ -65,6 +59,15 @@ const todoListSchema = new mongoose.Schema({
     type: String
   },
   todoItem: {
+    type: String
+  },
+  status: {
+    type: String
+  },
+  completionDate: {
+    type: String
+  },
+  notes: {
     type: String
   }
 });
@@ -129,10 +132,12 @@ const guitarSchema = new mongoose.Schema({
     type: String
   },
   purchaseHistory: [purchaseHistorySchema],
-  pictures: [{
-    type: String
-  }],
-  specs: [specificationSchema],
+  pictures: [
+    {
+      type: String
+    }
+  ],
+  specifications: [specificationSchema],
   maintenance: [maintenanceSchema],
   todoList: [todoListSchema],
   lastUpdated: {
