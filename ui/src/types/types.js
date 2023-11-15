@@ -12,7 +12,8 @@ import {
 } from "prop-types";
 import {
   DEFAULT_ORDER_BY,
-  DEFAULT_PAGE_SIZE
+  DEFAULT_PAGE_SIZE,
+  INSTRUMENT_OPTION_DEFAULTS
 } from "../components/data/constants";
 
 /*
@@ -85,8 +86,8 @@ export const guitar = {
     countyOfOrigin: "",
     purchaseHistory: [],
     case: "",
-    instrumentType: "",
-    noOfStrings: null,
+    instrumentType: INSTRUMENT_OPTION_DEFAULTS[0],
+    noOfStrings: 6,
     soundScape: "",
     color: "",
     appearanceNotes: "",

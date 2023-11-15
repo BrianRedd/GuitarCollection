@@ -36,6 +36,16 @@ const GuitarForm = props => {
   const guitars = useSelector(state => state.guitarsState?.list) ?? [];
   const brands = useSelector(state => state.brandsState.list) ?? [];
 
+  const brandOptions = _.orderBy(
+    brands?.map(brand => ({
+      value: brand.id,
+      label: brand.name,
+      presence: (guitars ?? []).filter(guitar => guitar.brandId === brand.id)
+        .length
+    })),
+    ["presence", "name"],
+    ["desc", "asc"]
+  );
   const countryOptions = _.uniq(
     _.compact([
       ...COUNTRY_OPTION_DEFAULTS,
@@ -63,9 +73,9 @@ const GuitarForm = props => {
   const statusOptions = _.uniq(
     _.compact([
       ...STATUS_OPTION_DEFAULTS,
-      ...guitars.map(guitar => guitar.status)
+      ...guitars.map(guitar => guitar.status).sort()
     ])
-  ).sort();
+  );
   const tuningOptions = _.uniq(
     _.compact([
       ...TUNING_OPTION_DEFAULTS,
@@ -117,10 +127,7 @@ const GuitarForm = props => {
                   name="brandId"
                   label="Brand"
                   required
-                  options={brands?.map(brand => ({
-                    value: brand.id,
-                    label: brand.name
-                  }))}
+                  options={brandOptions}
                 />
                 <InputTextField name="model" required />
                 <InputTextField name="serialNo" label="S/N" required />
@@ -217,7 +224,9 @@ const GuitarForm = props => {
                   className="ms-2"
                   onClick={() => {
                     formProps.resetForm(initialValues);
-                    navigate("/");
+                    navigate(
+                      `/${isEdit ? `guitar/${initialValues._id}` : "/guitarlist"}`
+                    );
                   }}
                   variant="outlined"
                   color="secondary"

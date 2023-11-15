@@ -7,9 +7,9 @@ import { useNavigate } from "react-router-dom";
 
 import * as types from "../../types/types";
 
+import { addGuitar } from "../../store/slices/guitarsSlice";
 import { DATE_FORMAT } from "../data/constants";
 import GuitarForm from "./GuitarForm";
-import { addGuitar } from "../../store/slices/guitarsSlice";
 
 /**
  * @function AddGuitar
@@ -33,9 +33,9 @@ const AddGuitar = () => {
               ? moment(values.lastPlayed).format(DATE_FORMAT)
               : ""
           };
-          dispatch(addGuitar(submissionValues)).then(() => {
+          dispatch(addGuitar(submissionValues)).then(response => {
             actions.resetForm(initialValues);
-            navigate("/");
+            navigate(`/guitar/${response?.payload?._id ?? values?.name ?? ""}`);
           });
         }}
         buttonText="Add Guitar"

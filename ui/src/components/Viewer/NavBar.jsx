@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import {
   faGuitar,
+  faHome,
   faImages,
   faIndustry,
   faList
@@ -79,6 +80,11 @@ const NavBar = () => {
         <Nav className="me-auto" navbar>
           <NavItem>
             <Link to="/">
+              <FontAwesomeIcon icon={faHome} /> Home
+            </Link>
+          </NavItem>
+          <NavItem>
+            <Link to="/guitarlist">
               <FontAwesomeIcon icon={faList} /> Guitar List
             </Link>
           </NavItem>

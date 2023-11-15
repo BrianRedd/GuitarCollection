@@ -5,6 +5,7 @@ import React from "react";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box } from "@mui/system";
+import _ from "lodash";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -15,8 +16,8 @@ import confirm from "reactstrap-confirm";
 import { updateGuitar } from "../../store/slices/guitarsSlice";
 import { DATE_FORMAT } from "../data/constants";
 
-import MaintenanceTable from "./MaintenanceTable";
 import GuitarPictures from "./GuitarPictures";
+import MaintenanceTable from "./MaintenanceTable";
 import PurchaseDetailTable from "./PurchaseDetailTable";
 import SpecificationsTable from "./SpecificationsTable";
 import TodoList from "./TodoList";
@@ -75,20 +76,34 @@ const GuitarDetail = () => {
     );
   };
 
+  const LinkParser = paragraph => {
+    // links
+    const potentialLinks = paragraph.split("|");
+    return potentialLinks.map(snippet => {
+      const linkedGuitar = guitars.find(guitar => guitar.name === snippet);
+      if (!_.isEmpty(linkedGuitar)) {
+        return <a href={`/guitar/${linkedGuitar._id}`}>{snippet}</a>;
+      }
+      return snippet;
+    });
+  };
+
+  if (!guitar?._id || !matchId) {
+    return (
+      <Alert className="m-0" color={"danger"}>
+        {matchId ?? "Guitar"} Not Found or ID is Invalid
+      </Alert>
+    );
+  }
+
   return (
     <Box sx={{ width: "100%" }} className="p-4">
-      {guitar?._id && matchId ? (
-        <div className="d-flex w-100 justify-content-between">
-          <h1>{guitar.name}</h1>
-          <IconButton onClick={() => navigate(`/editguitar/${guitar._id}`)}>
-            <FontAwesomeIcon icon={faEdit} className="text-info" />
-          </IconButton>
-        </div>
-      ) : (
-        <Alert className="m-0" color={"danger"}>
-          {matchId ?? "Guitar"} Not Found or Valid
-        </Alert>
-      )}
+      <div className="d-flex w-100 justify-content-between">
+        <h1>{guitar.name}</h1>
+        <IconButton onClick={() => navigate(`/editguitar/${guitar._id}`)}>
+          <FontAwesomeIcon icon={faEdit} className="text-info" />
+        </IconButton>
+      </div>
       <Row>
         <Col {...colWidth()} className="brand-logo">
           {brand.logo && (
@@ -165,7 +180,13 @@ const GuitarDetail = () => {
       <Row>
         <Col xs={12} className="mt-3">
           <b>Story: </b>
-          <p>{guitar.story}</p>
+          <br />
+          {(guitar.story ?? "").split("\n").map((paragraph, idx) => (
+            <React.Fragment key={`paragraph-${idx}`}>
+              <br />
+              <p>{LinkParser(paragraph)}</p>
+            </React.Fragment>
+          ))}
         </Col>
       </Row>
       <PurchaseDetailTable guitar={guitar} />

@@ -1,298 +1,215 @@
 /** @module Home */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  Box,
-  IconButton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableSortLabel,
-  Tooltip
-} from "@mui/material";
+import { Button, ButtonBase } from "@mui/material";
+import { Box } from "@mui/system";
 import _ from "lodash";
+import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Alert } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import confirm from "reactstrap-confirm";
 
-import {
-  removeGuitar,
-  updatePagination
-} from "../../store/slices/guitarsSlice";
-import * as types from "../../types/types";
+import { useNavigate } from "react-router";
+import { updateGuitar } from "../../store/slices/guitarsSlice";
 import {
   CAPTION_OPTION_DEFAULTS,
-  DEFAULT_PAGE_SIZE,
-  OWNERSHIP_STATUS_OPTIONS
+  DATE_FORMAT,
+  STATUS_OPTION_DEFAULTS
 } from "../data/constants";
 
-import "./styles/viewer.scss";
-
-/**
- * @function Home
- * @returns {ReactNode}
- */
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { list: guitars = [], pagination = types.guitarsState.defaults } =
-    useSelector(state => state.guitarsState) ?? {};
+  const guitars = useSelector(state => state.guitarsState?.list) ?? [];
   const brands = useSelector(state => state.brandsState?.list) ?? [];
   const gallery = useSelector(state => state.galleryState?.list) ?? [];
 
-  const frontPictures = gallery.filter(
-    image => image.caption === CAPTION_OPTION_DEFAULTS[0]
-  );
-  console.log("frontPictures", frontPictures);
+  const [featuredGuitar, setFeaturedGuitar] = useState({});
 
-  const { orderBy, order, page = 0, pageSize = DEFAULT_PAGE_SIZE } = pagination;
+  const getFeaturedGuitar = () => {
+    const availableGuitars = guitars.filter(
+      guitar => guitar.status === STATUS_OPTION_DEFAULTS[0]
+    );
+    // TODO: add filters
+    // TODO: take into account last played
+    const rand = Math.floor(Math.random() * availableGuitars.length);
+    const featuredGuitar = (guitars ?? []).find(
+      guitar => guitar._id === availableGuitars[rand]._id
+    );
+    const frontPicture = (gallery ?? []).find(image => {
+      console.log("image", image);
+      return (
+        (featuredGuitar.pictures ?? []).includes(image?._id) &&
+        image?.caption &&
+        image?.caption === CAPTION_OPTION_DEFAULTS[0]
+      );
+    })?.image;
+    const brandObject = (brands ?? []).find(
+      brand => brand.id === featuredGuitar.brandId
+    );
+    return {
+      ...featuredGuitar,
+      frontPicture,
+      brandObject
+    };
+  };
 
-  const headCells = [
-    {
-      id: "thumbnail",
-      label: ""
-    },
-    {
-      id: "name",
-      label: "Name"
-    },
-    {
-      id: "brandId",
-      label: "Make"
-    },
-    {
-      id: "model",
-      label: "Model"
-    },
-    {
-      id: "year",
-      label: "Year"
-    },
-    {
-      id: "iconHolder",
-      label: ""
+  const hasFrontPicture = !_.isEmpty(featuredGuitar.frontPicture);
+
+  useEffect(() => {
+    if (guitars.length && brands.length && gallery.length) {
+      const featuredGuitar = getFeaturedGuitar();
+      setFeaturedGuitar(featuredGuitar);
     }
-  ];
-
-  const gridData = _.orderBy(guitars ?? [], orderBy, order).slice(
-    page * pageSize,
-    page * pageSize + pageSize
-  );
-
-  const handleChangePage = (event, newPage) => {
-    dispatch(
-      updatePagination({
-        page: newPage
-      })
-    );
-  };
-
-  const handleChangeRowsPerPage = event => {
-    dispatch(
-      updatePagination({
-        pageSize: parseInt(event.target.value, 10),
-        page: 0
-      })
-    );
-  };
-
-  const emptyRows =
-    page > 0 ? Math.max(0, (page + 1) * pageSize) - guitars.length : 0;
-
-  const getNameAdornment = row => {
-    const lastPurchaseHistory = row?.purchaseHistory?.slice(-1) ?? {};
-    const lastOwnershipStatus = lastPurchaseHistory[0]?.ownershipStatus;
-    const icon = OWNERSHIP_STATUS_OPTIONS.find(
-      option => option.value === lastOwnershipStatus
-    )?.icon;
-    return icon ? (
-      <Tooltip
-        arrow
-        placement="right"
-        title={
-          OWNERSHIP_STATUS_OPTIONS.find(
-            option => option.value === lastOwnershipStatus
-          )?.label
-        }
-      >
-        <FontAwesomeIcon icon={icon} className="ms-2" />
-      </Tooltip>
-    ) : (
-      ""
-    );
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [guitars, brands, gallery]);
 
   return (
     <Box sx={{ width: "100%" }} className="p-4">
-      {guitars.length ? (
-        <React.Fragment>
-          <h1>Guitar List</h1>
-          <TableContainer>
-            <Table aria-labelledby="tableTitle" size="small">
-              <TableHead>
-                <TableRow>
-                  {headCells.map(headCell => (
-                    <TableCell
-                      className={
-                        headCell.id === "iconHolder" ? "icon_holder" : ""
-                      }
-                      key={headCell.id}
-                      sortDirection={orderBy === headCell.id ? order : false}
+      <Row>
+        <Col>
+          <h1>Brian's Guitars</h1>
+        </Col>
+      </Row>
+      <Row className="border d-flex align-items-baseline">
+        <Col xs={12} md={3}>
+          <h3>Statistics</h3>
+        </Col>
+        <Col xs={12} md={3}>
+          {guitars.length} Guitars Loaded
+        </Col>
+        <Col xs={12} md={3}>
+          {brands.length} Brands Loaded
+        </Col>
+        <Col xs={12} md={3}>
+          {gallery.length} Gallery Images Loaded
+        </Col>
+      </Row>
+      <Row className="pt-3 text-center">
+        <Col>
+          <h3>Today's Featured Guitar</h3>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={12} md={hasFrontPicture ? 6 : 12} className="text-center">
+          {!_.isEmpty(featuredGuitar) && (
+            <React.Fragment>
+              <Row className="mb-3">
+                <Col>
+                  <h5>
+                    <b>{featuredGuitar.name}</b>
+                  </h5>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={6}>
+                  {featuredGuitar.brandObject?.logo ? (
+                    <img
+                      style={{ maxWidth: "75%" }}
+                      src={`http://localhost:5000/brandLogos/${featuredGuitar.brandObject.logo}`}
+                      alt={featuredGuitar.brandObject?.name}
+                    ></img>
+                  ) : (
+                    featuredGuitar.brandObject?.name ?? featuredGuitar.brandId
+                  )}
+                </Col>
+                <Col xs={6} className="text-start">
+                  <p>
+                    <b>Model:</b> {featuredGuitar.model}
+                  </p>
+                  <p>
+                    <b>Country:</b> {featuredGuitar.countyOfOrigin}
+                  </p>
+                  <p>
+                    <b>Year:</b> {featuredGuitar.year}
+                  </p>
+                  <p>
+                    <b>Instrument:</b> {featuredGuitar.instrumentType}
+                  </p>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="text-start">
+                  <p>
+                    <b>Sound Scape:</b> {featuredGuitar.soundScape}
+                  </p>
+                  <p>
+                    <b>Tuning:</b> {featuredGuitar.tuning}
+                  </p>
+                </Col>
+                <Col className="text-start">
+                  <p>
+                    <b>No of Strings:</b> {featuredGuitar.noOfStrings}
+                  </p>
+                  <p>
+                    <b>Last Played:</b> {featuredGuitar.lastPlayed || "N/A"}
+                  </p>
+                  <p>
+                    <Button
+                      variant="contained"
+                      disableElevation
+                      color="success"
+                      onClick={async event => {
+                        event.preventDefault();
+                        const result = await confirm({
+                          title: `Play ${featuredGuitar.name}?`,
+                          message: `Want to play ${featuredGuitar.name} today?`,
+                          confirmColor: "success",
+                          cancelColor: "link text-danger",
+                          confirmText: "Yes!",
+                          cancelText: "No"
+                        });
+                        if (result) {
+                          dispatch(
+                            updateGuitar({
+                              ...featuredGuitar,
+                              lastPlayed: moment().format(DATE_FORMAT)
+                            })
+                          ).then(() => {
+                            navigate(`/guitar/${featuredGuitar._id}`);
+                          });
+                        }
+                      }}
                     >
-                      {headCell.id === "iconHolder" ? (
-                        <span>{headCell.label}</span>
-                      ) : (
-                        <TableSortLabel
-                          active={orderBy === headCell.id}
-                          direction={orderBy === headCell.id ? order : "asc"}
-                          onClick={() => {
-                            dispatch(
-                              updatePagination({
-                                orderBy: headCell.id,
-                                order: order === "asc" ? "desc" : "asc"
-                              })
-                            );
-                          }}
-                        >
-                          {headCell.label}
-                        </TableSortLabel>
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {gridData.map(row => {
-                  const brand =
-                    (brands ?? []).find(brand => brand.id === row.brandId) ??
-                    {};
-                  const frontPicture = frontPictures.find(picture =>
-                    (row.pictures ?? []).includes(picture._id)
-                  );
-                  return (
-                    <TableRow key={row._id}>
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        onClick={() => {
-                          navigate(`/guitar/${row._id}`);
-                        }}
-                      >
-                        {!_.isEmpty(frontPicture) && (
-                          <img
-                            src={`http://localhost:5000/gallery/${frontPicture.image}`}
-                            height="60"
-                            alt={row.name}
-                          ></img>
-                        )}
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        onClick={() => {
-                          navigate(`/guitar/${row._id}`);
-                        }}
-                      >
-                        <b>{row.name}</b>
-                        {getNameAdornment(row)}
-                      </TableCell>
-                      <TableCell
-                        onClick={() => {
-                          navigate(`/guitar/${row._id}`);
-                        }}
-                      >
-                        {brand.logo ? (
-                          <img
-                            src={`http://localhost:5000/brandLogos/${brand.logo}`}
-                            height="45"
-                            alt={brand.name}
-                          ></img>
-                        ) : (
-                          brand.name ?? row.brandId
-                        )}
-                      </TableCell>
-                      <TableCell
-                        onClick={() => {
-                          navigate(`/guitar/${row._id}`);
-                        }}
-                      >
-                        {row.model}
-                      </TableCell>
-                      <TableCell
-                        onClick={() => {
-                          navigate(`/guitar/${row._id}`);
-                        }}
-                      >
-                        {row.year}
-                      </TableCell>
-                      <TableCell className="icon_holder">
-                        <IconButton
-                          onClick={() => navigate(`/editguitar/${row._id}`)}
-                        >
-                          <FontAwesomeIcon
-                            icon={faEdit}
-                            className="text-success small"
-                          />
-                        </IconButton>
-                        <IconButton
-                          onClick={async event => {
-                            event.preventDefault();
-                            const result = await confirm({
-                              title: `Delete ${row.name}?`,
-                              message: `Are you sure you want to permanently delete ${row.name}?`,
-                              confirmColor: "danger",
-                              cancelColor: "link text-primary"
-                            });
-                            if (result) {
-                              dispatch(removeGuitar(row._id));
-                            }
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            className="text-danger small"
-                          />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-                {emptyRows > 0 && (
-                  <TableRow
-                    style={{
-                      height: 71 * emptyRows
+                      Play Today?
+                    </Button>
+                  </p>
+                </Col>
+              </Row>
+              <Row>
+                <Col className="mt-4 text-center">
+                  <Button
+                    variant="contained"
+                    disableElevation
+                    color="info"
+                    onClick={() => {
+                      const featuredGuitar = getFeaturedGuitar();
+                      setFeaturedGuitar(featuredGuitar);
                     }}
                   >
-                    <TableCell colSpan={headCells.length} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            className="custom-pagination"
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={guitars.length}
-            rowsPerPage={pageSize}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </React.Fragment>
-      ) : (
-        <Alert className="m-0" color={"danger"}>
-          No Guitars Found
-        </Alert>
-      )}
+                    Find Another Featured Guitar?
+                  </Button>
+                </Col>
+              </Row>
+            </React.Fragment>
+          )}
+        </Col>
+        {hasFrontPicture && (
+          <Col xs={12} md={6} className="text-center">
+            <ButtonBase
+              onClick={() => {
+                navigate(`/guitar/${featuredGuitar._id}`);
+              }}
+            >
+              <img
+                src={`http://localhost:5000/gallery/${featuredGuitar.frontPicture}`}
+                alt={featuredGuitar.name}
+              ></img>
+            </ButtonBase>
+          </Col>
+        )}
+      </Row>
     </Box>
   );
 };

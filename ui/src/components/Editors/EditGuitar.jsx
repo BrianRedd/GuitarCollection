@@ -44,7 +44,7 @@ const EditGuitar = () => {
               };
               dispatch(updateGuitar(submissionValues)).then(() => {
                 actions.resetForm(initialValues);
-                navigate("/");
+                navigate(`/guitar/${values?._id ?? values?.name ?? ""}`);
               });
             }}
             buttonText="Update Guitar"

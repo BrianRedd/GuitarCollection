@@ -12,7 +12,7 @@ export const DEFAULT_ORDER_BY = "name";
 
 export const TEXT_REQUIRED = "Required";
 
-export const DATE_FORMAT = "YYYY-MM-DD"
+export const DATE_FORMAT = "YYYY-MM-DD";
 
 export const OWNERSHIP_STATUS_OPTIONS = [
   {
@@ -68,11 +68,12 @@ export const TUNING_OPTION_DEFAULTS = [
 
 export const STATUS_OPTION_DEFAULTS = [
   "Playable",
-  "De-tuned",
-  "Offsite Repairs",
+  "Display Only",
   "In Need of Repairs",
   "In Transit",
-  "For Sale"
+  "For Sale",
+  "Offsite for Repairs",
+  "Sold or Gifted"
 ];
 
 export const CAPTION_OPTION_DEFAULTS = [

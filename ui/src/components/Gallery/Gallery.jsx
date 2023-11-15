@@ -49,7 +49,6 @@ const Gallery = () => {
         }
       });
     });
-    console.log("imageGuitarMapping", imageGuitarMapping);
     return _.orderBy(
       (gallery ?? []).map(image => ({
         ...image,

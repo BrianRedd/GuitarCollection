@@ -4,16 +4,17 @@ import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { getBrands } from "../store/slices/brandsSlice";
+import { getGallery } from "../store/slices/gallerySlice";
 import { getGuitars } from "../store/slices/guitarsSlice";
 
-import { getGallery } from "../store/slices/gallerySlice";
 import Brands from "./Brands/Brands";
 import AddGuitar from "./Editors/AddGuitar";
 import EditGuitar from "./Editors/EditGuitar";
+import Gallery from "./Gallery/Gallery";
 import GuitarDetail from "./GuitarDetail/GuitarDetail";
+import GuitarList from "./GuitarList/GuitarList";
 import Home from "./Viewer/Home";
 import Layout from "./Viewer/Layout";
-import Gallery from "./Gallery/Gallery";
 
 /**
  * @function Main
@@ -43,10 +44,12 @@ const Main = () => {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+            <Route path="guitarlist" element={<GuitarList />} />
             <Route path="addguitar" element={<AddGuitar />} />
             <Route path="editguitar" element={<EditGuitar />} />
             <Route path="editguitar/:id" element={<EditGuitar />} />
             <Route path="brands" element={<Brands />} />
+            <Route path="guitar" element={<GuitarDetail />} />
             <Route path="guitar/:id" element={<GuitarDetail />} />
             <Route path="gallery" element={<Gallery />} />
           </Route>
