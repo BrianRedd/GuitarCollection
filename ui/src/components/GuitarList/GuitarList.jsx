@@ -289,7 +289,7 @@ const GuitarList = () => {
           </TableContainer>
           <TablePagination
             className="custom-pagination"
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[5, 10, 25, 50]}
             component="div"
             count={guitars.length}
             rowsPerPage={pageSize}

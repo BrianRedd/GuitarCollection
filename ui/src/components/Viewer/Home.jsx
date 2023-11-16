@@ -38,7 +38,6 @@ const Home = () => {
       guitar => guitar._id === availableGuitars[rand]._id
     );
     const frontPicture = (gallery ?? []).find(image => {
-      console.log("image", image);
       return (
         (featuredGuitar.pictures ?? []).includes(image?._id) &&
         image?.caption &&
@@ -92,12 +91,16 @@ const Home = () => {
         </Col>
       </Row>
       <Row>
-        <Col xs={12} md={hasFrontPicture ? 6 : 12} className="text-center">
+        <Col xs={12} md={6} className="text-center">
           {!_.isEmpty(featuredGuitar) && (
             <React.Fragment>
               <Row className="mb-3">
                 <Col>
-                  <h5>
+                  <h5
+                    onClick={() => {
+                      navigate(`/guitar/${featuredGuitar._id}`);
+                    }}
+                  >
                     <b>{featuredGuitar.name}</b>
                   </h5>
                 </Col>
@@ -195,20 +198,26 @@ const Home = () => {
             </React.Fragment>
           )}
         </Col>
-        {hasFrontPicture && (
-          <Col xs={12} md={6} className="text-center">
-            <ButtonBase
-              onClick={() => {
-                navigate(`/guitar/${featuredGuitar._id}`);
-              }}
-            >
+        <Col xs={12} md={6} className="text-center">
+          <ButtonBase
+            style={{ minWidth: "200px", minHeight: "200px" }}
+            className="border"
+            onClick={() => {
+              navigate(`/guitar/${featuredGuitar._id}`);
+            }}
+          >
+            {hasFrontPicture ? (
               <img
                 src={`http://localhost:5000/gallery/${featuredGuitar.frontPicture}`}
                 alt={featuredGuitar.name}
               ></img>
-            </ButtonBase>
-          </Col>
-        )}
+            ) : (
+              <div className="h-100 w-100 d-flex justify-content-center align-content-middle">
+                No Image
+              </div>
+            )}
+          </ButtonBase>
+        </Col>
       </Row>
     </Box>
   );

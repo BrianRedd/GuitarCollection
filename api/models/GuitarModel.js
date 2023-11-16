@@ -37,10 +37,13 @@ const specificationSchema = new mongoose.Schema({
 });
 
 const maintenanceSchema = new mongoose.Schema({
-  type: {
+  id: {
     type: String
   },
-  date: {
+  maintenanceType: {
+    type: String
+  },
+  maintenanceDate: {
     type: String
   },
   whoBy: {

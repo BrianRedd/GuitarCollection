@@ -63,21 +63,20 @@ export const guitar = {
         fileName: string
       })
     ),
-    maintenance: arrayOf(
-      shape({
-        id: string,
-        type: string,
-        date: string,
-        whoBy: string,
-        cost: string,
-        notes: string
-      })
-    ),
-    todo: arrayOf(
+    todoList: arrayOf(
       shape({
         todoItem: string,
         status: string,
         completionDate: string,
+        notes: string
+      })
+    ),
+    maintenance: arrayOf(
+      shape({
+        maintenanceType: string,
+        maintenanceDate: string,
+        whoBy: string,
+        cost: string,
         notes: string
       })
     )
@@ -103,7 +102,7 @@ export const guitar = {
     specifications: [],
     pictures: [],
     maintenance: [],
-    todo: []
+    todoList: []
   }
 };
 

@@ -21,12 +21,13 @@ export const TodoList = props => {
         <TableHead>
           <TableRow>
             <TableCell>Item</TableCell>
-            <TableCell width="250">Status</TableCell>
+            <TableCell>Status</TableCell>
             <TableCell>Completion Date</TableCell>
+            <TableCell>Notes</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {(guitar.todo ?? []).map(row => (
+          {(guitar.todoList ?? []).map(row => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row">
                 {row.todoItem}

@@ -29,12 +29,12 @@ export const MaintenanceTable = props => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {(guitar.specifications ?? []).map(row => (
+          {(guitar.maintenance ?? []).map(row => (
             <TableRow key={row.id}>
               <TableCell component="th" scope="row">
-                {row.type}
+                {row.maintenanceType}
               </TableCell>
-              <TableCell>{row.date}</TableCell>
+              <TableCell>{row.maintenanceDate}</TableCell>
               <TableCell>{row.whoBy}</TableCell>
               <TableCell>
                 <NumericFormat

@@ -7,7 +7,7 @@ import {
   faTag
 } from "@fortawesome/free-solid-svg-icons";
 
-export const DEFAULT_PAGE_SIZE = 10;
+export const DEFAULT_PAGE_SIZE = 50;
 export const DEFAULT_ORDER_BY = "name";
 
 export const TEXT_REQUIRED = "Required";
@@ -100,4 +100,11 @@ export const SPEC_OPTION_DEFAULTS = [
   "Tuners",
   "Reference Link^",
   "Other"
+];
+
+export const TODO_OPTION_DEFAULTS = [
+  "Not Started",
+  "In Progress",
+  "On Hold",
+  "Completed"
 ];

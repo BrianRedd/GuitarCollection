@@ -10,7 +10,9 @@ import { Col } from "reactstrap";
 
 const InputTextField = props => {
   const {
+    Adornment,
     label: labelFromProps,
+    helperText,
     hidden,
     name,
     onChange,
@@ -42,6 +44,14 @@ const InputTextField = props => {
       lg = 2;
   }
 
+  const InputProps = {};
+  if (prefix) {
+    InputProps.startAdornment = <InputAdornment position="start">{prefix}</InputAdornment>
+  };
+  if (Adornment) {
+    InputProps.endAdornment = <InputAdornment position="end">{Adornment}</InputAdornment>
+  }
+
   return (
     <Col xs={xs} md={md} lg={lg} className={`mb-3 ${hidden ? "d-none" : ""}`}>
       <TextField
@@ -51,16 +61,8 @@ const InputTextField = props => {
           Boolean(_.get(formProps.errors, name))
         }
         fullWidth
-        helperText={_.get(formProps.errors, name)}
-        InputProps={
-          prefix
-            ? {
-                startAdornment: (
-                  <InputAdornment position="start">{prefix}</InputAdornment>
-                )
-              }
-            : undefined
-        }
+        helperText={helperText || _.get(formProps.errors, name)}
+        InputProps={InputProps}
         label={label}
         name={name}
         onBlur={formProps.handleBlur}
@@ -79,6 +81,8 @@ const InputTextField = props => {
 };
 
 InputTextField.propTypes = {
+  Adornment: PropTypes.node,
+  helperText: PropTypes.string,
   hidden: PropTypes.bool,
   label: PropTypes.string,
   name: PropTypes.string,
@@ -90,6 +94,8 @@ InputTextField.propTypes = {
 };
 
 InputTextField.defaultProps = {
+  Adornment: undefined,
+  helperText: undefined,
   hidden: false,
   label: undefined,
   name: "",

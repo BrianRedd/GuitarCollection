@@ -38,6 +38,7 @@ export const addGuitar = createAsyncThunk("guitars/addGuitar", guitarObject => {
 export const updateGuitar = createAsyncThunk(
   "guitars/updateGuitar",
   guitarObject => {
+    console.log("guitarObject", guitarObject);
     return axios
       .put(`${baseURL}/update/${guitarObject._id}`, guitarObject)
       .then(response => {

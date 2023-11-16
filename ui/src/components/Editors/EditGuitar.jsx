@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Alert } from "reactstrap";
 
-import { updateGuitar } from "../../store/slices/guitarsSlice";
+import { getGuitars, updateGuitar } from "../../store/slices/guitarsSlice";
 import * as types from "../../types/types";
 import { DATE_FORMAT } from "../data/constants";
 
@@ -43,8 +43,10 @@ const EditGuitar = () => {
                   : ""
               };
               dispatch(updateGuitar(submissionValues)).then(() => {
-                actions.resetForm(initialValues);
-                navigate(`/guitar/${values?._id ?? values?.name ?? ""}`);
+                dispatch(getGuitars()).then(() => {
+                  actions.resetForm(initialValues);
+                  navigate(`/guitar/${values?._id ?? values?.name ?? ""}`);
+                });
               });
             }}
             buttonText="Update Guitar"

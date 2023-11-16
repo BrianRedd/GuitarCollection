@@ -23,8 +23,6 @@ const InputFreeFormField = props => {
     width
   } = props;
 
-  console.log("props", props);
-
   const formProps = useFormikContext();
 
   const setValue = value => {
@@ -59,7 +57,7 @@ const InputFreeFormField = props => {
       xs={xs}
       md={md}
       lg={lg}
-      className={_.compact(["mb-3", hidden && "d-none", className].join(" "))}
+      className={_.compact(["mb-3", hidden && "d-none", className]).join(" ")}
     >
       <Autocomplete
         onChange={(event, newValue) => {

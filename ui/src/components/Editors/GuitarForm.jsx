@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { faCircleXmark, faGuitar } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendarCheck,
+  faCircleXmark,
+  faGuitar
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { Formik } from "formik";
 import _ from "lodash";
+import moment from "moment";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -13,18 +18,22 @@ import { Col, Form, FormGroup, Row } from "reactstrap";
 import {
   COLOR_OPTION_DEFAULTS,
   COUNTRY_OPTION_DEFAULTS,
+  DATE_FORMAT,
   INSTRUMENT_OPTION_DEFAULTS,
+  OWNERSHIP_STATUS_OPTIONS,
   SOUNDSCAPE_OPTION_DEFAULTS,
+  SPEC_OPTION_DEFAULTS,
   STATUS_OPTION_DEFAULTS,
+  TODO_OPTION_DEFAULTS,
   TUNING_OPTION_DEFAULTS
 } from "../data/constants";
 import { guitarsValidationSchema } from "./data/validationSchemas";
 
+import { getDateFromOvationSN } from "../../utils/utils";
 import InputFreeFormField from "../common/InputFreeFormField";
 import InputSelectField from "../common/InputSelectField";
 import InputTextField from "../common/InputTextField";
-import PurchaseHistory from "./PurchaseHistory";
-import Specifications from "./Specifications";
+import EditableGrid from "./EditableGrid";
 
 /**
  * @function GuitarForm
@@ -36,6 +45,8 @@ const GuitarForm = props => {
 
   const guitars = useSelector(state => state.guitarsState?.list) ?? [];
   const brands = useSelector(state => state.brandsState.list) ?? [];
+
+  const [snComment, setSnComment] = useState(null);
 
   const brandOptions = _.orderBy(
     brands?.map(brand => ({
@@ -92,6 +103,7 @@ const GuitarForm = props => {
     >
       {formProps => {
         const writeArray = (arrayField, rows) => {
+          console.log("writeArray", arrayField, rows);
           formProps.setFieldValue(arrayField, rows);
         };
         const isEdit = Boolean(initialValues._id);
@@ -131,8 +143,27 @@ const GuitarForm = props => {
                   options={brandOptions}
                 />
                 <InputTextField name="model" required />
-                <InputTextField name="serialNo" label="S/N" required />
-                <InputTextField name="year" required />
+                <InputTextField
+                  name="serialNo"
+                  label="S/N"
+                  required
+                  Adornment={
+                    <IconButton
+                      onClick={() => {
+                        const dateFromSN = getDateFromOvationSN({
+                          brandId: formProps.values.brandId,
+                          serialNo: formProps.values.serialNo
+                        });
+                        formProps.setFieldValue("year", dateFromSN.year ?? "");
+                        setSnComment(dateFromSN.comment ?? "");
+                      }}
+                      color="info"
+                    >
+                      <FontAwesomeIcon icon={faCalendarCheck} />
+                    </IconButton>
+                  }
+                />
+                <InputTextField name="year" required helperText={snComment} />
                 <InputFreeFormField
                   name="countyOfOrigin"
                   label="Country of Origin"
@@ -205,13 +236,240 @@ const GuitarForm = props => {
                   />
                 </Row>
               )}
-              <PurchaseHistory
-                writePurchaseHistory={rows =>
-                  writeArray("purchaseHistory", rows)
-                }
+              <EditableGrid
+                title="Purchase History"
+                writeArray={writeArray}
+                listName="purchaseHistory"
+                fieldDefaults={{
+                  ownershipStatus: "",
+                  where: "",
+                  when: "",
+                  who: "",
+                  amount: null,
+                  notes: ""
+                }}
+                gridColumns={[
+                  {
+                    field: "ownershipStatus",
+                    headerName: "Ownership Status",
+                    flex: 1,
+                    editable: true,
+                    type: "singleSelect",
+                    valueOptions: OWNERSHIP_STATUS_OPTIONS,
+                    getOptionValue: value => value.value,
+                    getOptionLabel: value => value.label,
+                    headerClassName: "fst-italic"
+                  },
+                  {
+                    field: "where",
+                    headerName: "Transaction Location",
+                    flex: 1,
+                    editable: true,
+                    headerClassName: "fst-italic"
+                  },
+                  {
+                    field: "when",
+                    headerName: "Date",
+                    flex: 1,
+                    editable: true,
+                    headerClassName: "fst-italic"
+                  },
+                  {
+                    field: "who",
+                    headerName: "Store / Party",
+                    flex: 1,
+                    editable: true,
+                    headerClassName: "fst-italic"
+                  },
+                  {
+                    field: "amount",
+                    headerName: "Amount",
+                    type: "number",
+                    flex: 1,
+                    align: "right",
+                    headerAlign: "right",
+                    editable: true,
+                    valueFormatter: params => {
+                      if (params.value == null) {
+                        return "";
+                      }
+                      return `$ ${params.value.toLocaleString()}`;
+                    },
+                    headerClassName: "fst-italic"
+                  },
+                  {
+                    field: "notes",
+                    headerName: "Notes",
+                    flex: 1.5,
+                    editable: true,
+                    headerClassName: "fst-italic"
+                  }
+                ]}
               />
-              <Specifications
+              {/* <Specifications
                 writeSpecifications={rows => writeArray("specifications", rows)}
+              /> */}
+              <EditableGrid
+                title="Specifications"
+                writeArray={writeArray}
+                listName="specifications"
+                fieldDefaults={{
+                  specType: "",
+                  specification: ""
+                }}
+                gridColumns={[
+                  {
+                    field: "specType",
+                    headerName: "Type",
+                    flex: 0.3,
+                    editable: true,
+                    type: "singleSelect",
+                    valueOptions: SPEC_OPTION_DEFAULTS,
+                    getOptionValue: value => value,
+                    getOptionLabel: value => value.replaceAll("^", ""),
+                    headerClassName: "fst-italic"
+                  },
+                  {
+                    field: "specification",
+                    headerName: "Specification",
+                    editable: true,
+                    flex: 1,
+                    headerClassName: "fst-italic"
+                  }
+                ]}
+              />
+              <EditableGrid
+                title="To Do List"
+                writeArray={writeArray}
+                listName="todoList"
+                fieldDefaults={{
+                  todoItem: "",
+                  status: "",
+                  completionDate: "",
+                  notes: ""
+                }}
+                gridColumns={[
+                  {
+                    field: "todoItem",
+                    headerName: "To Do Task",
+                    editable: true,
+                    flex: 3,
+                    headerClassName: "fst-italic"
+                  },
+                  {
+                    field: "status",
+                    headerName: "Status",
+                    flex: 1,
+                    editable: true,
+                    type: "singleSelect",
+                    valueOptions: TODO_OPTION_DEFAULTS,
+                    headerClassName: "fst-italic"
+                  },
+                  {
+                    field: "completionDate",
+                    headerName: "Completed On",
+                    editable: true,
+                    flex: 1,
+                    headerClassName: "fst-italic",
+                    type: "date",
+                    valueSetter: params => {
+                      const completionDate = moment(params.value).format(
+                        DATE_FORMAT
+                      );
+                      if (completionDate === "Invalid date") {
+                        return { ...params.row, completionDate: "" };
+                      }
+                      return { ...params.row, completionDate };
+                    },
+                    valueGetter: params => {
+                      if (!params.value) {
+                        return params.value;
+                      }
+                      return new Date(params.value);
+                    }
+                  },
+                  {
+                    field: "notes",
+                    headerName: "Notes",
+                    editable: true,
+                    flex: 2,
+                    headerClassName: "fst-italic"
+                  }
+                ]}
+              />
+              <EditableGrid
+                title="Maintenance History"
+                writeArray={writeArray}
+                listName="maintenance"
+                fieldDefaults={{
+                  maintenanceType: "",
+                  maintenanceDate: "",
+                  whoBy: "",
+                  cost: null,
+                  notes: ""
+                }}
+                gridColumns={[
+                  {
+                    field: "maintenanceType",
+                    headerName: "Maintenance Type",
+                    editable: true,
+                    flex: 3,
+                    headerClassName: "fst-italic"
+                  },
+                  {
+                    field: "maintenanceDate",
+                    headerName: "Date",
+                    editable: true,
+                    type: "date",
+                    flex: 1,
+                    headerClassName: "fst-italic",
+                    valueSetter: params => {
+                      const maintenanceDate = moment(params.value).format(
+                        DATE_FORMAT
+                      );
+                      if (maintenanceDate === "Invalid date") {
+                        return { ...params.row, maintenanceDate: "" };
+                      }
+                      return { ...params.row, maintenanceDate };
+                    },
+                    valueGetter: params => {
+                      if (!params.value) {
+                        return params.value;
+                      }
+                      return new Date(params.value);
+                    }
+                  },
+                  {
+                    field: "whoBy",
+                    headerName: "Performed By",
+                    flex: 1,
+                    editable: true,
+                    headerClassName: "fst-italic"
+                  },
+                  {
+                    field: "cost",
+                    headerName: "Cost",
+                    type: "number",
+                    flex: 1,
+                    align: "right",
+                    headerAlign: "right",
+                    editable: true,
+                    valueFormatter: params => {
+                      if (params.value == null) {
+                        return "";
+                      }
+                      return `$ ${params.value.toLocaleString()}`;
+                    },
+                    headerClassName: "fst-italic"
+                  },
+                  {
+                    field: "notes",
+                    headerName: "Notes",
+                    editable: true,
+                    flex: 2,
+                    headerClassName: "fst-italic"
+                  }
+                ]}
               />
             </FormGroup>
             <Row className="pt-5">
@@ -233,7 +491,7 @@ const GuitarForm = props => {
                     formProps.resetForm(initialValues);
                     navigate(
                       `/${
-                        isEdit ? `guitar/${initialValues._id}` : "/guitarlist"
+                        isEdit ? `guitar/${initialValues._id}` : "guitarlist"
                       }`
                     );
                   }}
