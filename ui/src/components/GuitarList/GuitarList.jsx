@@ -85,10 +85,11 @@ const GuitarList = () => {
     }
   ];
 
-  const gridData = _.orderBy(guitars ?? [], orderBy, order).slice(
-    page * pageSize,
-    page * pageSize + pageSize
-  );
+  const gridData = _.orderBy(
+    guitars ?? [],
+    [orderBy, "serialNo"],
+    [order, "asc"]
+  ).slice(page * pageSize, page * pageSize + pageSize);
 
   const handleChangePage = (event, newPage) => {
     dispatch(

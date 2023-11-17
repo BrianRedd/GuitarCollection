@@ -27,7 +27,7 @@ import {
   TODO_OPTION_DEFAULTS,
   TUNING_OPTION_DEFAULTS
 } from "../data/constants";
-import { guitarsValidationSchema } from "./data/validationSchemas";
+import { getGuitarsValidationSchema } from "./data/validationSchemas";
 
 import { getDateFromOvationSN } from "../../utils/utils";
 import InputFreeFormField from "../common/InputFreeFormField";
@@ -95,18 +95,22 @@ const GuitarForm = props => {
     ])
   );
 
+  const isEdit = Boolean(initialValues._id);
+
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={handleSubmit}
-      validationSchema={guitarsValidationSchema}
+      validationSchema={getGuitarsValidationSchema({
+        isEdit,
+        guitars
+      })}
     >
       {formProps => {
         const writeArray = (arrayField, rows) => {
           console.log("writeArray", arrayField, rows);
           formProps.setFieldValue(arrayField, rows);
         };
-        const isEdit = Boolean(initialValues._id);
         return (
           <Form>
             <FormGroup>
