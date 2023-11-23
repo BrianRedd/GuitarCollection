@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {  enqueueSnackbar } from 'notistack'
 
 import { getBrands } from "../store/slices/brandsSlice";
 import { getGallery } from "../store/slices/gallerySlice";
@@ -24,7 +25,10 @@ const Main = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getGuitars());
+    dispatch(getGuitars()).then(response => {
+      console.log("response", response);
+      enqueueSnackbar("Test message" )
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

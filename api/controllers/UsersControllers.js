@@ -1,17 +1,20 @@
-/** @module GuitarControllers */
+/** @module UsersControllers */
 
-const GuitarModel = require("../models/GuitarModel");
+const UserModel = require("../models/UserModel");
 
-const controllerType = "Guitar";
+const controllerType = "User";
 
-module.exports.getGuitars = async (request, response) => {
-  const guitars = await GuitarModel.find();
-  response.send(guitars);
+module.exports.getUsers = async (request, response) => {
+  const users = await UserModel.find();
+  response.send(users);
 };
 
-module.exports.saveGuitar = (request, response) => {
-  console.log("request", request.body)
-  GuitarModel.create(request.body)
+module.exports.saveUser = (request, response) => {
+  const user = new UserModel({
+    ...request.body
+  });
+  user
+    .save()
     .then(data => {
       const message = `${controllerType} Saved Successfully`;
       console.log(message);
@@ -26,10 +29,12 @@ module.exports.saveGuitar = (request, response) => {
     });
 };
 
-module.exports.updateGuitar = (request, response) => {
-  const { id } = request.params;
-
-  GuitarModel.findByIdAndUpdate(id, request.body)
+module.exports.updateUser = (request, response) => {
+  let id = request.params.id;
+  const userObject = {
+    ...request.body
+  };
+  UserModel.findByIdAndUpdate(id, userObject)
     .then(data => {
       const message = `${controllerType} Updated Successfully`;
       console.log(message);
@@ -44,10 +49,10 @@ module.exports.updateGuitar = (request, response) => {
     });
 };
 
-module.exports.deleteGuitar = (request, response) => {
-  const { id } = request.params;
+module.exports.deleteUser = (request, response) => {
+  let id = request.params.id;
 
-  GuitarModel.findByIdAndDelete(id)
+  UserModel.findByIdAndDelete(id)
     .then(data => {
       const message = `${controllerType} Deleted Successfully`;
       console.log(message);

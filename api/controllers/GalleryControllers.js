@@ -4,6 +4,8 @@ const fs = require("fs");
 
 const GalleryModel = require("../models/GalleryModel");
 
+const controllerType = "Image";
+
 module.exports.getGallery = async (request, response) => {
   const galleryImages = await GalleryModel.find();
   response.send(galleryImages);
@@ -17,8 +19,12 @@ module.exports.saveGalleryImage = (request, response) => {
   galleryImage
     .save()
     .then(data => {
-      console.log("Updated Successfully");
-      response.status(201).send(data);
+      const message = `${controllerType} Saved Successfully`;
+      console.log(message);
+      response.status(201).send({
+        message,
+        data
+      });
     })
     .catch(error => {
       console.error(error);
@@ -48,8 +54,12 @@ module.exports.updateGalleryImage = (request, response) => {
   };
   GalleryModel.findByIdAndUpdate(id, galleryImageObject)
     .then(data => {
-      console.log("Updated Successfully");
-      response.status(201).send({ data });
+      const message = `${controllerType} Updated Successfully`;
+      console.log(message);
+      response.status(201).send({
+        message,
+        data
+      });
     })
     .catch(error => {
       console.error(error);
@@ -67,8 +77,12 @@ module.exports.deleteGalleryImage = (request, response) => {
 
   GalleryModel.findByIdAndDelete(id)
     .then(data => {
-      console.log("Deleted Successfully");
-      response.status(201).send(data);
+      const message = `${controllerType} Deleted Successfully`;
+      console.log(message);
+      response.status(201).send({
+        message,
+        data
+      });
     })
     .catch(error => {
       console.error(error);

@@ -2,13 +2,19 @@
 
 import React, { useState } from "react";
 
-import { faCloudArrowUp, faImages } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowDown,
+  faArrowRight,
+  faCloudArrowUp,
+  faImages
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ButtonBase } from "@mui/material";
 import { Formik } from "formik";
+import _ from "lodash";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { Col, Row } from "reactstrap";
+import { Col, Collapse, Row } from "reactstrap";
 
 import {
   addGalleryImage,
@@ -40,6 +46,16 @@ const GuitarPictures = props => {
   );
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const guitarImageList = _.orderBy(
+    (guitar.pictures ?? [])?.map(imageId => {
+      const image = gallery.find(img => img._id === imageId) ?? {};
+      return image;
+    }),
+    "caption"
+  );
 
   return (
     <Formik
@@ -82,15 +98,25 @@ const GuitarPictures = props => {
         };
         return (
           <Row>
-            <h5 className="mt-2 text-decoration-underline">Picture Gallery</h5>
-            <Row>
-              {(guitar.pictures ?? [])?.map(imageId => {
-                const image = gallery.find(img => img._id === imageId) ?? {};
-                return (
+            <ButtonBase
+              onClick={() => setIsOpen(!isOpen)}
+              className=" justify-content-start d-flex"
+            >
+              <h5 className="mt-2 ps-2 text-decoration-underline">
+                Picture Gallery ({(guitar.pictures ?? []).length})
+                <FontAwesomeIcon
+                  className="ms-2"
+                  icon={isOpen ? faArrowDown : faArrowRight}
+                />
+              </h5>
+            </ButtonBase>
+            <Collapse isOpen={isOpen}>
+              <Row>
+                {guitarImageList?.map(image => (
                   <GalleryImage
-                    key={imageId}
+                    key={image._id}
                     image={image}
-                    selectImage={image => {
+                    selectImage={(image) => {
                       selectImage(image);
                       setIsUploadModalOpen(true);
                     }}
@@ -99,53 +125,53 @@ const GuitarPictures = props => {
                         updateGuitar({
                           ...guitar,
                           pictures: (guitar.pictures ?? []).filter(
-                            id => id !== imageId
+                            id => id !== image._id
                           )
                         })
                       );
                     }}
                   />
-                );
-              })}
-              <div className="gallery-image border d-block">
-                <ButtonBase
-                  className="w-100 d-block h-50"
-                  onClick={() => {
-                    selectImage(types.galleryImage.defaults);
-                    setIsUploadModalOpen(true);
-                  }}
-                >
-                  <Row>
-                    <Col>
-                      <h6>Upload New Image</h6>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <FontAwesomeIcon icon={faCloudArrowUp} size="2xl" />
-                    </Col>
-                  </Row>
-                </ButtonBase>
-                <ButtonBase
-                  className="w-100 d-block h-50 border-top"
-                  onClick={() => {
-                    selectImage(types.galleryImage.defaults);
-                    setIsSelectModalOpen(true);
-                  }}
-                >
-                  <Row>
-                    <Col>
-                      <h6>Select From Gallery</h6>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <FontAwesomeIcon icon={faImages} size="2xl" />
-                    </Col>
-                  </Row>
-                </ButtonBase>
-              </div>
-            </Row>
+                ))}
+                <div className="gallery-image border d-block">
+                  <ButtonBase
+                    className="w-100 d-block h-50"
+                    onClick={() => {
+                      selectImage(types.galleryImage.defaults);
+                      setIsUploadModalOpen(true);
+                    }}
+                  >
+                    <Row>
+                      <Col>
+                        <h6>Upload New Image</h6>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <FontAwesomeIcon icon={faCloudArrowUp} size="2xl" />
+                      </Col>
+                    </Row>
+                  </ButtonBase>
+                  <ButtonBase
+                    className="w-100 d-block h-50 border-top"
+                    onClick={() => {
+                      selectImage(types.galleryImage.defaults);
+                      setIsSelectModalOpen(true);
+                    }}
+                  >
+                    <Row>
+                      <Col>
+                        <h6>Select From Gallery</h6>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <FontAwesomeIcon icon={faImages} size="2xl" />
+                      </Col>
+                    </Row>
+                  </ButtonBase>
+                </div>
+              </Row>
+            </Collapse>
             <ImageUploadModal
               isOpen={isUploadModalOpen}
               toggle={() => setIsUploadModalOpen(!isUploadModalOpen)}

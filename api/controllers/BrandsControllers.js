@@ -4,6 +4,8 @@ const fs = require("fs");
 
 const BrandModel = require("../models/BrandModel");
 
+const controllerType = "Brand";
+
 module.exports.getBrands = async (request, response) => {
   const brands = await BrandModel.find();
   response.send(brands);
@@ -17,8 +19,12 @@ module.exports.saveBrand = (request, response) => {
   brand
     .save()
     .then(data => {
-      console.log("Updated Successfully");
-      response.status(201).send(data);
+      const message = `${controllerType} Saved Successfully`;
+      console.log(message);
+      response.status(201).send({
+        message,
+        data
+      });
     })
     .catch(error => {
       console.error(error);
@@ -48,8 +54,12 @@ module.exports.updateBrand = (request, response) => {
   };
   BrandModel.findByIdAndUpdate(id, brandObject)
     .then(data => {
-      console.log("Updated Successfully");
-      response.status(201).send({ data });
+      const message = `${controllerType} Updated Successfully`;
+      console.log(message);
+      response.status(201).send({
+        message,
+        data
+      });
     })
     .catch(error => {
       console.error(error);
@@ -67,8 +77,12 @@ module.exports.deleteBrand = (request, response) => {
 
   BrandModel.findByIdAndDelete(id)
     .then(data => {
-      console.log("Deleted Successfully");
-      response.status(201).send(data);
+      const message = `${controllerType} Deleted Successfully`;
+      console.log(message);
+      response.status(201).send({
+        message,
+        data
+      });
     })
     .catch(error => {
       console.error(error);
