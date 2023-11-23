@@ -3,6 +3,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import _ from "lodash";
+import { enqueueSnackbar } from "notistack";
 
 import * as types from "../../types/types";
 import { baseURL } from "../../utils/constants";
@@ -34,7 +35,7 @@ export const addGalleryImage = createAsyncThunk(
         }
       })
       .then(response => {
-        console.log("addGalleryImage", response);
+        enqueueSnackbar(response.data.message);
         return response.data;
       });
   }
@@ -55,8 +56,8 @@ export const updateGalleryImage = createAsyncThunk(
         }
       })
       .then(response => {
-        console.log("updateGalleryImage", response);
-        return response;
+        enqueueSnackbar(response.data.message);
+        return response.data;
       });
   }
 );
@@ -74,7 +75,7 @@ export const deleteGalleryImage = createAsyncThunk(
         data: imageObject
       })
       .then(response => {
-        console.log("deleteGalleryImage", response);
+        enqueueSnackbar(response.data.message);
         return response.data;
       });
   }
@@ -101,13 +102,7 @@ const gallerySlice = createSlice({
     });
     builder.addCase(getGallery.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = _.orderBy(action.payload, "name");
-      state.message = {
-        type: "info",
-        text: `${action.payload?.length} Gallery Image${
-          action.payload?.length !== 1 ? "s" : ""
-        } Loaded`
-      };
+      state.list = _.orderBy(action.payload.data, "name");
     });
     builder.addCase(getGallery.rejected, (state, action) => {
       state.loading = false;
@@ -123,11 +118,7 @@ const gallerySlice = createSlice({
     });
     builder.addCase(addGalleryImage.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = [{ ...action.payload, isNew: true }, ...state.list];
-      state.message = {
-        type: "success",
-        text: `Image Successfully Added`
-      };
+      state.list = [{ ...action.payload.data, isNew: true }, ...state.list];
     });
     builder.addCase(addGalleryImage.rejected, (state, action) => {
       state.loading = false;
@@ -142,14 +133,10 @@ const gallerySlice = createSlice({
     });
     builder.addCase(updateGalleryImage.fulfilled, (state, action) => {
       const list = state.list;
-      const idx = list.map(item => item._id).indexOf(action.payload._id);
-      list[idx] = action.payload;
+      const idx = list.map(item => item._id).indexOf(action.payload.data._id);
+      list[idx] = action.payload.data;
       state.loading = false;
       state.list = list;
-      state.message = {
-        type: "success",
-        text: `Image Successfully Updated`
-      };
     });
     builder.addCase(updateGalleryImage.rejected, (state, action) => {
       state.loading = false;
@@ -164,14 +151,10 @@ const gallerySlice = createSlice({
     });
     builder.addCase(deleteGalleryImage.fulfilled, (state, action) => {
       const list = state.list;
-      const idx = list.map(item => item._id).indexOf(action.payload._id);
+      const idx = list.map(item => item._id).indexOf(action.payload.data._id);
       list.splice(idx, 1);
       state.loading = false;
       state.list = list;
-      state.message = {
-        type: "success",
-        text: `Image Successfully Deleted`
-      };
     });
     builder.addCase(deleteGalleryImage.rejected, (state, action) => {
       state.loading = false;

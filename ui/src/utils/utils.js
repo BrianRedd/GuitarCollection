@@ -1,5 +1,35 @@
 /** @module utils */
 
+export const getColWidth = width => {
+  const xs = 12;
+  let md = 0;
+  let lg = 0;
+  switch (width) {
+    case "wide":
+      md = 6;
+      lg = 4;
+      break;
+    case "full":
+      md = 12;
+      lg = 12;
+      break;
+    default:
+      md = 3;
+      lg = 2;
+  }
+  return {
+    xs,
+    md,
+    lg
+  };
+};
+
+export const getUserName = user => {
+  return user.firstname
+    ? `${user.firstname} ${user.lastname ?? ""}`
+    : user.username ?? "User";
+};
+
 export const getDateFromOvationSN = ({ serialNo = "", brandId }) => {
   const response = {
     year: "",

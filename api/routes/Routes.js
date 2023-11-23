@@ -22,6 +22,12 @@ const {
   updateGalleryImage,
   deleteGalleryImage
 } = require("../controllers/GalleryControllers");
+const {
+  getUser,
+  saveUser,
+  updateUser,
+  deleteUser
+} = require("../controllers/UsersControllers");
 
 // image upload
 var brandStorage = multer.diskStorage({
@@ -67,5 +73,11 @@ router.get("/getgallery", getGallery);
 router.post("/saveimage", galleryUpload, saveGalleryImage);
 router.put("/updateimage/:id", galleryUpload, updateGalleryImage);
 router.delete("/deleteimage/:id", deleteGalleryImage);
+
+// Users
+router.get("/getuser/:id", getUser);
+router.post("/saveuser", saveUser);
+router.put("/updateuser/:id", updateUser);
+router.delete("/deleteuser/:id", deleteUser);
 
 module.exports = router;

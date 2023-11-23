@@ -80,7 +80,10 @@ const GuitarPictures = props => {
               dispatch(
                 updateGuitar({
                   ...guitar,
-                  pictures: [...(guitar.pictures ?? []), response.payload._id]
+                  pictures: _.compact([
+                    ...(guitar.pictures ?? []),
+                    response.payload.data._id
+                  ])
                 })
               );
               actions.resetForm(types.galleryImage.defaults);
@@ -116,7 +119,7 @@ const GuitarPictures = props => {
                   <GalleryImage
                     key={image._id}
                     image={image}
-                    selectImage={(image) => {
+                    selectImage={image => {
                       selectImage(image);
                       setIsUploadModalOpen(true);
                     }}

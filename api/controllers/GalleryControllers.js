@@ -8,7 +8,10 @@ const controllerType = "Image";
 
 module.exports.getGallery = async (request, response) => {
   const galleryImages = await GalleryModel.find();
-  response.send(galleryImages);
+  const message = `${galleryImages.length} ${controllerType}${
+    galleryImages.length === 1 ? "" : "s"
+  } Loaded Successfully`;
+  response.send({ data: galleryImages, message });
 };
 
 module.exports.saveGalleryImage = (request, response) => {

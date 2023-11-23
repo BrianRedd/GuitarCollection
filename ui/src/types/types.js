@@ -123,7 +123,8 @@ export const guitarsState = {
       orderBy: string,
       page: number,
       pageSize: number
-    })
+    }),
+    selected: string
   }),
   defaults: {
     list: [],
@@ -134,7 +135,8 @@ export const guitarsState = {
       orderBy: DEFAULT_ORDER_BY,
       page: 0,
       pageSize: DEFAULT_PAGE_SIZE
-    }
+    },
+    selected: ""
   }
 };
 
@@ -188,7 +190,7 @@ export const brandsState = {
 export const galleryImage = {
   types: shape({
     image: string,
-    capttion: string
+    caption: string
   }),
   defaults: {
     image: "",
@@ -213,5 +215,41 @@ export const galleryState = {
     list: [],
     loading: false,
     message: {}
+  }
+};
+
+/*
+ USER TYPES
+ ----------*/
+/**
+ * @const user
+ */
+export const user = {
+  types: shape({
+    username: string,
+    firstname: string,
+    lastname: string,
+    password: string,
+    permissions: arrayOf(string)
+  }),
+  defaults: {
+    username: "",
+    firstname: "",
+    lastname: "",
+    password: "",
+    permissions: []
+  }
+};
+
+/**
+ * @const userState
+ * @description Types for userState Redux store
+ */
+export const userState = {
+  types: shape({
+    user: user.types
+  }),
+  defaults: {
+    user: {}
   }
 };

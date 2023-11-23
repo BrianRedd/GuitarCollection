@@ -6,10 +6,11 @@ import { IconButton } from "@mui/material";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
-import { Form, FormGroup, Row } from "reactstrap";
+import { Col, Form, FormGroup, Row } from "reactstrap";
 
-import { getDateFromOvationSN } from "../../utils/utils";
+import { getColWidth, getDateFromOvationSN } from "../../utils/utils";
 import {
+  CAPTION_OPTION_DEFAULTS,
   COLOR_OPTION_DEFAULTS,
   COUNTRY_OPTION_DEFAULTS,
   INSTRUMENT_OPTION_DEFAULTS,
@@ -37,6 +38,7 @@ const GuitarForm = props => {
 
   const guitars = useSelector(state => state.guitarsState?.list) ?? [];
   const brands = useSelector(state => state.brandsState.list) ?? [];
+  const gallery = useSelector(state => state.galleryState?.list) ?? [];
 
   const [snComment, setSnComment] = useState(null);
 
@@ -95,101 +97,123 @@ const GuitarForm = props => {
     formProps.setFieldValue(arrayField, rows);
   };
 
+  const frontPictures = gallery.filter(
+    image => image.caption === CAPTION_OPTION_DEFAULTS[0]
+  );
+  const thumbnail = frontPictures.find(picture =>
+    (initialValues.pictures ?? []).includes(picture._id)
+  );
+
   return (
     <Form>
       <FormGroup>
-        {isEdit ? (
-          <Row className="border my-4 pt-3">
-            <InputFreeFormField
-              name="status"
-              required
-              options={statusOptions}
-              width="wide"
-            />
-            <InputFreeFormField
-              name="tuning"
-              options={tuningOptions}
-              width="wide"
-            />
-            <InputTextField
-              name="lastPlayed"
-              label="Last Played"
-              otherProps={{
-                type: "date",
-                InputLabelProps: { shrink: true }
-              }}
-              width="wide"
-            />
-          </Row>
-        ) : null}
         <Row>
-          <InputTextField name="name" required />
-          <InputSelectField
-            name="brandId"
-            label="Brand"
-            required
-            options={brandOptions}
-          />
-          <InputTextField name="model" required />
-          <InputTextField
-            name="serialNo"
-            label="S/N"
-            required
-            Adornment={
-              <IconButton
-                onClick={() => {
-                  const dateFromSN = getDateFromOvationSN({
-                    brandId: formProps.values.brandId,
-                    serialNo: formProps.values.serialNo
-                  });
-                  formProps.setFieldValue("year", dateFromSN.year ?? "");
-                  setSnComment(dateFromSN.comment ?? "");
+          {thumbnail && (
+            <Col {...getColWidth()} className="brand-logo">
+              <img
+                src={`http://localhost:5000/gallery/${thumbnail.image}`}
+                alt={initialValues.name}
+              ></img>
+            </Col>
+          )}
+          <Col>
+            {isEdit ? (
+              <Row className="border my-4 pt-3">
+                <InputFreeFormField
+                  name="status"
+                  required
+                  options={statusOptions}
+                  width="wide"
+                />
+                <InputFreeFormField
+                  name="tuning"
+                  options={tuningOptions}
+                  width="wide"
+                />
+                <InputTextField
+                  name="lastPlayed"
+                  label="Last Played"
+                  otherProps={{
+                    type: "date",
+                    InputLabelProps: { shrink: true }
+                  }}
+                  width="wide"
+                />
+              </Row>
+            ) : null}
+            <Row>
+              <InputTextField name="name" required />
+              <InputSelectField
+                name="brandId"
+                label="Brand"
+                required
+                options={brandOptions}
+              />
+              <InputTextField name="model" required />
+              <InputTextField
+                name="serialNo"
+                label="S/N"
+                required
+                Adornment={
+                  <IconButton
+                    onClick={() => {
+                      const dateFromSN = getDateFromOvationSN({
+                        brandId: formProps.values.brandId,
+                        serialNo: formProps.values.serialNo
+                      });
+                      formProps.setFieldValue("year", dateFromSN.year ?? "");
+                      setSnComment(dateFromSN.comment ?? "");
+                    }}
+                    disabled={
+                      !formProps.values.brandId || !formProps.values.serialNo
+                    }
+                    color="info"
+                  >
+                    <FontAwesomeIcon icon={faCalendarCheck} />
+                  </IconButton>
+                }
+              />
+              <InputTextField name="year" required helperText={snComment} />
+              <InputFreeFormField
+                name="countyOfOrigin"
+                label="Country of Origin"
+                options={countryOptions}
+              />
+              <InputTextField name="case" width="wide" />
+              <InputFreeFormField
+                name="instrumentType"
+                label="Instrument Type"
+                required
+                options={instrumentOptions}
+              />
+              <InputTextField
+                name="noOfStrings"
+                label="Number of Strings"
+                required
+                otherProps={{
+                  type: "number"
                 }}
-                color="info"
-              >
-                <FontAwesomeIcon icon={faCalendarCheck} />
-              </IconButton>
-            }
-          />
-          <InputTextField name="year" required helperText={snComment} />
-          <InputFreeFormField
-            name="countyOfOrigin"
-            label="Country of Origin"
-            options={countryOptions}
-          />
-          <InputTextField name="case" width="wide" />
-          <InputFreeFormField
-            name="instrumentType"
-            label="Instrument Type"
-            required
-            options={instrumentOptions}
-          />
-          <InputTextField
-            name="noOfStrings"
-            label="Number of Strings"
-            required
-            otherProps={{
-              type: "number"
-            }}
-          />
-          <InputFreeFormField
-            name="soundScape"
-            label="Sound Scape"
-            required
-            options={soundScapeOptions}
-            width="wide"
-          />
-          <InputFreeFormField
-            name="color"
-            required
-            options={colorOptions}
-            width="wide"
-          />
-          <InputTextField
-            name="appearanceNotes"
-            label="Notes on Appearance"
-            width="wide"
-          />
+              />
+              <InputFreeFormField
+                name="soundScape"
+                label="Sound Scape"
+                required
+                options={soundScapeOptions}
+                width="wide"
+              />
+              <InputFreeFormField
+                name="color"
+                required
+                options={colorOptions}
+                width="wide"
+              />
+              <InputTextField
+                name="appearanceNotes"
+                label="Notes on Appearance"
+                width="wide"
+              />
+            </Row>
+          </Col>
         </Row>
         <Row>
           <InputTextField

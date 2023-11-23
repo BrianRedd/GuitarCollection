@@ -2,6 +2,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { enqueueSnackbar } from "notistack";
 
 import * as types from "../../types/types";
 import { baseURL } from "../../utils/constants";
@@ -25,7 +26,7 @@ export const getGuitars = createAsyncThunk("guitars/getGuitars", () => {
  */
 export const addGuitar = createAsyncThunk("guitars/addGuitar", guitarObject => {
   return axios.post(`${baseURL}/save`, guitarObject).then(response => {
-    console.log("addGuitar", response);
+    enqueueSnackbar(response.data.message);
     return response.data;
   });
 });
@@ -41,7 +42,7 @@ export const updateGuitar = createAsyncThunk(
     return axios
       .put(`${baseURL}/update/${guitarObject._id}`, guitarObject)
       .then(response => {
-        console.log("updateGuitar", response);
+        enqueueSnackbar(response.data.message);
         return {
           ...response.data,
           ...guitarObject
@@ -57,7 +58,7 @@ export const updateGuitar = createAsyncThunk(
  */
 export const removeGuitar = createAsyncThunk("guitars/removeGuitar", id => {
   return axios.delete(`${baseURL}/delete/${id}`).then(response => {
-    console.log("removeGuitar", response);
+    enqueueSnackbar(response.data.message);
     return response.data;
   });
 });
@@ -74,6 +75,9 @@ const guitarsSlice = createSlice({
         ...state.pagination,
         ...action.payload
       };
+    },
+    updateSelected(state, action) {
+      state.selected = action.payload;
     }
   },
   extraReducers: builder => {
@@ -83,13 +87,7 @@ const guitarsSlice = createSlice({
     });
     builder.addCase(getGuitars.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload;
-      state.message = {
-        type: "info",
-        text: `${action.payload?.length} Guitar${
-          action.payload?.length !== 1 ? "s" : ""
-        } Loaded`
-      };
+      state.list = action.payload.data;
     });
     builder.addCase(getGuitars.rejected, (state, action) => {
       state.loading = false;
@@ -106,10 +104,6 @@ const guitarsSlice = createSlice({
     builder.addCase(addGuitar.fulfilled, (state, action) => {
       state.loading = false;
       state.list = [{ ...action.payload, isNew: true }, ...state.list];
-      state.message = {
-        type: "success",
-        text: `Guitar ${action.payload.name} Successfully Added`
-      };
     });
     builder.addCase(addGuitar.rejected, (state, action) => {
       state.loading = false;
@@ -128,10 +122,6 @@ const guitarsSlice = createSlice({
       list[idx] = action.payload;
       state.loading = false;
       state.list = list;
-      state.message = {
-        type: "success",
-        text: `Guitar ${action.payload.name} Successfully Updated`
-      };
     });
     builder.addCase(updateGuitar.rejected, (state, action) => {
       state.loading = false;
@@ -150,10 +140,6 @@ const guitarsSlice = createSlice({
       list.splice(idx, 1);
       state.loading = false;
       state.list = list;
-      state.message = {
-        type: "success",
-        text: `Guitar ${action.payload.name} Successfully Deleted`
-      };
     });
     builder.addCase(removeGuitar.rejected, (state, action) => {
       state.loading = false;
@@ -165,6 +151,7 @@ const guitarsSlice = createSlice({
   }
 });
 
-export const { clearMessage, updatePagination } = guitarsSlice.actions;
+export const { clearMessage, updatePagination, updateSelected } =
+  guitarsSlice.actions;
 
 export default guitarsSlice.reducer;

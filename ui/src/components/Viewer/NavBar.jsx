@@ -7,7 +7,8 @@ import {
   faHome,
   faImages,
   faIndustry,
-  faList
+  faList,
+  faUser
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
@@ -26,19 +27,24 @@ import {
 import { clearMessage as clearBrandMessage } from "../../store/slices/brandsSlice";
 import { clearMessage as clearGalleryMessage } from "../../store/slices/gallerySlice";
 import { clearMessage as clearGuitarMessage } from "../../store/slices/guitarsSlice";
+import { getUserName } from "../../utils/utils";
+
+import ManageUserModal from "../Modals/ManageUserModal";
+import UserLoginModal from "../Modals/UserLoginModal";
 
 const NavBar = () => {
   const dispatch = useDispatch();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isManageUserModalOpen, setIsManageUserModalOpen] = useState(false);
 
-  const toggle = () => setIsOpen(!isOpen);
-
-  const { message: guitarsMessage } =
+  const { message: guitarsMessage, selected: selectedGuitar } =
     useSelector(state => state.guitarsState) ?? {};
   const { message: brandsMessage } =
     useSelector(state => state.brandsState) ?? {};
   const { message: galleryMessage } =
     useSelector(state => state.galleryState) ?? {};
+  const { user } = useSelector(state => state.userState) ?? {};
 
   useEffect(() => {
     if (!_.isEmpty(guitarsMessage)) {
@@ -72,12 +78,20 @@ const NavBar = () => {
     }
   }, [galleryMessage, dispatch]);
 
+  const toggle = () => setIsHamburgerOpen(!isHamburgerOpen);
+  const toggleLoginModal = () => {
+    setIsLoginModalOpen(!isLoginModalOpen);
+  };
+  const toggleManageUserModal = () => {
+    setIsManageUserModalOpen(!isManageUserModalOpen);
+  };
+
   return (
     <Navbar color="dark" dark expand="sm" fixed="top">
       <NavbarBrand href="/">Brian's Guitars</NavbarBrand>
       <NavbarToggler onClick={toggle} />
-      <Collapse isOpen={isOpen} navbar>
-        <Nav className="me-auto" navbar>
+      <Collapse isOpen={isHamburgerOpen} navbar>
+        <Nav className="me-auto w-100" navbar>
           <NavItem>
             <Link to="/">
               <FontAwesomeIcon icon={faHome} /> Home
@@ -103,6 +117,26 @@ const NavBar = () => {
               <FontAwesomeIcon icon={faImages} /> Image Gallery
             </Link>
           </NavItem>
+          {selectedGuitar && (
+            <NavItem>
+              <Link to={`/guitar/${selectedGuitar}`}>
+                <FontAwesomeIcon icon={faGuitar} /> {selectedGuitar}
+              </Link>
+            </NavItem>
+          )}
+          {user._id ? (
+            <NavItem className="ms-auto">
+              <Link onClick={toggleManageUserModal}>
+                <FontAwesomeIcon icon={faUser} /> {getUserName(user)}
+              </Link>
+            </NavItem>
+          ) : (
+            <NavItem className="ms-auto">
+              <Link onClick={toggleLoginModal}>
+                <FontAwesomeIcon icon={faUser} /> Login
+              </Link>
+            </NavItem>
+          )}
         </Nav>
       </Collapse>
       <Alert
@@ -129,6 +163,14 @@ const NavBar = () => {
       >
         {galleryMessage?.text}
       </Alert>
+      <UserLoginModal
+        isModalOpen={isLoginModalOpen}
+        toggle={toggleLoginModal}
+      />
+      <ManageUserModal
+        isModalOpen={isManageUserModalOpen}
+        toggle={toggleManageUserModal}
+      />
     </Navbar>
   );
 };

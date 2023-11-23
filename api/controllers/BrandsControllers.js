@@ -8,7 +8,10 @@ const controllerType = "Brand";
 
 module.exports.getBrands = async (request, response) => {
   const brands = await BrandModel.find();
-  response.send(brands);
+  const message = `${brands.length} ${controllerType}${
+    brands.length === 1 ? "" : "s"
+  } Loaded Successfully`;
+  response.send({data: brands, message});
 };
 
 module.exports.saveBrand = (request, response) => {

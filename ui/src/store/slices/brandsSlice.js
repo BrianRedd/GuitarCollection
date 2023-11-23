@@ -3,6 +3,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import _ from "lodash";
+import { enqueueSnackbar } from "notistack";
 
 import * as types from "../../types/types";
 import { baseURL } from "../../utils/constants";
@@ -32,7 +33,7 @@ export const addBrand = createAsyncThunk("brands/saveBrand", brandObject => {
       }
     })
     .then(response => {
-      console.log("addBrand", response);
+      enqueueSnackbar(response.data.message);
       return response.data;
     });
 });
@@ -52,7 +53,7 @@ export const updateBrand = createAsyncThunk(
         }
       })
       .then(response => {
-        console.log("updateBrand", response);
+        enqueueSnackbar(response.data.message);
         return response;
       });
   }
@@ -71,7 +72,7 @@ export const deleteBrand = createAsyncThunk(
         data: brandObject
       })
       .then(response => {
-        console.log("deleteBrand", response);
+        enqueueSnackbar(response.data.message);
         return response.data;
       });
   }
@@ -87,7 +88,7 @@ const brandsSlice = createSlice({
     updatePagination(state, action) {
       state.pagination = {
         ...state.pagination,
-        ...action.payload
+        ...action.payload.data
       };
     }
   },
@@ -98,13 +99,7 @@ const brandsSlice = createSlice({
     });
     builder.addCase(getBrands.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = _.orderBy(action.payload, "name");
-      state.message = {
-        type: "info",
-        text: `${action.payload?.length} Brand${
-          action.payload?.length !== 1 ? "s" : ""
-        } Loaded`
-      };
+      state.list = _.orderBy(action.payload.data, "name");
     });
     builder.addCase(getBrands.rejected, (state, action) => {
       state.loading = false;
@@ -120,11 +115,7 @@ const brandsSlice = createSlice({
     });
     builder.addCase(addBrand.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = [{ ...action.payload, isNew: true }, ...state.list];
-      state.message = {
-        type: "success",
-        text: `Brand ${action.payload.name} Successfully Added`
-      };
+      state.list = [{ ...action.payload.data, isNew: true }, ...state.list];
     });
     builder.addCase(addBrand.rejected, (state, action) => {
       state.loading = false;
@@ -139,14 +130,10 @@ const brandsSlice = createSlice({
     });
     builder.addCase(updateBrand.fulfilled, (state, action) => {
       const list = state.list;
-      const idx = list.map(item => item._id).indexOf(action.payload._id);
-      list[idx] = action.payload;
+      const idx = list.map(item => item._id).indexOf(action.payload.data._id);
+      list[idx] = action.payload.data;
       state.loading = false;
       state.list = list;
-      state.message = {
-        type: "success",
-        text: `Brand ${action.payload.name} Successfully Updated`
-      };
     });
     builder.addCase(updateBrand.rejected, (state, action) => {
       state.loading = false;
@@ -161,14 +148,10 @@ const brandsSlice = createSlice({
     });
     builder.addCase(deleteBrand.fulfilled, (state, action) => {
       const list = state.list;
-      const idx = list.map(item => item._id).indexOf(action.payload._id);
+      const idx = list.map(item => item._id).indexOf(action.payload.data._id);
       list.splice(idx, 1);
       state.loading = false;
       state.list = list;
-      state.message = {
-        type: "success",
-        text: `Brand ${action.payload.name} Successfully Deleted`
-      };
     });
     builder.addCase(deleteBrand.rejected, (state, action) => {
       state.loading = false;

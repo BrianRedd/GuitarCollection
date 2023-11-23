@@ -6,7 +6,10 @@ const controllerType = "Guitar";
 
 module.exports.getGuitars = async (request, response) => {
   const guitars = await GuitarModel.find();
-  response.send(guitars);
+  const message = `${guitars.length} ${controllerType}${
+    guitars.length === 1 ? "" : "s"
+  } Loaded Successfully`;
+  response.send({data: guitars, message});
 };
 
 module.exports.saveGuitar = (request, response) => {

@@ -26,19 +26,22 @@ const Main = () => {
 
   useEffect(() => {
     dispatch(getGuitars()).then(response => {
-      console.log("response", response);
-      enqueueSnackbar("Test message" )
+      enqueueSnackbar(response.payload.message)
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    dispatch(getBrands());
+    dispatch(getBrands()).then(response => {
+      enqueueSnackbar(response.payload.message)
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    dispatch(getGallery());
+    dispatch(getGallery()).then(response => {
+      enqueueSnackbar(response.payload.message)
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
