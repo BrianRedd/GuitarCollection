@@ -9,6 +9,8 @@ import { useFormikContext } from "formik";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
+import usePermissions from "../../hooks/usePermissions";
+
 import "./styles/editors.scss";
 
 /**
@@ -22,19 +24,23 @@ const GuitarFormButtons = props => {
 
   const navigate = useNavigate();
 
+  const hasEditGuitarPermissions = usePermissions("EDIT_GUITAR");
+
   const formProps = useFormikContext();
   return (
     <div className={`d-flex justify-content-end save-buttons ${className}`}>
-      <Button
-        onClick={formProps.handleSubmit}
-        variant="contained"
-        disableElevation
-        color="primary"
-        className="font-weight-bold"
-      >
-        <FontAwesomeIcon icon={faGuitar} className="me-3" />
-        {submitButtonText}
-      </Button>
+      {hasEditGuitarPermissions && (
+        <Button
+          onClick={formProps.handleSubmit}
+          variant="contained"
+          disableElevation
+          color="primary"
+          className="font-weight-bold"
+        >
+          <FontAwesomeIcon icon={faGuitar} className="me-3" />
+          {submitButtonText}
+        </Button>
+      )}
       <Button
         className="ms-2"
         onClick={() => {

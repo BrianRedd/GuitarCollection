@@ -11,6 +11,7 @@ import { Col, Row } from "reactstrap";
 import confirm from "reactstrap-confirm";
 
 import { useNavigate } from "react-router";
+import usePermissions from "../../hooks/usePermissions";
 import { updateGuitar } from "../../store/slices/guitarsSlice";
 import {
   CAPTION_OPTION_DEFAULTS,
@@ -24,6 +25,8 @@ const Home = () => {
   const guitars = useSelector(state => state.guitarsState?.list) ?? [];
   const brands = useSelector(state => state.brandsState?.list) ?? [];
   const gallery = useSelector(state => state.galleryState?.list) ?? [];
+
+  const hasEditGuitarPermissions = usePermissions("EDIT_GUITAR");
 
   const [featuredGuitar, setFeaturedGuitar] = useState({});
 
@@ -148,36 +151,38 @@ const Home = () => {
                   <p>
                     <b>Last Played:</b> {featuredGuitar.lastPlayed || "N/A"}
                   </p>
-                  <p>
-                    <Button
-                      variant="contained"
-                      disableElevation
-                      color="success"
-                      onClick={async event => {
-                        event.preventDefault();
-                        const result = await confirm({
-                          title: `Play ${featuredGuitar.name}?`,
-                          message: `Want to play ${featuredGuitar.name} today?`,
-                          confirmColor: "success",
-                          cancelColor: "link text-danger",
-                          confirmText: "Yes!",
-                          cancelText: "No"
-                        });
-                        if (result) {
-                          dispatch(
-                            updateGuitar({
-                              ...featuredGuitar,
-                              lastPlayed: moment().format(DATE_FORMAT)
-                            })
-                          ).then(() => {
-                            navigate(`/guitar/${featuredGuitar._id}`);
+                  {hasEditGuitarPermissions && (
+                    <p>
+                      <Button
+                        variant="contained"
+                        disableElevation
+                        color="success"
+                        onClick={async event => {
+                          event.preventDefault();
+                          const result = await confirm({
+                            title: `Play ${featuredGuitar.name}?`,
+                            message: `Want to play ${featuredGuitar.name} today?`,
+                            confirmColor: "success",
+                            cancelColor: "link text-danger",
+                            confirmText: "Yes!",
+                            cancelText: "No"
                           });
-                        }
-                      }}
-                    >
-                      Play Today?
-                    </Button>
-                  </p>
+                          if (result) {
+                            dispatch(
+                              updateGuitar({
+                                ...featuredGuitar,
+                                lastPlayed: moment().format(DATE_FORMAT)
+                              })
+                            ).then(() => {
+                              navigate(`/guitar/${featuredGuitar._id}`);
+                            });
+                          }
+                        }}
+                      >
+                        Play Today?
+                      </Button>
+                    </p>
+                  )}
                 </Col>
               </Row>
               <Row>

@@ -20,6 +20,7 @@ import * as types from "../../types/types";
 import InputTextField from "../common/InputTextField";
 import BrandBlock from "./BrandBlock";
 
+import usePermissions from "../../hooks/usePermissions";
 import "./styles/brands.scss";
 
 /**
@@ -30,6 +31,8 @@ const Brands = () => {
   const dispatch = useDispatch();
   const [selectedBrand, setSelectedBrand] = useState(types.brand.defaults);
   const brands = useSelector(state => state.brandsState.list) ?? [];
+
+  const hasEditBrandPermissions = usePermissions("EDIT_BRAND");
 
   const isEdit = Boolean(selectedBrand._id);
 
@@ -86,91 +89,101 @@ const Brands = () => {
                   No Brands Found
                 </Alert>
               )}
-              <h4 className="mt-3">
-                {isEdit ? `Edit Brand ${selectedBrand.name}` : "Add New Brand"}
-              </h4>
-              <Form>
-                <FormGroup>
-                  <Row>
-                    <InputTextField
-                      name="name"
-                      required
-                      onChange={evt => {
-                        const value = evt.target.value;
-                        if (value && value.length > 2 && !isEdit) {
-                          formProps.setFieldValue(
-                            "id",
-                            value?.slice(0, 2)?.toUpperCase()
-                          );
-                        }
-                      }}
-                    />
-                    <InputTextField
-                      name="id"
-                      required
-                      otherProps={{
-                        disabled: !formProps.values?.name || isEdit
-                      }}
-                    />
-                    <InputTextField name="notes" width="wide" />
-                  </Row>
-                  <Row>
-                    <Col xs={isEdit ? 6 : 12} md={isEdit ? 4 : 6}>
-                      <input
-                        type="file"
-                        name="image"
-                        className="form-control form-control-lg"
-                        onChange={event => {
-                          formProps.setFieldValue(
-                            "logo",
-                            event.currentTarget.files[0]
-                          );
-                        }}
-                        required
-                      />
-                    </Col>
-                    {isEdit && selectedBrand.logo && (
-                      <Col xs={6} md={2}>
-                        <img
-                          src={`http://localhost:5000/brandLogos/${selectedBrand.logo}`}
-                          width="100"
-                          className="img-thumbnail mt-1"
-                          alt={selectedBrand.name}
-                        ></img>
-                      </Col>
-                    )}
-                    <Col xs={12} md={6} className="buttons-container">
-                      <Button
-                        onClick={formProps.handleSubmit}
-                        variant="contained"
-                        disableElevation
-                        color="primary"
-                        className="font-weight-bold"
-                      >
-                        <FontAwesomeIcon icon={faIndustry} className="me-3" />
-                        {isEdit
-                          ? `Save ${selectedBrand.name}`
-                          : "Create New Brand"}
-                      </Button>
-                      <Button
-                        className="ms-2"
-                        onClick={() => {
-                          formProps.resetForm(types.brand.defaults);
-                          setSelectedBrand(types.brand.defaults);
-                        }}
-                        variant="outlined"
-                        color="secondary"
-                      >
-                        <FontAwesomeIcon
-                          icon={faCircleXmark}
-                          className="me-3"
+
+              {hasEditBrandPermissions && (
+                <React.Fragment>
+                  <h4 className="mt-3">
+                    {isEdit
+                      ? `Edit Brand ${selectedBrand.name}`
+                      : "Add New Brand"}
+                  </h4>
+                  <Form>
+                    <FormGroup>
+                      <Row>
+                        <InputTextField
+                          name="name"
+                          required
+                          onChange={evt => {
+                            const value = evt.target.value;
+                            if (value && value.length > 2 && !isEdit) {
+                              formProps.setFieldValue(
+                                "id",
+                                value?.slice(0, 2)?.toUpperCase()
+                              );
+                            }
+                          }}
                         />
-                        Cancel
-                      </Button>
-                    </Col>
-                  </Row>
-                </FormGroup>
-              </Form>
+                        <InputTextField
+                          name="id"
+                          required
+                          otherProps={{
+                            disabled: !formProps.values?.name || isEdit
+                          }}
+                        />
+                        <InputTextField name="notes" width="wide" />
+                      </Row>
+                      <Row>
+                        <Col xs={isEdit ? 6 : 12} md={isEdit ? 4 : 6}>
+                          <input
+                            type="file"
+                            name="image"
+                            className="form-control form-control-lg"
+                            onChange={event => {
+                              formProps.setFieldValue(
+                                "logo",
+                                event.currentTarget.files[0]
+                              );
+                            }}
+                            required
+                          />
+                        </Col>
+                        {isEdit && selectedBrand.logo && (
+                          <Col xs={6} md={2}>
+                            <img
+                              src={`http://localhost:5000/brandLogos/${selectedBrand.logo}`}
+                              width="100"
+                              className="img-thumbnail mt-1"
+                              alt={selectedBrand.name}
+                            ></img>
+                          </Col>
+                        )}
+                        <Col xs={12} md={6} className="buttons-container">
+                          <Button
+                            onClick={formProps.handleSubmit}
+                            variant="contained"
+                            disableElevation
+                            color="primary"
+                            className="font-weight-bold"
+                          >
+                            <FontAwesomeIcon
+                              icon={faIndustry}
+                              className="me-3"
+                            />
+                            {isEdit
+                              ? `Save ${selectedBrand.name}`
+                              : "Create New Brand"}
+                          </Button>
+                          <Button
+                            className="ms-2"
+                            onClick={() => {
+                              formProps.resetForm(types.brand.defaults);
+                              setSelectedBrand(types.brand.defaults);
+                            }}
+                            variant="outlined"
+                            color="secondary"
+                          >
+                            <FontAwesomeIcon
+                              icon={faCircleXmark}
+                              className="me-3"
+                            />
+                            Cancel
+                          </Button>
+                        </Col>
+                      </Row>
+                    </FormGroup>
+                  </Form>
+                </React.Fragment>
+              )}
             </React.Fragment>
           );
         }}

@@ -3,12 +3,14 @@ import React, { useState } from "react";
 import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "@mui/material";
+import { useFormikContext } from "formik";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { Col, Form, FormGroup, Row } from "reactstrap";
 
-import { getColWidth, getDateFromOvationSN } from "../../utils/utils";
+import { getDateFromOvationSN } from "../../utils/dateFromSN";
+import { getColWidth } from "../../utils/utils";
 import {
   CAPTION_OPTION_DEFAULTS,
   COLOR_OPTION_DEFAULTS,
@@ -22,7 +24,7 @@ import {
   TUNING_OPTION_DEFAULTS
 } from "../data/constants";
 
-import { useFormikContext } from "formik";
+import usePermissions from "../../hooks/usePermissions";
 import InputFreeFormField from "../common/InputFreeFormField";
 import InputSelectField from "../common/InputSelectField";
 import InputTextField from "../common/InputTextField";
@@ -39,6 +41,8 @@ const GuitarForm = props => {
   const guitars = useSelector(state => state.guitarsState?.list) ?? [];
   const brands = useSelector(state => state.brandsState.list) ?? [];
   const gallery = useSelector(state => state.galleryState?.list) ?? [];
+
+  const hasPurchaseHistoryPermissions = usePermissions("VIEW_PURCHASE_HISTORY");
 
   const [snComment, setSnComment] = useState(null);
 
@@ -248,76 +252,78 @@ const GuitarForm = props => {
             />
           </Row>
         )}
-        <EditableGrid
-          title="Purchase History"
-          writeArray={writeArray}
-          listName="purchaseHistory"
-          fieldDefaults={{
-            ownershipStatus: "",
-            where: "",
-            when: "",
-            who: "",
-            amount: null,
-            notes: ""
-          }}
-          gridColumns={[
-            {
-              field: "ownershipStatus",
-              headerName: "Ownership Status",
-              flex: 1,
-              editable: true,
-              type: "singleSelect",
-              valueOptions: OWNERSHIP_STATUS_OPTIONS,
-              getOptionValue: value => value.value,
-              getOptionLabel: value => value.label,
-              headerClassName: "fst-italic"
-            },
-            {
-              field: "where",
-              headerName: "Transaction Location",
-              flex: 1,
-              editable: true,
-              headerClassName: "fst-italic"
-            },
-            {
-              field: "when",
-              headerName: "Date",
-              flex: 1,
-              editable: true,
-              headerClassName: "fst-italic"
-            },
-            {
-              field: "who",
-              headerName: "Store / Party",
-              flex: 1,
-              editable: true,
-              headerClassName: "fst-italic"
-            },
-            {
-              field: "amount",
-              headerName: "Amount",
-              type: "number",
-              flex: 1,
-              align: "right",
-              headerAlign: "right",
-              editable: true,
-              valueFormatter: params => {
-                if (params.value == null) {
-                  return "";
-                }
-                return `$ ${params.value.toLocaleString()}`;
+        {hasPurchaseHistoryPermissions && (
+          <EditableGrid
+            title="Purchase History"
+            writeArray={writeArray}
+            listName="purchaseHistory"
+            fieldDefaults={{
+              ownershipStatus: "",
+              where: "",
+              when: "",
+              who: "",
+              amount: null,
+              notes: ""
+            }}
+            gridColumns={[
+              {
+                field: "ownershipStatus",
+                headerName: "Ownership Status",
+                flex: 1,
+                editable: true,
+                type: "singleSelect",
+                valueOptions: OWNERSHIP_STATUS_OPTIONS,
+                getOptionValue: value => value.value,
+                getOptionLabel: value => value.label,
+                headerClassName: "fst-italic"
               },
-              headerClassName: "fst-italic"
-            },
-            {
-              field: "notes",
-              headerName: "Notes",
-              flex: 1.5,
-              editable: true,
-              headerClassName: "fst-italic"
-            }
-          ]}
-        />
+              {
+                field: "where",
+                headerName: "Transaction Location",
+                flex: 1,
+                editable: true,
+                headerClassName: "fst-italic"
+              },
+              {
+                field: "when",
+                headerName: "Date",
+                flex: 1,
+                editable: true,
+                headerClassName: "fst-italic"
+              },
+              {
+                field: "who",
+                headerName: "Store / Party",
+                flex: 1,
+                editable: true,
+                headerClassName: "fst-italic"
+              },
+              {
+                field: "amount",
+                headerName: "Amount",
+                type: "number",
+                flex: 1,
+                align: "right",
+                headerAlign: "right",
+                editable: true,
+                valueFormatter: params => {
+                  if (params.value == null) {
+                    return "";
+                  }
+                  return `$ ${params.value.toLocaleString()}`;
+                },
+                headerClassName: "fst-italic"
+              },
+              {
+                field: "notes",
+                headerName: "Notes",
+                flex: 1.5,
+                editable: true,
+                headerClassName: "fst-italic"
+              }
+            ]}
+          />
+        )}
         <EditableGrid
           title="Specifications"
           writeArray={writeArray}

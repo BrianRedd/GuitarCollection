@@ -87,7 +87,7 @@ const guitarsSlice = createSlice({
     });
     builder.addCase(getGuitars.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload.data;
+      state.list = action.payload?.data;
     });
     builder.addCase(getGuitars.rejected, (state, action) => {
       state.loading = false;
@@ -103,7 +103,7 @@ const guitarsSlice = createSlice({
     });
     builder.addCase(addGuitar.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = [{ ...action.payload, isNew: true }, ...state.list];
+      state.list = [{ ...action.payload?.data, isNew: true }, ...state.list];
     });
     builder.addCase(addGuitar.rejected, (state, action) => {
       state.loading = false;
@@ -117,8 +117,9 @@ const guitarsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(updateGuitar.fulfilled, (state, action) => {
+      console.log("action", action)
       const list = state.list;
-      const idx = list.map(item => item._id).indexOf(action.payload._id);
+      const idx = list.map(item => item._id).indexOf(action.payload?.data._id);
       list[idx] = action.payload;
       state.loading = false;
       state.list = list;
@@ -136,7 +137,7 @@ const guitarsSlice = createSlice({
     });
     builder.addCase(removeGuitar.fulfilled, (state, action) => {
       const list = state.list;
-      const idx = list.map(item => item._id).indexOf(action.payload._id);
+      const idx = list.map(item => item._id).indexOf(action.payload?.data._id);
       list.splice(idx, 1);
       state.loading = false;
       state.list = list;

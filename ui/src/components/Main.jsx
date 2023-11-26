@@ -16,6 +16,8 @@ import GuitarDetail from "./GuitarDetail/GuitarDetail";
 import GuitarList from "./GuitarList/GuitarList";
 import Home from "./Viewer/Home";
 import Layout from "./Viewer/Layout";
+import { cookieFunctions } from "../utils/utils";
+import { getUser, writeUser } from "../store/slices/userSlice";
 
 /**
  * @function Main
@@ -44,6 +46,19 @@ const Main = () => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const loginCookie = cookieFunctions.getCookie("bgln");
+
+  useEffect(() => {
+    if (loginCookie) {
+      const loginArray = loginCookie.split("|");
+      dispatch(getUser(loginArray?.[0])).then(response => {
+        if (response?.payload?.data?.password === loginArray?.[1]) {
+          dispatch(writeUser(response.payload.data))
+        }
+      })
+    }
+  }, [dispatch, loginCookie])
 
   return (
     <BrowserRouter>

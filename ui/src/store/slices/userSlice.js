@@ -112,7 +112,6 @@ const userSlice = createSlice({
     });
     builder.addCase(updateUser.fulfilled, (state, action) => {
       state.loading = false;
-      state.user = action.payload.data;
     });
     builder.addCase(updateUser.rejected, (state, action) => {
       state.loading = false;

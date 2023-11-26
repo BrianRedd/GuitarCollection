@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, IconButton } from "@mui/material";
 import { Box } from "@mui/system";
 import _ from "lodash";
 import moment from "moment";
@@ -13,7 +14,9 @@ import { useNavigate } from "react-router-dom";
 import { Alert, Col, Row } from "reactstrap";
 import confirm from "reactstrap-confirm";
 
+import usePermissions from "../../hooks/usePermissions";
 import { updateGuitar, updateSelected } from "../../store/slices/guitarsSlice";
+import { getColWidth } from "../../utils/utils";
 import { CAPTION_OPTION_DEFAULTS, DATE_FORMAT } from "../data/constants";
 
 import GuitarPictures from "./GuitarPictures";
@@ -22,9 +25,7 @@ import PurchaseDetailTable from "./PurchaseDetailTable";
 import SpecificationsTable from "./SpecificationsTable";
 import TodoList from "./TodoList";
 
-import { Button, IconButton } from "@mui/material";
 import "./styles/guitardetail.scss";
-import { getColWidth } from "../../utils/utils";
 
 /**
  * @function GuitarDetail
@@ -39,6 +40,9 @@ const GuitarDetail = () => {
   const brands = useSelector(state => state.brandsState?.list) ?? [];
   const gallery = useSelector(state => state.galleryState?.list) ?? [];
 
+  const hasEditGuitarPermissions = usePermissions("EDIT_GUITAR");
+  const hasPurchaseHistoryPermissions = usePermissions("VIEW_PURCHASE_HISTORY");
+
   const guitar =
     guitars.find(guitar => guitar._id === matchId || guitar.name === matchId) ??
     {};
@@ -50,7 +54,6 @@ const GuitarDetail = () => {
   }, [dispatch, guitarName, matchId]);
 
   const brand = (brands ?? []).find(brand => brand.id === guitar.brandId) ?? {};
-
 
   const DetailItem = ({ width = "", title = "", children }) => {
     const widthProps = getColWidth(width);
@@ -99,9 +102,11 @@ const GuitarDetail = () => {
     <Box sx={{ width: "100%" }} className="p-4">
       <div className="d-flex w-100 justify-content-between">
         <h1>{guitar.name}</h1>
-        <IconButton onClick={() => navigate(`/editguitar/${guitar._id}`)}>
-          <FontAwesomeIcon icon={faEdit} className="text-info" />
-        </IconButton>
+        {hasEditGuitarPermissions && (
+          <IconButton onClick={() => navigate(`/editguitar/${guitar._id}`)}>
+            <FontAwesomeIcon icon={faEdit} className="text-info" />
+          </IconButton>
+        )}
       </div>
       <Row>
         {thumbnail && (
@@ -130,33 +135,42 @@ const GuitarDetail = () => {
                 <DetailItem title="Tuning" width="wide">
                   {guitar.tuning}
                 </DetailItem>
+
                 <Col {...getColWidth("wide")}>
-                  <Button
-                    variant="contained"
-                    disableElevation
-                    color="success"
-                    onClick={async event => {
-                      event.preventDefault();
-                      const result = await confirm({
-                        title: `Played ${guitar.name} today?`,
-                        message: `Did you play ${guitar.name} today?`,
-                        confirmColor: "success",
-                        cancelColor: "link text-danger",
-                        confirmText: "Yes!",
-                        cancelText: "No"
-                      });
-                      if (result) {
-                        dispatch(
-                          updateGuitar({
-                            ...guitar,
-                            lastPlayed: moment().format(DATE_FORMAT)
-                          })
-                        );
-                      }
-                    }}
-                  >
-                    Last Played: {guitar.lastPlayed || "N/A"}
-                  </Button>
+                  {hasEditGuitarPermissions ? (
+                    <Button
+                      variant="contained"
+                      disableElevation
+                      color="success"
+                      onClick={async event => {
+                        event.preventDefault();
+                        const result = await confirm({
+                          title: `Played ${guitar.name} today?`,
+                          message: `Did you play ${guitar.name} today?`,
+                          confirmColor: "success",
+                          cancelColor: "link text-danger",
+                          confirmText: "Yes!",
+                          cancelText: "No"
+                        });
+                        if (result) {
+                          dispatch(
+                            updateGuitar({
+                              ...guitar,
+                              lastPlayed: moment().format(DATE_FORMAT)
+                            })
+                          );
+                        }
+                      }}
+                    >
+                      Last Played: {guitar.lastPlayed || "N/A"}
+                    </Button>
+                  ) : (
+                    <DetailItem title="Last Played" width="wide">
+                      {guitar.lastPlayed
+                        ? moment(guitar.lastPlayed).format(DATE_FORMAT)
+                        : "N/A"}
+                    </DetailItem>
+                  )}
                 </Col>
               </Row>
               <Row>
@@ -201,7 +215,7 @@ const GuitarDetail = () => {
         </Col>
       </Row>
       <GuitarPictures guitar={guitar} />
-      <PurchaseDetailTable guitar={guitar} />
+      {hasPurchaseHistoryPermissions && <PurchaseDetailTable guitar={guitar} />}
       <SpecificationsTable guitar={guitar} />
       <TodoList guitar={guitar} />
       <MaintenanceTable guitar={guitar} />

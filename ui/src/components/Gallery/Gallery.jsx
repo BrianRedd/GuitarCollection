@@ -6,10 +6,12 @@ import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, ButtonBase } from "@mui/material";
 import { Formik } from "formik";
+import _ from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { Col, Row } from "reactstrap";
 import { galleryValidationSchema } from "./data/validationSchemas";
 
+import usePermissions from "../../hooks/usePermissions";
 import {
   addGalleryImage,
   getGallery,
@@ -20,7 +22,6 @@ import * as types from "../../types/types";
 import ImageUploadModal from "../Modals/ImageUploadModal";
 import GalleryImage from "./GalleryImage";
 
-import _ from "lodash";
 import "./styles/gallery.scss";
 
 /**
@@ -32,6 +33,8 @@ const Gallery = () => {
 
   const guitars = useSelector(state => state.guitarsState.list) ?? [];
   const gallery = useSelector(state => state.galleryState.list) ?? [];
+
+  const hasEditGuitarPermissions = usePermissions("EDIT_GUITAR");
 
   const [selectedImage, setSelectedImage] = useState(
     types.galleryImage.defaults
@@ -94,24 +97,26 @@ const Gallery = () => {
           return (
             <React.Fragment>
               <Row>
-                <ButtonBase
-                  className="gallery-image border d-block me-2"
-                  onClick={() => {
-                    selectImage(types.galleryImage.defaults);
-                    setIsModalOpen(true);
-                  }}
-                >
-                  <Row>
-                    <Col>
-                      <h6 className="">Upload New Image</h6>
-                    </Col>
-                  </Row>
-                  <Row className="">
-                    <Col>
-                      <FontAwesomeIcon icon={faCloudArrowUp} size="2xl" />
-                    </Col>
-                  </Row>
-                </ButtonBase>
+                {hasEditGuitarPermissions && (
+                  <ButtonBase
+                    className="gallery-image border d-block me-2"
+                    onClick={() => {
+                      selectImage(types.galleryImage.defaults);
+                      setIsModalOpen(true);
+                    }}
+                  >
+                    <Row>
+                      <Col>
+                        <h6 className="">Upload New Image</h6>
+                      </Col>
+                    </Row>
+                    <Row className="">
+                      <Col>
+                        <FontAwesomeIcon icon={faCloudArrowUp} size="2xl" />
+                      </Col>
+                    </Row>
+                  </ButtonBase>
+                )}
                 {gridData()?.map(image => (
                   <GalleryImage
                     key={image._id}

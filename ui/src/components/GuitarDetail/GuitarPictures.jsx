@@ -16,6 +16,7 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { Col, Collapse, Row } from "reactstrap";
 
+import usePermissions from "../../hooks/usePermissions";
 import {
   addGalleryImage,
   getGallery,
@@ -26,10 +27,10 @@ import * as types from "../../types/types";
 import { galleryValidationSchema } from "../Gallery/data/validationSchemas";
 
 import GalleryImage from "../Gallery/GalleryImage";
+import ImageSelectorModal from "../Modals/ImageSelectorModal";
 import ImageUploadModal from "../Modals/ImageUploadModal";
 
 import "../Gallery/styles/gallery.scss";
-import ImageSelectorModal from "../Modals/ImageSelectorModal";
 
 /**
  * @function GuitarPictures
@@ -40,6 +41,8 @@ const GuitarPictures = props => {
   const dispatch = useDispatch();
 
   const gallery = useSelector(state => state.galleryState?.list) ?? [];
+
+  const hasEditGuitarPermissions = usePermissions("EDIT_GUITAR");
 
   const [selectedImage, setSelectedImage] = useState(
     types.galleryImage.defaults
@@ -135,44 +138,46 @@ const GuitarPictures = props => {
                     }}
                   />
                 ))}
-                <div className="gallery-image border d-block">
-                  <ButtonBase
-                    className="w-100 d-block h-50"
-                    onClick={() => {
-                      selectImage(types.galleryImage.defaults);
-                      setIsUploadModalOpen(true);
-                    }}
-                  >
-                    <Row>
-                      <Col>
-                        <h6>Upload New Image</h6>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <FontAwesomeIcon icon={faCloudArrowUp} size="2xl" />
-                      </Col>
-                    </Row>
-                  </ButtonBase>
-                  <ButtonBase
-                    className="w-100 d-block h-50 border-top"
-                    onClick={() => {
-                      selectImage(types.galleryImage.defaults);
-                      setIsSelectModalOpen(true);
-                    }}
-                  >
-                    <Row>
-                      <Col>
-                        <h6>Select From Gallery</h6>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <FontAwesomeIcon icon={faImages} size="2xl" />
-                      </Col>
-                    </Row>
-                  </ButtonBase>
-                </div>
+                {hasEditGuitarPermissions && (
+                  <div className="gallery-image border d-block">
+                    <ButtonBase
+                      className="w-100 d-block h-50"
+                      onClick={() => {
+                        selectImage(types.galleryImage.defaults);
+                        setIsUploadModalOpen(true);
+                      }}
+                    >
+                      <Row>
+                        <Col>
+                          <h6>Upload New Image</h6>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <FontAwesomeIcon icon={faCloudArrowUp} size="2xl" />
+                        </Col>
+                      </Row>
+                    </ButtonBase>
+                    <ButtonBase
+                      className="w-100 d-block h-50 border-top"
+                      onClick={() => {
+                        selectImage(types.galleryImage.defaults);
+                        setIsSelectModalOpen(true);
+                      }}
+                    >
+                      <Row>
+                        <Col>
+                          <h6>Select From Gallery</h6>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <FontAwesomeIcon icon={faImages} size="2xl" />
+                        </Col>
+                      </Row>
+                    </ButtonBase>
+                  </div>
+                )}
               </Row>
             </Collapse>
             <ImageUploadModal

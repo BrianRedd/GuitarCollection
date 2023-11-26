@@ -8,7 +8,8 @@ import {
   faImages,
   faIndustry,
   faList,
-  faUser
+  faUser,
+  faUserGear
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import _ from "lodash";
@@ -24,6 +25,7 @@ import {
   NavbarToggler
 } from "reactstrap";
 
+import usePermissions from "../../hooks/usePermissions";
 import { clearMessage as clearBrandMessage } from "../../store/slices/brandsSlice";
 import { clearMessage as clearGalleryMessage } from "../../store/slices/gallerySlice";
 import { clearMessage as clearGuitarMessage } from "../../store/slices/guitarsSlice";
@@ -45,6 +47,8 @@ const NavBar = () => {
   const { message: galleryMessage } =
     useSelector(state => state.galleryState) ?? {};
   const { user } = useSelector(state => state.userState) ?? {};
+
+  const hasEditGuitarPermissions = usePermissions("EDIT_GUITAR");
 
   useEffect(() => {
     if (!_.isEmpty(guitarsMessage)) {
@@ -102,11 +106,13 @@ const NavBar = () => {
               <FontAwesomeIcon icon={faList} /> Guitar List
             </Link>
           </NavItem>
-          <NavItem>
-            <Link to="/addguitar">
-              <FontAwesomeIcon icon={faGuitar} /> Add Guitar
-            </Link>
-          </NavItem>
+          {hasEditGuitarPermissions && (
+            <NavItem>
+              <Link to="/addguitar">
+                <FontAwesomeIcon icon={faGuitar} /> Add Guitar
+              </Link>
+            </NavItem>
+          )}
           <NavItem>
             <Link to="/brands">
               <FontAwesomeIcon icon={faIndustry} /> Brands
@@ -127,7 +133,7 @@ const NavBar = () => {
           {user._id ? (
             <NavItem className="ms-auto">
               <Link onClick={toggleManageUserModal}>
-                <FontAwesomeIcon icon={faUser} /> {getUserName(user)}
+                <FontAwesomeIcon icon={faUserGear} /> {getUserName(user)}
               </Link>
             </NavItem>
           ) : (

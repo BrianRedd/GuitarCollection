@@ -5,11 +5,12 @@ import React, { useState } from "react";
 import {
   faEye,
   faEyeSlash,
-  faSave,
+  faUser,
+  faUserCheck,
   faXmarkCircle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, IconButton } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, IconButton } from "@mui/material";
 import { Formik } from "formik";
 import _ from "lodash";
 import PropTypes from "prop-types";
@@ -18,6 +19,8 @@ import { Alert, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 import { getUser, updateUser, writeUser } from "../../store/slices/userSlice";
 
+import md5Hasher from "../../utils/md5";
+import { cookieFunctions } from "../../utils/utils";
 import InputTextField from "../common/InputTextField";
 import { userLoginValidationSchema } from "./data/modalData";
 
@@ -37,7 +40,8 @@ const UserLoginModal = props => {
     isNewPassword: false,
     username: "",
     password: "",
-    passwordConfirm: ""
+    passwordConfirm: "",
+    saveCookie: true
   };
 
   const EyeAdornment = (
@@ -60,20 +64,44 @@ const UserLoginModal = props => {
         onSubmit={values => {
           console.log("values", values);
           if (values.isNewPassword) {
-            dispatch(
-              updateUser({
-                ..._.pick(userObject, [
-                  "_id",
-                  "username",
-                  "firstname",
-                  "lastname",
-                  "permissions"
-                ]),
-                password: values.password
-              })
-            );
-          } else if (values.password === userObject.password) {
+            const submissionObject = {
+              ..._.pick(userObject, [
+                "_id",
+                "username",
+                "firstname",
+                "lastname",
+                "permissions"
+              ]),
+              password: md5Hasher(values.password)
+            };
+            dispatch(updateUser(submissionObject)).then(response => {
+              if (response?.payload?.data) {
+                dispatch(
+                  writeUser({
+                    ...response?.payload?.data,
+                    ...submissionObject
+                  })
+                );
+                if (values.saveCookie) {
+                  cookieFunctions.setCookie(
+                    "bgln",
+                    `${submissionObject.username}|${submissionObject.password}`
+                  );
+                } else {
+                  cookieFunctions.setCookie("bgln", "");
+                }
+              }
+            });
+          } else if (md5Hasher(values.password) === userObject.password) {
             dispatch(writeUser(userObject));
+            if (values.saveCookie) {
+              cookieFunctions.setCookie(
+                "bgln",
+                `${userObject.username}|${userObject.password}`
+              );
+            } else {
+              cookieFunctions.setCookie("bgln", "");
+            }
           } else {
             setError("Wrong Password");
             return false;
@@ -116,7 +144,7 @@ const UserLoginModal = props => {
                     color="info"
                     disabled={!formProps.values.username}
                   >
-                    <FontAwesomeIcon icon={faSave} />
+                    <FontAwesomeIcon icon={faUserCheck} />
                   </IconButton>
                 }
               />
@@ -163,6 +191,20 @@ const UserLoginModal = props => {
                       width="full"
                     />
                   )}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={formProps.values?.saveCookie}
+                        onChange={() =>
+                          formProps.setFieldValue(
+                            "saveCookie",
+                            !formProps.values?.saveCookie
+                          )
+                        }
+                      />
+                    }
+                    label="Remember Me"
+                  />
                 </React.Fragment>
               )}
             </ModalBody>
@@ -179,7 +221,7 @@ const UserLoginModal = props => {
                 className="font-weight-bold"
                 disabled={!formProps.values?.password}
               >
-                <FontAwesomeIcon icon={faSave} className="me-2" />
+                <FontAwesomeIcon icon={faUser} className="me-2" />
                 Login
               </Button>
             </ModalFooter>

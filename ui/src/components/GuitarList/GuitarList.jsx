@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { Alert } from "reactstrap";
 import confirm from "reactstrap-confirm";
 
+import usePermissions from "../../hooks/usePermissions";
 import {
   removeGuitar,
   updatePagination
@@ -47,6 +48,8 @@ const GuitarList = () => {
     useSelector(state => state.guitarsState) ?? {};
   const brands = useSelector(state => state.brandsState?.list) ?? [];
   const gallery = useSelector(state => state.galleryState?.list) ?? [];
+
+  const hasEditGuitarPermissions = usePermissions("EDIT_GUITAR");
 
   const frontPictures = gallery.filter(
     image => image.caption === CAPTION_OPTION_DEFAULTS[0]
@@ -78,12 +81,15 @@ const GuitarList = () => {
     {
       id: "lastPlayed",
       label: "Last Played"
-    },
-    {
-      id: "iconHolder",
-      label: ""
     }
   ];
+
+  if (hasEditGuitarPermissions) {
+    headCells.push({
+      id: "iconHolder",
+      label: ""
+    });
+  }
 
   const gridData = _.orderBy(
     guitars ?? [],
@@ -244,35 +250,37 @@ const GuitarList = () => {
                       >
                         {row.lastPlayed}
                       </TableCell>
-                      <TableCell className="icon_holder">
-                        <IconButton
-                          onClick={() => navigate(`/editguitar/${row._id}`)}
-                        >
-                          <FontAwesomeIcon
-                            icon={faEdit}
-                            className="text-success small"
-                          />
-                        </IconButton>
-                        <IconButton
-                          onClick={async event => {
-                            event.preventDefault();
-                            const result = await confirm({
-                              title: `Delete ${row.name}?`,
-                              message: `Are you sure you want to permanently delete ${row.name}?`,
-                              confirmColor: "danger",
-                              cancelColor: "link text-primary"
-                            });
-                            if (result) {
-                              dispatch(removeGuitar(row._id));
-                            }
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            className="text-danger small"
-                          />
-                        </IconButton>
-                      </TableCell>
+                      {hasEditGuitarPermissions && (
+                        <TableCell className="icon_holder">
+                          <IconButton
+                            onClick={() => navigate(`/editguitar/${row._id}`)}
+                          >
+                            <FontAwesomeIcon
+                              icon={faEdit}
+                              className="text-success small"
+                            />
+                          </IconButton>
+                          <IconButton
+                            onClick={async event => {
+                              event.preventDefault();
+                              const result = await confirm({
+                                title: `Delete ${row.name}?`,
+                                message: `Are you sure you want to permanently delete ${row.name}?`,
+                                confirmColor: "danger",
+                                cancelColor: "link text-primary"
+                              });
+                              if (result) {
+                                dispatch(removeGuitar(row._id));
+                              }
+                            }}
+                          >
+                            <FontAwesomeIcon
+                              icon={faTrash}
+                              className="text-danger small"
+                            />
+                          </IconButton>
+                        </TableCell>
+                      )}
                     </TableRow>
                   );
                 })}

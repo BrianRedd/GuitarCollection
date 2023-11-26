@@ -116,3 +116,10 @@ export const TODO_OPTION_DEFAULTS = [
   "On Hold",
   "Completed"
 ];
+
+export const PERMISSIONS_OPTIONS = [
+  "EDIT_USER",
+  "EDIT_GUITAR",
+  "EDIT_BRAND",
+  "VIEW_PURCHASE_HISTORY"
+];

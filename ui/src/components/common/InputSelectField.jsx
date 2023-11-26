@@ -17,7 +17,7 @@ const InputSelectField = props => {
     options,
     width,
     valueProp = "value",
-    labelProp = "label",    
+    labelProp = "label",
     required,
     otherProps = {}
   } = props;

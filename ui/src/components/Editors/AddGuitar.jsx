@@ -40,8 +40,9 @@ const AddGuitar = () => {
               : ""
           };
           dispatch(addGuitar(submissionValues)).then(response => {
+            console.log("response", response);
             actions.resetForm(initialValues);
-            navigate(`/guitar/${response?.payload?._id ?? values?.name ?? ""}`);
+            navigate(`/guitar/${response?.payload?.data?._id ?? values?.name ?? ""}`);
           });
         }}
         validationSchema={getGuitarsValidationSchema({
