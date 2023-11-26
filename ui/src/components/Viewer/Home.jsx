@@ -11,12 +11,13 @@ import { Col, Row } from "reactstrap";
 import confirm from "reactstrap-confirm";
 
 import { useNavigate } from "react-router";
+import useFilters from "../../hooks/useFilters";
 import usePermissions from "../../hooks/usePermissions";
 import { updateGuitar } from "../../store/slices/guitarsSlice";
 import {
-  CAPTION_OPTION_DEFAULTS,
+  CAPTION_OPTION_FULL_FRONT,
   DATE_FORMAT,
-  STATUS_OPTION_DEFAULTS
+  STATUS_OPTION_PLAYABLE
 } from "../data/constants";
 
 const Home = () => {
@@ -25,16 +26,17 @@ const Home = () => {
   const guitars = useSelector(state => state.guitarsState?.list) ?? [];
   const brands = useSelector(state => state.brandsState?.list) ?? [];
   const gallery = useSelector(state => state.galleryState?.list) ?? [];
+  const filters = useSelector(state => state.filtersState.filters) ?? {};
 
   const hasEditGuitarPermissions = usePermissions("EDIT_GUITAR");
+
+  const applyFilter = useFilters();
 
   const [featuredGuitar, setFeaturedGuitar] = useState({});
 
   const getFeaturedGuitar = () => {
-    const availableGuitars = guitars.filter(
-      guitar => guitar.status === STATUS_OPTION_DEFAULTS[0]
-    );
-    // TODO: add filters
+    const availableGuitars = applyFilter(guitars, true);
+
     // TODO: take into account last played
     const rand = Math.floor(Math.random() * availableGuitars.length);
     const featuredGuitar = (guitars ?? []).find(
@@ -44,7 +46,7 @@ const Home = () => {
       return (
         (featuredGuitar.pictures ?? []).includes(image?._id) &&
         image?.caption &&
-        image?.caption === CAPTION_OPTION_DEFAULTS[0]
+        image?.caption === CAPTION_OPTION_FULL_FRONT
       );
     })?.image;
     const brandObject = (brands ?? []).find(
@@ -143,6 +145,13 @@ const Home = () => {
                   <p>
                     <b>Tuning:</b> {featuredGuitar.tuning}
                   </p>
+                  {!(filters.featuredStatus ?? []).includes(
+                    STATUS_OPTION_PLAYABLE
+                  ) && (
+                    <p>
+                      <b>Status:</b> {featuredGuitar.status}
+                    </p>
+                  )}
                 </Col>
                 <Col className="text-start">
                   <p>

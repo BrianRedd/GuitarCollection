@@ -17,7 +17,7 @@ import confirm from "reactstrap-confirm";
 import usePermissions from "../../hooks/usePermissions";
 import { updateGuitar, updateSelected } from "../../store/slices/guitarsSlice";
 import { getColWidth } from "../../utils/utils";
-import { CAPTION_OPTION_DEFAULTS, DATE_FORMAT } from "../data/constants";
+import { CAPTION_OPTION_FULL_FRONT, DATE_FORMAT } from "../data/constants";
 
 import GuitarPictures from "./GuitarPictures";
 import MaintenanceTable from "./MaintenanceTable";
@@ -92,7 +92,7 @@ const GuitarDetail = () => {
   }
 
   const frontPictures = gallery.filter(
-    image => image.caption === CAPTION_OPTION_DEFAULTS[0]
+    image => image.caption === CAPTION_OPTION_FULL_FRONT
   );
   const thumbnail = frontPictures.find(picture =>
     (guitar.pictures ?? []).includes(picture._id)

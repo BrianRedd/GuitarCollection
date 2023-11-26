@@ -23,7 +23,7 @@ import {
   Row
 } from "reactstrap";
 
-import { CAPTION_OPTION_DEFAULTS } from "../data/constants";
+import { CAPTION_OPTIONS_DEFAULTS } from "../data/constants";
 
 import InputFreeFormField from "../common/InputFreeFormField";
 
@@ -42,7 +42,7 @@ const ImageUploadModal = props => {
 
   const captionOptions = _.uniq(
     _.compact([
-      ...CAPTION_OPTION_DEFAULTS,
+      ...CAPTION_OPTIONS_DEFAULTS,
       ...gallery.map(image => image.caption).sort()
     ])
   );

@@ -1,13 +1,15 @@
 import React, { useEffect } from "react";
 
+import { enqueueSnackbar } from "notistack";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import {  enqueueSnackbar } from 'notistack'
 
 import { getBrands } from "../store/slices/brandsSlice";
 import { getGallery } from "../store/slices/gallerySlice";
 import { getGuitars } from "../store/slices/guitarsSlice";
 
+import { getUser, writeUser } from "../store/slices/userSlice";
+import { cookieFunctions } from "../utils/utils";
 import Brands from "./Brands/Brands";
 import AddGuitar from "./Editors/AddGuitar";
 import EditGuitar from "./Editors/EditGuitar";
@@ -16,8 +18,6 @@ import GuitarDetail from "./GuitarDetail/GuitarDetail";
 import GuitarList from "./GuitarList/GuitarList";
 import Home from "./Viewer/Home";
 import Layout from "./Viewer/Layout";
-import { cookieFunctions } from "../utils/utils";
-import { getUser, writeUser } from "../store/slices/userSlice";
 
 /**
  * @function Main
@@ -28,21 +28,21 @@ const Main = () => {
 
   useEffect(() => {
     dispatch(getGuitars()).then(response => {
-      enqueueSnackbar(response.payload.message)
+      enqueueSnackbar(response.payload.message);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     dispatch(getBrands()).then(response => {
-      enqueueSnackbar(response.payload.message)
+      enqueueSnackbar(response.payload.message);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     dispatch(getGallery()).then(response => {
-      enqueueSnackbar(response.payload.message)
+      enqueueSnackbar(response.payload.message);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -54,11 +54,14 @@ const Main = () => {
       const loginArray = loginCookie.split("|");
       dispatch(getUser(loginArray?.[0])).then(response => {
         if (response?.payload?.data?.password === loginArray?.[1]) {
-          dispatch(writeUser(response.payload.data))
+          dispatch(writeUser(response.payload.data));
+        } else {
+          dispatch(writeUser({}));
+          cookieFunctions.setCookie("bgln", "");
         }
-      })
+      });
     }
-  }, [dispatch, loginCookie])
+  }, [dispatch, loginCookie]);
 
   return (
     <BrowserRouter>

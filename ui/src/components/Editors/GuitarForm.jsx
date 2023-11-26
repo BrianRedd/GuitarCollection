@@ -12,16 +12,16 @@ import { Col, Form, FormGroup, Row } from "reactstrap";
 import { getDateFromOvationSN } from "../../utils/dateFromSN";
 import { getColWidth } from "../../utils/utils";
 import {
-  CAPTION_OPTION_DEFAULTS,
-  COLOR_OPTION_DEFAULTS,
-  COUNTRY_OPTION_DEFAULTS,
-  INSTRUMENT_OPTION_DEFAULTS,
+  CAPTION_OPTION_FULL_FRONT,
+  COLOR_OPTIONS_DEFAULTS,
+  COUNTRY_OPTIONS_DEFAULTS,
+  INSTRUMENT_OPTIONS_DEFAULTS,
   OWNERSHIP_STATUS_OPTIONS,
-  SOUNDSCAPE_OPTION_DEFAULTS,
-  SPEC_OPTION_DEFAULTS,
-  STATUS_OPTION_DEFAULTS,
-  TODO_OPTION_DEFAULTS,
-  TUNING_OPTION_DEFAULTS
+  SOUNDSCAPE_OPTIONS_DEFAULTS,
+  SPEC_OPTIONS_DEFAULTS,
+  STATUS_OPTIONS_DEFAULTS,
+  TODO_OPTIONS_DEFAULTS,
+  TUNING_OPTIONS_DEFAULTS
 } from "../data/constants";
 
 import usePermissions from "../../hooks/usePermissions";
@@ -60,37 +60,37 @@ const GuitarForm = props => {
   );
   const countryOptions = _.uniq(
     _.compact([
-      ...COUNTRY_OPTION_DEFAULTS,
+      ...COUNTRY_OPTIONS_DEFAULTS,
       ...guitars.map(guitar => guitar.countyOfOrigin).sort()
     ])
   );
   const instrumentOptions = _.uniq(
     _.compact([
-      ...INSTRUMENT_OPTION_DEFAULTS,
+      ...INSTRUMENT_OPTIONS_DEFAULTS,
       ...guitars.map(guitar => guitar.instrumentType).sort()
     ])
   );
   const soundScapeOptions = _.uniq(
     _.compact([
-      ...SOUNDSCAPE_OPTION_DEFAULTS,
+      ...SOUNDSCAPE_OPTIONS_DEFAULTS,
       ...guitars.map(guitar => guitar.soundScape)
     ])
   ).sort();
   const colorOptions = _.uniq(
     _.compact([
-      ...COLOR_OPTION_DEFAULTS,
+      ...COLOR_OPTIONS_DEFAULTS,
       ...guitars.map(guitar => guitar.color)
     ])
   ).sort();
   const statusOptions = _.uniq(
     _.compact([
-      ...STATUS_OPTION_DEFAULTS,
+      ...STATUS_OPTIONS_DEFAULTS,
       ...guitars.map(guitar => guitar.status).sort()
     ])
   );
   const tuningOptions = _.uniq(
     _.compact([
-      ...TUNING_OPTION_DEFAULTS,
+      ...TUNING_OPTIONS_DEFAULTS,
       ...guitars.map(guitar => guitar.tuning).sort()
     ])
   );
@@ -102,7 +102,7 @@ const GuitarForm = props => {
   };
 
   const frontPictures = gallery.filter(
-    image => image.caption === CAPTION_OPTION_DEFAULTS[0]
+    image => image.caption === CAPTION_OPTION_FULL_FRONT
   );
   const thumbnail = frontPictures.find(picture =>
     (initialValues.pictures ?? []).includes(picture._id)
@@ -339,7 +339,7 @@ const GuitarForm = props => {
               flex: 0.3,
               editable: true,
               type: "singleSelect",
-              valueOptions: SPEC_OPTION_DEFAULTS,
+              valueOptions: SPEC_OPTIONS_DEFAULTS,
               getOptionValue: value => value,
               getOptionLabel: value => value.replaceAll("^", ""),
               headerClassName: "fst-italic"
@@ -377,7 +377,7 @@ const GuitarForm = props => {
               flex: 1,
               editable: true,
               type: "singleSelect",
-              valueOptions: TODO_OPTION_DEFAULTS,
+              valueOptions: TODO_OPTIONS_DEFAULTS,
               headerClassName: "fst-italic"
             },
             {

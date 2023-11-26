@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import { Alert } from "reactstrap";
 import confirm from "reactstrap-confirm";
 
+import useFilters from "../../hooks/useFilters";
 import usePermissions from "../../hooks/usePermissions";
 import {
   removeGuitar,
@@ -30,7 +31,7 @@ import {
 } from "../../store/slices/guitarsSlice";
 import * as types from "../../types/types";
 import {
-  CAPTION_OPTION_DEFAULTS,
+  CAPTION_OPTION_FULL_FRONT,
   DEFAULT_PAGE_SIZE,
   OWNERSHIP_STATUS_OPTIONS
 } from "../data/constants";
@@ -44,16 +45,22 @@ import "./styles/guitarlist.scss";
 const GuitarList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { list: guitars = [], pagination = types.guitarsState.defaults } =
-    useSelector(state => state.guitarsState) ?? {};
+  const {
+    list: guitarsFromState = [],
+    pagination = types.guitarsState.defaults
+  } = useSelector(state => state.guitarsState) ?? {};
   const brands = useSelector(state => state.brandsState?.list) ?? [];
   const gallery = useSelector(state => state.galleryState?.list) ?? [];
 
   const hasEditGuitarPermissions = usePermissions("EDIT_GUITAR");
 
+  const applyFilter = useFilters();
+
   const frontPictures = gallery.filter(
-    image => image.caption === CAPTION_OPTION_DEFAULTS[0]
+    image => image.caption === CAPTION_OPTION_FULL_FRONT
   );
+
+  const guitars = applyFilter(guitarsFromState ?? []);
 
   const { orderBy, order, page = 0, pageSize = DEFAULT_PAGE_SIZE } = pagination;
 
@@ -79,6 +86,10 @@ const GuitarList = () => {
       label: "Year"
     },
     {
+      id: "status",
+      label: "Status"
+    },
+    {
       id: "lastPlayed",
       label: "Last Played"
     }
@@ -92,7 +103,7 @@ const GuitarList = () => {
   }
 
   const gridData = _.orderBy(
-    guitars ?? [],
+    guitars,
     [orderBy, "serialNo"],
     [order, "asc"]
   ).slice(page * pageSize, page * pageSize + pageSize);
@@ -242,6 +253,13 @@ const GuitarList = () => {
                         }}
                       >
                         {row.year}
+                      </TableCell>
+                      <TableCell
+                        onClick={() => {
+                          navigate(`/guitar/${row._id}`);
+                        }}
+                      >
+                        {row.status}
                       </TableCell>
                       <TableCell
                         onClick={() => {

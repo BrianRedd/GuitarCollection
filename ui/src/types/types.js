@@ -13,7 +13,11 @@ import {
 import {
   DEFAULT_ORDER_BY,
   DEFAULT_PAGE_SIZE,
-  INSTRUMENT_OPTION_DEFAULTS
+  FILTER_FEATURED_STATUS,
+  FILTER_QUERY,
+  FILTER_STATUS,
+  INSTRUMENT_OPTION_GUITAR,
+  STATUS_OPTION_PLAYABLE
 } from "../components/data/constants";
 
 /*
@@ -90,7 +94,7 @@ export const guitar = {
     countyOfOrigin: "",
     purchaseHistory: [],
     case: "",
-    instrumentType: INSTRUMENT_OPTION_DEFAULTS[0],
+    instrumentType: INSTRUMENT_OPTION_GUITAR,
     noOfStrings: 6,
     soundScape: "",
     color: "",
@@ -251,5 +255,50 @@ export const userState = {
   }),
   defaults: {
     user: {}
+  }
+};
+
+/*
+ FILTERS TYPES
+ -------------*/
+/**
+ * @const filtersState
+ */
+export const filtersState = {
+  types: shape({
+    filters: shape({
+      [FILTER_QUERY]: string,
+      brandId: arrayOf(string),
+      from_year: string,
+      to_year: string,
+      from_lastPlayed: string,
+      to_lastPlayed: string,
+      countyOfOrigin: arrayOf(string),
+      instrumentType: arrayOf(string),
+      noOfStrings: arrayOf(string),
+      soundScape: arrayOf(string),
+      color: arrayOf(string),
+      [FILTER_STATUS]: arrayOf(string),
+      [FILTER_FEATURED_STATUS]: arrayOf(string),
+      tuning: arrayOf(string)
+    })
+  }),
+  defaults: {
+    filters: {
+      [FILTER_QUERY]: "",
+      brandId: [],
+      from_year: "",
+      to_year: "",
+      from_lastPlayed: "",
+      to_lastPlayed: "",
+      countyOfOrigin: [],
+      instrumentType: [],
+      noOfStrings: [],
+      soundScape: [],
+      color: [],
+      [FILTER_STATUS]: [],
+      [FILTER_FEATURED_STATUS]: [STATUS_OPTION_PLAYABLE],
+      tuning: []
+    }
   }
 };

@@ -41,11 +41,13 @@ export const OWNERSHIP_STATUS_OPTIONS = [
   }
 ];
 
-export const COUNTRY_OPTION_DEFAULTS = ["United States"];
+export const COUNTRY_OPTIONS_DEFAULTS = ["United States"];
 
-export const INSTRUMENT_OPTION_DEFAULTS = ["Guitar"];
+export const INSTRUMENT_OPTION_GUITAR = "Guitar";
 
-export const SOUNDSCAPE_OPTION_DEFAULTS = [
+export const INSTRUMENT_OPTIONS_DEFAULTS = [INSTRUMENT_OPTION_GUITAR];
+
+export const SOUNDSCAPE_OPTIONS_DEFAULTS = [
   "Acoustic",
   "Acoustic/Electric",
   "Classical/Nylon",
@@ -53,21 +55,23 @@ export const SOUNDSCAPE_OPTION_DEFAULTS = [
   "Electric Stereo"
 ];
 
-export const COLOR_OPTION_DEFAULTS = [
+export const COLOR_OPTIONS_DEFAULTS = [
   "Black",
   "Natural",
   "Red",
   "Tobacco Sunburst"
 ];
 
-export const TUNING_OPTION_DEFAULTS = [
+export const TUNING_OPTIONS_DEFAULTS = [
   "Standard/EADGBE",
   "Drop-D/DADGBE",
   "D-Scale/DGCFAD"
 ];
 
-export const STATUS_OPTION_DEFAULTS = [
-  "Playable",
+export const STATUS_OPTION_PLAYABLE = "Playable";
+
+export const STATUS_OPTIONS_DEFAULTS = [
+  STATUS_OPTION_PLAYABLE,
   "Display Only",
   "In Need of Repairs",
   "In Transit",
@@ -76,8 +80,10 @@ export const STATUS_OPTION_DEFAULTS = [
   "Sold or Gifted"
 ];
 
-export const CAPTION_OPTION_DEFAULTS = [
-  "Full Front",
+export const CAPTION_OPTION_FULL_FRONT = "Full Front";
+
+export const CAPTION_OPTIONS_DEFAULTS = [
+  CAPTION_OPTION_FULL_FRONT,
   "Full Side",
   "Body Front",
   "Body Back",
@@ -88,7 +94,7 @@ export const CAPTION_OPTION_DEFAULTS = [
   "Case"
 ];
 
-export const SPEC_OPTION_DEFAULTS = [
+export const SPEC_OPTIONS_DEFAULTS = [
   "Body Material",
   "Body Type",
   "Bridge",
@@ -110,7 +116,7 @@ export const SPEC_OPTION_DEFAULTS = [
   "Other"
 ];
 
-export const TODO_OPTION_DEFAULTS = [
+export const TODO_OPTIONS_DEFAULTS = [
   "Not Started",
   "In Progress",
   "On Hold",
@@ -123,3 +129,7 @@ export const PERMISSIONS_OPTIONS = [
   "EDIT_BRAND",
   "VIEW_PURCHASE_HISTORY"
 ];
+
+export const FILTER_QUERY = "query";
+export const FILTER_STATUS = "status";
+export const FILTER_FEATURED_STATUS = "featuredStatus";
