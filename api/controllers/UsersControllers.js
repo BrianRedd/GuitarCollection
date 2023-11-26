@@ -19,7 +19,7 @@ module.exports.getUser = (request, response) => {
       });
     })
     .catch(error => {
-      const errorMsg = `User ${(id ?? "").toUpperCase()} Not Found`;
+      const errorMsg = `User ${(id || "").toUpperCase()} Not Found`;
       console.error(errorMsg);
       response.send({
         error,
