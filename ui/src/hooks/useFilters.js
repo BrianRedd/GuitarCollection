@@ -37,18 +37,28 @@ const useFilters = () => {
       // dates
       else if (filter.startsWith("from_")) {
         const field = filter.split("_")[1];
-        filteredResults = filteredResults.filter(
-          result =>
+        filteredResults = filteredResults.filter(result => {
+          const dateValue =
+            field === "year"
+              ? parseFloat(result[field]).toString()
+              : result[field];
+          return (
             !filters[filter] ||
-            moment(result[field]).isSameOrAfter(filters[filter])
-        );
+            moment(dateValue).isSameOrAfter(moment(filters[filter]))
+          );
+        });
       } else if (filter.startsWith("to_")) {
         const field = filter.split("_")[1];
-        filteredResults = filteredResults.filter(
-          result =>
+        filteredResults = filteredResults.filter(result => {
+          const dateValue =
+            field === "year"
+              ? parseFloat(result[field]).toString()
+              : result[field];
+          return (
             !filters[filter] ||
-            moment(result[field]).isSameOrBefore(filters[filter])
-        );
+            moment(dateValue).isSameOrBefore(moment(filters[filter]))
+          );
+        });
       }
       // all string filters
       else if (!Array(filters[filter])) {

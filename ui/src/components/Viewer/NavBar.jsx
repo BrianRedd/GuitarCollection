@@ -1,8 +1,9 @@
 /** @module NavBar */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import {
+  faFilter,
   faGuitar,
   faHome,
   faImages,
@@ -17,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   Alert,
+  Badge,
   Collapse,
   Nav,
   NavItem,
@@ -29,8 +31,10 @@ import usePermissions from "../../hooks/usePermissions";
 import { clearMessage as clearBrandMessage } from "../../store/slices/brandsSlice";
 import { clearMessage as clearGalleryMessage } from "../../store/slices/gallerySlice";
 import { clearMessage as clearGuitarMessage } from "../../store/slices/guitarsSlice";
+import * as types from "../../types/types";
 import { getUserName } from "../../utils/utils";
 
+import FiltersModal from "../Modals/FiltersModal";
 import ManageUserModal from "../Modals/ManageUserModal";
 import UserLoginModal from "../Modals/UserLoginModal";
 
@@ -39,6 +43,7 @@ const NavBar = () => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isManageUserModalOpen, setIsManageUserModalOpen] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const { message: guitarsMessage, selected: selectedGuitar } =
     useSelector(state => state.guitarsState) ?? {};
@@ -47,8 +52,18 @@ const NavBar = () => {
   const { message: galleryMessage } =
     useSelector(state => state.galleryState) ?? {};
   const { user } = useSelector(state => state.userState) ?? {};
+  const { filters } = useSelector(state => state.filtersState) ?? {};
 
   const hasEditGuitarPermissions = usePermissions("EDIT_GUITAR");
+
+  const numberOfAppliedFilters = useMemo(
+    () =>
+      Object.keys(filters ?? {}).filter(
+        filter =>
+          filters[filter] !== types.filtersState.defaults.filters[filter]
+      ).length,
+    [filters]
+  );
 
   useEffect(() => {
     if (!_.isEmpty(guitarsMessage)) {
@@ -83,6 +98,9 @@ const NavBar = () => {
   }, [galleryMessage, dispatch]);
 
   const toggle = () => setIsHamburgerOpen(!isHamburgerOpen);
+  const toggleFilterModal = () => {
+    setIsFilterModalOpen(!isFilterModalOpen);
+  };
   const toggleLoginModal = () => {
     setIsLoginModalOpen(!isLoginModalOpen);
   };
@@ -121,6 +139,14 @@ const NavBar = () => {
           <NavItem>
             <Link to="/gallery">
               <FontAwesomeIcon icon={faImages} /> Image Gallery
+            </Link>
+          </NavItem>
+          <NavItem>
+            <Link onClick={toggleFilterModal}>
+              <FontAwesomeIcon icon={faFilter} /> Filters{" "}
+              {Boolean(numberOfAppliedFilters) && (
+                <Badge color="warning">{numberOfAppliedFilters}</Badge>
+              )}
             </Link>
           </NavItem>
           {selectedGuitar && (
@@ -169,6 +195,10 @@ const NavBar = () => {
       >
         {galleryMessage?.text}
       </Alert>
+      <FiltersModal
+        isModalOpen={isFilterModalOpen}
+        toggle={toggleFilterModal}
+      />
       <UserLoginModal
         isModalOpen={isLoginModalOpen}
         toggle={toggleLoginModal}

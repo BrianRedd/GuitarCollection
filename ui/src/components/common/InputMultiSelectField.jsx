@@ -27,6 +27,9 @@ const InputMultiSelectField = props => {
     options,
     width,
     required,
+    valueProp = "value",
+    labelProp = "label",
+    size = "",
     otherProps = {}
   } = props;
 
@@ -51,6 +54,13 @@ const InputMultiSelectField = props => {
       lg = 2;
   }
 
+  const getValue = value => {
+    if (typeof options[0] === "string") {
+      return value;
+    }
+    return options.find(option => option[valueProp] === value)?.[labelProp];
+  };
+
   return (
     <Col
       xs={xs}
@@ -72,29 +82,36 @@ const InputMultiSelectField = props => {
             onChange(evt.target.value);
           }
         }}
+        size={size}
         required={required}
         input={<OutlinedInput label={label} />}
         renderValue={selected => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map(value => (
-              <Chip
-                key={value}
-                label={_.startCase(_.toLower(value.replaceAll("_", " ")))}
-              />
+              <Chip key={value} label={getValue(value)} />
             ))}
           </Box>
         )}
       >
-        {options.map(option => (
-          <MenuItem key={option} value={option}>
-            <Checkbox
-              checked={_.get(formProps.values, name)?.indexOf(option) > -1}
-            />
-            <ListItemText
-              primary={_.startCase(_.toLower(option.replaceAll("_", " ")))}
-            />
-          </MenuItem>
-        ))}
+        {options.map(option => {
+          let value;
+          let label;
+          if (typeof option === "string") {
+            value = option;
+            label = option;
+          } else {
+            value = option[valueProp];
+            label = option[labelProp];
+          }
+          return (
+            <MenuItem key={value} value={value}>
+              <Checkbox
+                checked={_.get(formProps.values, name)?.indexOf(value) > -1}
+              />
+              <ListItemText primary={label} />
+            </MenuItem>
+          );
+        })}
       </Select>
     </Col>
   );
@@ -111,6 +128,7 @@ InputMultiSelectField.propTypes = {
   valueProp: PropTypes.string,
   labelProp: PropTypes.string,
   required: PropTypes.bool,
+  size: PropTypes.string,
   otherProps: PropTypes.objectOf(PropTypes.any)
 };
 
@@ -125,6 +143,7 @@ InputMultiSelectField.defaultProps = {
   valueProp: "value",
   labelProp: "label",
   required: false,
+  size: "",
   otherProps: {}
 };
 

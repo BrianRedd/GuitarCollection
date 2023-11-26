@@ -42,7 +42,9 @@ const AddGuitar = () => {
           dispatch(addGuitar(submissionValues)).then(response => {
             console.log("response", response);
             actions.resetForm(initialValues);
-            navigate(`/guitar/${response?.payload?.data?._id ?? values?.name ?? ""}`);
+            navigate(
+              `/guitar/${response?.payload?.data?._id ?? values?.name ?? ""}`
+            );
           });
         }}
         validationSchema={getGuitarsValidationSchema({
@@ -55,7 +57,7 @@ const AddGuitar = () => {
               <div className="w-100 d-flex justify-content-between">
                 <h1>Add Guitar</h1>
                 <GuitarFormButtons
-                className=""
+                  className=""
                   submitButtonText={submitButtonText}
                   initialValues={initialValues}
                 />

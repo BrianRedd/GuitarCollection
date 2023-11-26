@@ -10,12 +10,12 @@ const filtersSlice = createSlice({
   name: "filtersState",
   initialState,
   reducers: {
-    writeFilter(state, action) {
-      state.filter = action.payload;
+    writeFilters(state, action) {
+      state.filters = action.payload;
     }
   }
 });
 
-export const { writeFilter } = filtersSlice.actions;
+export const { writeFilters } = filtersSlice.actions;
 
 export default filtersSlice.reducer;

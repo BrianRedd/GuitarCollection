@@ -4,7 +4,6 @@ import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "@mui/material";
 import { useFormikContext } from "formik";
-import _ from "lodash";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { Col, Form, FormGroup, Row } from "reactstrap";
@@ -13,17 +12,12 @@ import { getDateFromOvationSN } from "../../utils/dateFromSN";
 import { getColWidth } from "../../utils/utils";
 import {
   CAPTION_OPTION_FULL_FRONT,
-  COLOR_OPTIONS_DEFAULTS,
-  COUNTRY_OPTIONS_DEFAULTS,
-  INSTRUMENT_OPTIONS_DEFAULTS,
   OWNERSHIP_STATUS_OPTIONS,
-  SOUNDSCAPE_OPTIONS_DEFAULTS,
   SPEC_OPTIONS_DEFAULTS,
-  STATUS_OPTIONS_DEFAULTS,
-  TODO_OPTIONS_DEFAULTS,
-  TUNING_OPTIONS_DEFAULTS
+  TODO_OPTIONS_DEFAULTS
 } from "../data/constants";
 
+import useOptions from "../../hooks/useOptions";
 import usePermissions from "../../hooks/usePermissions";
 import InputFreeFormField from "../common/InputFreeFormField";
 import InputSelectField from "../common/InputSelectField";
@@ -38,8 +32,6 @@ import GuitarFormButtons from "./GuitarFormButtons";
 const GuitarForm = props => {
   const { initialValues, submitButtonText } = props;
 
-  const guitars = useSelector(state => state.guitarsState?.list) ?? [];
-  const brands = useSelector(state => state.brandsState.list) ?? [];
   const gallery = useSelector(state => state.galleryState?.list) ?? [];
 
   const hasPurchaseHistoryPermissions = usePermissions("VIEW_PURCHASE_HISTORY");
@@ -48,54 +40,17 @@ const GuitarForm = props => {
 
   const formProps = useFormikContext();
 
-  const brandOptions = _.orderBy(
-    brands?.map(brand => ({
-      value: brand.id,
-      label: brand.name,
-      presence: (guitars ?? []).filter(guitar => guitar.brandId === brand.id)
-        .length
-    })),
-    ["presence", "name"],
-    ["desc", "asc"]
-  );
-  const countryOptions = _.uniq(
-    _.compact([
-      ...COUNTRY_OPTIONS_DEFAULTS,
-      ...guitars.map(guitar => guitar.countyOfOrigin).sort()
-    ])
-  );
-  const instrumentOptions = _.uniq(
-    _.compact([
-      ...INSTRUMENT_OPTIONS_DEFAULTS,
-      ...guitars.map(guitar => guitar.instrumentType).sort()
-    ])
-  );
-  const soundScapeOptions = _.uniq(
-    _.compact([
-      ...SOUNDSCAPE_OPTIONS_DEFAULTS,
-      ...guitars.map(guitar => guitar.soundScape)
-    ])
-  ).sort();
-  const colorOptions = _.uniq(
-    _.compact([
-      ...COLOR_OPTIONS_DEFAULTS,
-      ...guitars.map(guitar => guitar.color)
-    ])
-  ).sort();
-  const statusOptions = _.uniq(
-    _.compact([
-      ...STATUS_OPTIONS_DEFAULTS,
-      ...guitars.map(guitar => guitar.status).sort()
-    ])
-  );
-  const tuningOptions = _.uniq(
-    _.compact([
-      ...TUNING_OPTIONS_DEFAULTS,
-      ...guitars.map(guitar => guitar.tuning).sort()
-    ])
-  );
-
   const isEdit = Boolean(initialValues._id);
+
+  const {
+    brandOptions,
+    countryOptions,
+    instrumentOptions,
+    soundScapeOptions,
+    colorOptions,
+    statusOptions,
+    tuningOptions
+  } = useOptions();
 
   const writeArray = (arrayField, rows) => {
     formProps.setFieldValue(arrayField, rows);
@@ -185,10 +140,10 @@ const GuitarForm = props => {
               />
               <InputTextField name="case" width="wide" />
               <InputFreeFormField
-                name="instrumentType"
                 label="Instrument Type"
-                required
+                name="instrumentType"
                 options={instrumentOptions}
+                required
               />
               <InputTextField
                 name="noOfStrings"

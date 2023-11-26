@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 import { faCircleXmark, faImage } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, ButtonBase, FormControlLabel, Switch } from "@mui/material";
+import { Button, ButtonBase } from "@mui/material";
 import { useFormikContext } from "formik";
 import _ from "lodash";
 import PropTypes from "prop-types";

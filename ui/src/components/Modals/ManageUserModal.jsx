@@ -187,7 +187,10 @@ const ManageUserModal = props => {
                 <InputMultiSelectField
                   className="mt-3"
                   name="permissions"
-                  options={PERMISSIONS_OPTIONS}
+                  options={PERMISSIONS_OPTIONS.map(option => ({
+                    value: option,
+                    label: _.startCase(_.toLower(option.replaceAll("_", " ")))
+                  }))}
                   width="full"
                 />
               )}

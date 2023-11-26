@@ -9,7 +9,7 @@ import { Alert } from "reactstrap";
 
 import { getGuitars, updateGuitar } from "../../store/slices/guitarsSlice";
 import * as types from "../../types/types";
-import { DATE_FORMAT } from "../data/constants";
+import { DATE_FORMAT, INSTRUMENT_OPTION_GUITAR } from "../data/constants";
 import { getGuitarsValidationSchema } from "./data/validationSchemas";
 
 import GuitarForm from "./GuitarForm";
@@ -31,7 +31,9 @@ const EditGuitar = () => {
     ...guitars.find(guitar => guitar._id === matchId || guitar.name === matchId)
   };
 
-  const submitButtonText = "Update Guitar";
+  const submitButtonText = `Update ${
+    initialValues.instrumentType ?? INSTRUMENT_OPTION_GUITAR
+  }`;
 
   return (
     <Box sx={{ width: "100%" }} className="p-4">
